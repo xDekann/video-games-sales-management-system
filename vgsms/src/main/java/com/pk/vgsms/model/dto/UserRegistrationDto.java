@@ -1,0 +1,50 @@
+package com.pk.vgsms.model.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserRegistrationDto {
+
+    @NotBlank(message = "Username must not be blank!")
+    @Size(min = 3, max = 45, message = "Username must contain more than 2 and less than 46 characters!")
+    private String username;
+
+    @NotBlank(message = "Password must not be blank!")
+    @Size(min = 4, max = 75, message = "Password must contain more than 3 and less than 76 characters!")
+    @Pattern(regexp = "^[A-Za-z0-9#%@!&$./]+$", message = "Password must not contain whitespace characters! It can contain characters such as: A-Z, a-z, 0-9, #%@!&$/.")
+    private String password;
+
+    @NotBlank(message = "Name must not be blank!")
+    @Size(min = 3, max = 45, message = "Name must contain more than 2 and less than 46 characters!")
+    @Pattern(regexp = "[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+", message = "The user's name can only contain letters.")
+    private String name;
+
+    @NotBlank(message = "Surname must not be blank!")
+    @Size(min = 2, max = 45, message = "Surname must contain more than 1 and less than 46 characters!")
+    private String surname;
+
+    @Email(regexp = ".+[@].+[\\.].+", message = "Invalid address!")
+    @Size(max = 45, message = "Email must contain less than 46 characters!")
+    @NotBlank(message = "Email must not be blank!")
+    private String email;
+
+    @NotBlank(message = "City must not be blank!")
+    @Size(min = 3, max = 45, message = "City must contain more than 2 and less than 46 characters!")
+    @Pattern(regexp = "[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+", message = "The user's city can only contain letters.")
+    private String city;
+
+    @NotBlank(message = "Address must not be blank!")
+    @Size(min = 3, max = 100, message = "City must contain more than 2 and less than 100 characters!")
+    @Pattern(regexp = "^[A-Za-z0-9\\-.,\\/\\\\ ]+$", message = "Invalid address")
+    private String address;
+
+    private String authorityName;
+}
