@@ -1,7 +1,25 @@
 package com.pk.vgsms.model.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -26,12 +44,11 @@ public class User {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @PrimaryKeyJoinColumn
     private UserDetails userDetails;
 
-    @OneToOne
-    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_auth")
     private Authority authority;
 
@@ -43,5 +60,28 @@ public class User {
     public void connectUserDetails(UserDetails userDetails) {
         if (userDetails == null) {return;}
         this.userDetails = userDetails;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return username.equals(user.username) && enabled.equals(user.enabled);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, enabled);
     }
 }

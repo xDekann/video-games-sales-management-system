@@ -1,7 +1,21 @@
 package com.pk.vgsms.model.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -9,6 +23,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Table(name = "user_detail")
 public class UserDetails {
 
@@ -40,5 +55,18 @@ public class UserDetails {
         if (user == null)
             return;
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDetails that = (UserDetails) o;
+        return name.equals(that.name) && surname.equals(that.surname) && email.equals(that.email) && city.equals(that.city) && address.equals(that.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, surname, email, city, address);
     }
 }

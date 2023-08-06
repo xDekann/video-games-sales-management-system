@@ -9,6 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -30,12 +35,24 @@ public class SecurityConfig {
                         configurer.requestMatchers("/").permitAll()
                                 .requestMatchers("/v1/login").permitAll()
                                 .requestMatchers("/v1/register").permitAll()
-                                .anyRequest().authenticated())
-                .formLogin(configurer -> configurer.loginPage("/v1/login"))
+                                .anyRequest().permitAll())
+                //.formLogin(configurer -> configurer.loginPage("/v1/login"))
                 .logout(configurer -> configurer
                         .logoutUrl("/v1/logout")
                         .logoutSuccessUrl("/v1/login?logout")
                         .permitAll())
+                .csrf(csrf -> csrf.disable())
                 .build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

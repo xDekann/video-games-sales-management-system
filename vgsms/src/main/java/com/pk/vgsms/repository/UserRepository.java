@@ -1,5 +1,6 @@
 package com.pk.vgsms.repository;
 
+import com.pk.vgsms.model.entity.Authority;
 import com.pk.vgsms.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,4 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u JOIN FETCH u.userDetails ud " +
             "JOIN FETCH u.authority ua WHERE u.username = :username")
     User findUserByName(@Param("username") String username);
+
+    @Query("SELECT a FROM Authority a WHERE a.authorityName = :authorityName")
+    Authority findAuthorityByAuthorityName(@Param("authorityName") String authorityName);
 }

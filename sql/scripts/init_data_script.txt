@@ -1,0 +1,2 @@
+insert into authority(id_auth, authority_name) values (1, "USER");
+insert into authority(id_auth, authority_name) values (2, "ADMIN");

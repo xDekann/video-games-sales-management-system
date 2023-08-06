@@ -24,10 +24,11 @@ public class RegisterService {
     public void registerUser(UserRegistrationDto userRegistrationDto) {
         User user = dtoToUser(userRegistrationDto);
         UserDetails userDetails = dtoToUserDetails(userRegistrationDto);
-        Authority authority = new Authority(userRegistrationDto.getAuthorityName());
+        Authority authority = userRepository.findAuthorityByAuthorityName(userRegistrationDto.getAuthorityName());
         user.connectUserDetails(userDetails);
         user.connectAuthority(authority);
         userDetails.connectUser(user);
+        authority.getUsers().add(user);
         userRepository.save(user);
     }
 
