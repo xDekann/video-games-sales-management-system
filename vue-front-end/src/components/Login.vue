@@ -2,8 +2,8 @@
     <div>
         <h2>Login</h2>
         <form @submit.prevent="submitForm">
-            <label for="email">Email:</label>
-            <input type="email" id="email" v-model="email" />
+            <label for="username">Username:</label>
+            <input type="text" id="username" v-model="username" />
 
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="password" />
@@ -12,36 +12,61 @@
         </form>
         <p v-if="message">{{ message }}</p>
     </div>
+    <div v-if="role">
+        <form @submit.prevent="logout">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
 </template>
   
 <script>
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { onMounted, ref } from 'vue';
 
 export default {
+    setup() {
+        const role = ref(null);
+        onMounted(() => {
+            const roleCookie = Cookies.get('ROLE');
+            role.value = roleCookie ? atob(roleCookie) : null;
+        });
+        return {role};
+    },
     data() {
         return {
-            email: '',
+            username: '',
             password: '',
-            message: ''
+            message: '',
         };
     },
     methods: {
         async submitForm() {
             try {
                 const response = await axios.post('/v1/login', {
-                    email: this.email,
+                    username: this.username,
                     password: this.password
                 });
+
+                //this.message(response.data);
 
                 if (response.status === 200) {
                     // Login successful, handle the logic here
                     this.message = 'Login successful!';
+                    //this.message = response.headers['Set-Cookie'][0].split(';')[0].split('=')[1];
+                    //Cookies.set('ROLE', response.data.role, { expires: 1 }); // Set cookie to expire in 1 days
+                    this.$router.push('/register');
                 } else {
                     this.message = 'Login failed!';
                 }
             } catch (error) {
                 this.message = 'An error occurred during login.';
             }
+        },
+        async logout() {
+            await axios.get('/v1/logout');
+            Cookies.remove('ROLE');
+            this.role = null;
         }
     }
 };

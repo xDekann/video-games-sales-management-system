@@ -1,4 +1,4 @@
-package com.pk.vgsms.controller;
+package com.pk.vgsms.controller.v1;
 
 import com.pk.vgsms.model.dto.UserRegistrationDto;
 import com.pk.vgsms.service.RegisterService;

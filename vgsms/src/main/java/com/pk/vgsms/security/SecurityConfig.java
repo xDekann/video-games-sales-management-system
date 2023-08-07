@@ -39,7 +39,6 @@ public class SecurityConfig {
                 //.formLogin(configurer -> configurer.loginPage("/v1/login"))
                 .logout(configurer -> configurer
                         .logoutUrl("/v1/logout")
-                        .logoutSuccessUrl("/v1/login?logout")
                         .permitAll())
                 .csrf(csrf -> csrf.disable())
                 .build();
