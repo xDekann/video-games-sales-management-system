@@ -31,5 +31,4 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password!");
         }
     }
-
 }

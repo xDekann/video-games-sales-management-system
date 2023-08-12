@@ -35,6 +35,7 @@ public class SecurityConfig {
                         configurer.requestMatchers("/").permitAll()
                                 .requestMatchers("/v1/login").permitAll()
                                 .requestMatchers("/v1/register").permitAll()
+                                .requestMatchers("/v1/employee/**").hasRole("EMPLOYEE")
                                 .anyRequest().permitAll())
                 //.formLogin(configurer -> configurer.loginPage("/v1/login"))
                 .logout(configurer -> configurer

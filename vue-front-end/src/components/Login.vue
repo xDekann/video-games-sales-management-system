@@ -12,19 +12,22 @@
         </form>
         <p v-if="message">{{ message }}</p>
     </div>
+    <!--
     <div v-if="role">
         <form @submit.prevent="logout">
             <button type="submit">Logout</button>
         </form>
     </div>
+-->
 </template>
   
 <script>
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { onMounted, ref } from 'vue';
+//import { onMounted, ref } from 'vue';
 
 export default {
+    /*
     setup() {
         const role = ref(null);
         onMounted(() => {
@@ -33,6 +36,7 @@ export default {
         });
         return {role};
     },
+    */
     data() {
         return {
             username: '',
@@ -55,7 +59,14 @@ export default {
                     this.message = 'Login successful!';
                     //this.message = response.headers['Set-Cookie'][0].split(';')[0].split('=')[1];
                     //Cookies.set('ROLE', response.data.role, { expires: 1 }); // Set cookie to expire in 1 days
-                    this.$router.push('/register');
+                    const roleCookie = atob(Cookies.get('ROLE'))
+                    switch(roleCookie) {
+                        case 'ROLE_EMPLOYEE': this.$router.push('/gamepanel'); break;
+                        case 'ROLE_USER': this.$router.push('/home'); break;
+                        case 'ROLE_ADMIN': this.$router.push('/userconsole'); break;
+                        default: this.message = "Login error occurred."
+                    }
+                    //this.$router.push('/register');
                 } else {
                     this.message = 'Login failed!';
                 }

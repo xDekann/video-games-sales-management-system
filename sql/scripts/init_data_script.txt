@@ -1,2 +1,9 @@
 insert into authority(id_auth, authority_name) values (1, "USER");
 insert into authority(id_auth, authority_name) values (2, "ADMIN");
+insert into authority(id_auth, authority_name) values (3, "EMPLOYEE");
+insert into product(id_product,name,price,amount_available,category,producer) values(1,'Genshin', 15.59, 1, 'RPG', 'Mihoyo');
+insert into product(id_product,name,price,amount_available,category,producer) values(2,'Genshin2', 15.05, 1, 'HORROR', 'Mihoyo');
+insert into product(id_product,name,price,amount_available,category,producer) values(3,'Genshin3', 15, 1, 'FPS', 'Mihoyo');
+insert into product(id_product,name,price,amount_available,category,producer) values(4,'Genshin4', 15, 1, 'HORROR', 'Mihoyo');
+insert into product(id_product,name,price,amount_available,category,producer) values(5,'Genshin5', 15, 1, 'RPG', 'Mihoyo');
+insert into product(id_product,name,price,amount_available,category,producer) values(6,'Genshin6', 15, 1, 'RPG', 'Mihoyo');

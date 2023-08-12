@@ -24,7 +24,7 @@
 
       <button type="submit">Register</button>
     </form>
-    <p v-if="message" id="#message">{{ message }}</p>
+    <p v-if="message">{{ message }}</p>
     <div v-if="errors.length > 0">
       <ul>
         <li v-for="error in errors" :key="error.id">{{ error.defaultMessage }}</li> <!--id just for the vuejs case, it does not exist-->
@@ -60,7 +60,8 @@ export default {
           surname: this.surname,
           email: this.email,
           city: this.city,
-          address: this.address
+          address: this.address,
+          authorityName: 'EMPLOYEE'
         });
 
         if (response.status === 200) {
@@ -71,9 +72,15 @@ export default {
           this.message = 'Registration failed!';
         }
       } catch (error) {
-        if (error.response.status === 403) this.message = 'Unauthorized!';
-        if (error.response.status === 400) this.errors = error.response.data.errors;
-        else this.message = "An error has occured";
+        if (error.response.status === 403) {
+          this.message = 'Unauthorized!';
+        }
+        if (error.response.status === 400) {
+          this.errors = error.response.data.errors;
+        }
+        else {
+          this.message = "An error has occured";
+        } 
       }
     }
   }
