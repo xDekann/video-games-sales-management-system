@@ -24,7 +24,7 @@ export default {
       const endpoint = this.action
         ? "/v1/employee/game/replenish"
         : "/v1/employee/game/deplenish";
-      const response = axios
+      axios
         .put(endpoint, null, {
           params: {
             id: this.gameId,
@@ -34,9 +34,7 @@ export default {
         .catch((error) => {
           console.error("Error has occurred during the update:", error);
         });
-      if (response) {
-        this.$emit("close");
-      }
+      this.$emit("close");
     },
     cancel() {
       // Hide the prompt
