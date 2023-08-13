@@ -6,6 +6,7 @@
       <LogoutButton class ="logout-button"></LogoutButton>
     </div>
     
+    <!-- Category search -->
     <div class="label-container">
       <label for="category">Category:</label>
       <select id="category" v-model="selectedCategory">
@@ -13,6 +14,8 @@
         <option v-for="category in gameCategories" :key="category.label" :value="category.value">{{ category.label }}</option>
       </select>
     </div>
+    
+    <!-- Searchbar -->
     <div class="search-container" v-click-away="clearFill">
       <input v-model="searchPhrase" @input="handleInput" placeholder="Search games..." />
       <ul class="fill-options">
