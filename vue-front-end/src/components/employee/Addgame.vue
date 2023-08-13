@@ -55,7 +55,7 @@ export default {
   methods: {
     async addGame() {
       try {
-        const response = await axios.put("/v1/employee/game", {
+        const response = await axios.post("/v1/employee/game", {
           name: this.gameData.name,
           price: this.gameData.price,
           category: this.gameData.category,

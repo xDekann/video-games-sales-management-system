@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class EmployeeService {
 
@@ -39,4 +41,24 @@ public class EmployeeService {
             return productRepository.findAllByNameContainingIgnoreCaseAndCategoryOrderByName(phrase, category, pageable);
         }
     }
+
+    public Product replenishProduct(Long id, Long amount, Boolean addition) {
+        Optional<Product> possibleProduct = productRepository.findById(id);
+        if (possibleProduct.isPresent()) {
+            Product product = possibleProduct.get();
+            if (addition) {
+                product.setAmount(product.getAmount() + amount);
+            } else {
+                product.setAmount(product.getAmount() - amount);
+            }
+            productRepository.save(product);
+            return product;
+        }
+        return null;
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
 }

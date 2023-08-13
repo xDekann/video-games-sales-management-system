@@ -7,9 +7,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,5 +32,13 @@ public class LoginController {
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password!");
         }
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<String> showLogoutMessage(@RequestParam(name = "logout", required = false) String logout) {
+        if (logout != null) {
+            return ResponseEntity.ok("You have been successfully logged out.");
+        }
+        return ResponseEntity.ok("Login page.");
     }
 }

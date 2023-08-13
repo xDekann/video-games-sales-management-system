@@ -1,5 +1,6 @@
 package com.pk.vgsms.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,12 +39,17 @@ public class SecurityConfig {
                                 .requestMatchers("/v1/employee/**").hasRole("EMPLOYEE")
                                 .anyRequest().permitAll())
                 //.formLogin(configurer -> configurer.loginPage("/v1/login"))
-                .logout(configurer -> configurer
+                .logout(configurer -> configurer.permitAll()
                         .logoutUrl("/v1/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        })
+                        .deleteCookies("ROLE")
                         .permitAll())
                 .csrf(csrf -> csrf.disable())
                 .build();
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

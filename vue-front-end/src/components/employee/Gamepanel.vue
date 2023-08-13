@@ -1,26 +1,30 @@
 <template>
   <div>
-    <button @click="goToAddGame">Add Game</button>
-  
-  <!-- Adjusted spacing for the Category label and select input -->
-  <div class="label-container">
-    <label for="category">Category:</label>
-    <select id="category" v-model="selectedCategory">
-      <option value="">Select Category</option>
-      <option v-for="category in gameCategories" :key="category.label" :value="category.value">{{ category.label }}</option>
-    </select>
-  </div>
-  
-  <!-- Adjusted spacing for the search container and search button -->
-  <div class="search-container" v-click-away="clearFill">
-    <input v-model="searchPhrase" @input="handleInput" placeholder="Search games..." />
-    <ul class="fill-options">
-      <li v-for="option in fillOptions" :key="option" @click="selectSuggestion(option)">{{ option.name }}</li>
-    </ul>
-  </div>
-  
-  <button class="search-button" @click="searchGames">Search</button>
+    <!-- Upper side panel -->
+    <div class="button-container">
+      <button class="add-game-button" @click="goToAddGame">Add Game</button>
+      <LogoutButton class ="logout-button"></LogoutButton>
+    </div>
+    
+    <div class="label-container">
+      <label for="category">Category:</label>
+      <select id="category" v-model="selectedCategory">
+        <option value="">Select Category</option>
+        <option v-for="category in gameCategories" :key="category.label" :value="category.value">{{ category.label }}</option>
+      </select>
+    </div>
+    <div class="search-container" v-click-away="clearFill">
+      <input v-model="searchPhrase" @input="handleInput" placeholder="Search games..." />
+      <ul class="fill-options">
+        <li v-for="option in fillOptions" :key="option" @click="selectSuggestion(option)">{{ option.name }}</li>
+      </ul>
+    </div>
+    <div class="search-controls">
+      <button class="search-button" @click="searchGames">Search</button>
+      <button class="clear-button" @click="clear">Clear</button>
+    </div>
 
+    <!-- Displayed games -->
     <ul>
       <li v-for="game in games" :key="game.id" class="game-item">
         <div class="game-info">
@@ -30,12 +34,17 @@
           <p>Producer: {{ game.producer }}</p>
         </div>
         <div class="game-buttons">
-          <button @click="stockGame(game.id)">Stock</button>
-          <button @click="unstockGame(game.id)">Unstock</button>
+          <button @click="stockGame(game.id, true)">Stock</button>
+          <button @click="stockGame(game.id, false)">Unstock</button>
           <button @click="removeGame(game.id)">Remove</button>
         </div>
       </li>
     </ul>
+
+    <!-- Action confirmation prompt -->
+    <StockUnstockPrompt v-if="showingPrompt" :gameId="selectedGameId" :action="action" @close="closePrompt" />
+
+    <!-- Pagination controls -->
     <div class="pagination-controls">
       <button @click="previousPage" :disabled="currentPage === 0">Previous</button>
       <span class="page-number">{{ currentPage + 1 }}</span>
@@ -45,9 +54,12 @@
 </template>
   
 <script>
+// Add pop-ups for operations like stock/unstock (error/success)
 import axios from 'axios';
 import { generateGameCategories } from './gameCategories';
 import { debounce } from 'lodash';
+import StockUnstockPrompt from './children-components/StockUnstockPrompt.vue';
+import LogoutButton from '@/components/LogoutButton.vue';
 
 export default {
   mounted() {
@@ -57,10 +69,15 @@ export default {
   before() {
     document.removeEventListener('click', this.handleDocumentClick);
   },
+  components: {
+    StockUnstockPrompt,
+    LogoutButton
+},
   data() {
     return {
       searchPhrase: '',
       searchPhraseMinLetters: 3,
+      isSearchClicked: false,
       games: [],
       selectedCategory: '',
       gameCategories: generateGameCategories(),
@@ -70,6 +87,7 @@ export default {
       fillPage: 0,
       currentPage: 0,
       totalPages: 0,
+      showingPrompt: false,
     };
   },
   methods: {
@@ -81,10 +99,12 @@ export default {
         this.clear();
         return;
       }
+      this.currentPage = 0;
+      this.isSearchClicked = true;
       this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);
       this.fillOptions = []
     },
-      // for sake of filling user's input
+    // for sake of filling user's input
     handleInput: debounce(function() {
       if (this.searchPhrase.length >= this.searchPhraseMinLetters) {
         this.fetchGames(this.searchPhrase, this.selectedCategory, this.fillPage, this.fillSize, true);
@@ -93,11 +113,14 @@ export default {
       }
     }, 300),
     selectSuggestion(option) {
-      this.searchPhrase = option.name; // Update the search bar's value
-      this.fillOptions = []; // Clear the suggestions after selection
+      this.searchPhrase = option.name;
+      this.fillOptions = [];
     },
     clear() {
       this.currentPage = 0;
+      this.searchPhrase = '';
+      this.selectedCategory = '';
+      this.isSearchClicked = false;
       this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);
     },
     clearFill() {
@@ -117,8 +140,36 @@ export default {
         this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);     
        }
     },
+    stockGame(gameId, givenAction) {
+      this.showingPrompt = true;
+      this.selectedGameId = gameId;
+      this.action = givenAction;
+    },
+    async closePrompt() {
+      this.showingPrompt = false;
+      await new Promise(resolve => setTimeout(resolve, 300)); // make sure the timeout is correct
+      this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);
+    },
+    async removeGame(gameId) {
+      const confirmed = window.confirm("Are you sure you want to remove this game?");
+      if (confirmed) {
+        try {
+          const response = await axios.delete(`/v1/employee/game`, {params: {id: gameId}});
+          if (response.status === 200) {
+            this.clear();
+          } else {
+            console.error("Error removing game:", response.statusText);
+          }
+        } catch (error) {
+          console.error("Error removing game:", error);
+        }
+      }
+    },
     fetchGames(phrase, category, currentPage, size, isFill) {
-      console.log(phrase);
+      if (!this.isSearchClicked) {
+        phrase = '';
+        category = '';
+      }
       axios
         .get("/v1/employee/game", {
           params: {
@@ -284,9 +335,24 @@ select {
   background-color: #f0f0f0;
 }
 
+.search-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
 /* Style for the "Search" button */
 button.search-button {
   background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.clear-button {
+  background-color: #007bff;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -297,6 +363,43 @@ button.search-button {
   font-size: 18px;
   color: #333;
   margin: -8px 10px 0; /* Add horizontal spacing */
+}
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-game-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.logout-button {
+  background-color: #ccc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .button-container {
+    flex-direction: column; /* Change to column layout on smaller screens */
+  }
+  
+  .add-game-button,
+  .logout-button {
+    width: 100%; /* Make the button take full width on shrink */
+    padding: 10px; /* Add padding for smaller screens */
+    margin-bottom: 10px; /* Add margin between the buttons on smaller screens */
+  }
 }
 </style>
   

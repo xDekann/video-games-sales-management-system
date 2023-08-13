@@ -11,7 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +34,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @PutMapping("/game")
+    @PostMapping("/game")
     public ResponseEntity<String> addProduct(@Valid @RequestBody GameDto gameDto) {
         // validate if the game with the given name already exists in db
         try {
@@ -60,4 +62,45 @@ public class EmployeeController {
                     .build();
         }
     }
+
+    @PutMapping("/game/replenish")
+    public ResponseEntity<String> replenishProduct(@RequestParam("id") Long productId, @RequestParam("amount") Long amount) {
+        // add the validation for negative amount (floating point?)
+        try {
+            if (employeeService.replenishProduct(productId, amount, true) != null) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error has occurred during replenish operation.");
+        }
+    }
+
+    @PutMapping("/game/deplenish")
+    public ResponseEntity<String> deplenishProduct(@RequestParam("id") Long productId, @RequestParam("amount") Long amount) {
+        try {
+            if (employeeService.replenishProduct(productId, amount, false) != null) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error has occurred during deplenish operation.");
+        }
+    }
+
+    @DeleteMapping("/game")
+    public ResponseEntity<String> deleteProduct(@RequestParam("id") Long productId) {
+        try {
+            employeeService.deleteProduct(productId);
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error has occurred during deletion operation.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
