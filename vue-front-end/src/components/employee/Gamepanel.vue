@@ -67,15 +67,15 @@ import LogoutButton from '@/components/LogoutButton.vue';
 export default {
   mounted() {
       this.clear();
-      document.addEventListener('click', this.handleDocumentClick);
-    },
+      //document.addEventListener('click', this.handleDocumentClick);
+  },
   before() {
-    document.removeEventListener('click', this.handleDocumentClick);
+    //document.removeEventListener('click', this.handleDocumentClick);
   },
   components: {
     StockUnstockPrompt,
     LogoutButton
-},
+  },
   data() {
     return {
       searchPhrase: '',
@@ -169,7 +169,7 @@ export default {
       }
     },
     fetchGames(phrase, category, currentPage, size, isFill) {
-      if (!this.isSearchClicked) {
+      if (!this.isSearchClicked && !isFill) {
         phrase = '';
         category = '';
       }
@@ -199,10 +199,13 @@ export default {
 </script>
 <style scoped>
 .game-item {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  /* margin-left: 10px; */ /* Remove this line */
 }
 
 .game-info {
@@ -212,37 +215,14 @@ export default {
 
 .game-buttons {
   display: flex;
+  flex-direction: column; /* Change the flex direction to column */
   gap: 10px;
-}
-.search-container {
-  position: relative; /* Make the container a reference for absolute positioning */
-  display: inline-block; /* Display the input and dropdown inline */
+  align-items: flex-start; /* Align items to the start of the column */
 }
 
-.fill-options {
-  position: absolute;
-  top: 100%; /* Position the dropdown below the input */
-  left: 0;
-  width: 100%; /* Make the dropdown width match the input width */
-  list-style: none; /* Remove default bullet points */
-  background-color: white; /* Set the background color */
-  border: 1px solid #ccc; /* Add a border for a clean separation */
-  border-top: none; /* Remove top border to connect with input */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+.game-buttons button {
+  width: 100%; /* Set the width to 100% for all buttons */
 }
-
-.fill-options li {
-  padding: 8px 12px; /* Add padding to each option */
-  cursor: pointer;
-  transition: background-color 0.2s; /* Add a smooth hover effect */
-}
-
-.fill-options li:hover {
-  background-color: #f0f0f0; /* Change background color on hover */
-}
-
 .pagination-controls {
   display: flex;
   align-items: center; /* Center items vertically */
@@ -302,7 +282,6 @@ select {
 .search-container {
   position: relative;
   display: inline-block;
-  margin-right: 10px; /* Add right margin for spacing */
 }
 
 /* Style for the search input */
@@ -390,6 +369,12 @@ button.clear-button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  margin: 0; /* Reset margin */
+  padding: 0; /* Reset padding */
 }
 
 @media (max-width: 600px) {

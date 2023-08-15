@@ -61,7 +61,7 @@ export default {
           email: this.email,
           city: this.city,
           address: this.address,
-          authorityName: 'EMPLOYEE'
+          authorityName: 'ADMIN'
         });
 
         if (response.status === 200) {

@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 .requestMatchers("/v1/login").permitAll()
                                 .requestMatchers("/v1/register").permitAll()
                                 .requestMatchers("/v1/employee/**").hasRole("EMPLOYEE")
+                                .requestMatchers(("/v1/admin/**")).hasRole("ADMIN")
                                 .anyRequest().permitAll())
                 //.formLogin(configurer -> configurer.loginPage("/v1/login"))
                 .logout(configurer -> configurer.permitAll()

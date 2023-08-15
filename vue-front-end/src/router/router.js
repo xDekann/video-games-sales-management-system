@@ -3,19 +3,22 @@ import Register from '@/components/Register.vue';
 import Login from '@/components/Login.vue';
 import Gamepanel from '@/components/employee/Gamepanel.vue';
 import Addgame from '@/components/employee/Addgame.vue';
+import Userpanel from '@/components/admin/Userpanel.vue';
 
 import jsCookie from 'js-cookie';
 const routes = [
   { path: '/register', component: Register },
   { path: '/login', component: Login },
   { path: '/gamepanel', component: Gamepanel},
-  { path: '/gamepanel/addgame', component: Addgame}
+  { path: '/gamepanel/addgame', component: Addgame},
+  { path: '/userpanel', component: Userpanel}
 ]
 
 
 const protectedRoutes = ['/gamepanel', '/gamepanel/addgame']
 const roleAllowedRoutes = {
-  'ROLE_EMPLOYEE': ['/gamepanel', '/gamepanel/addgame']
+  'ROLE_EMPLOYEE': ['/gamepanel', '/gamepanel/addgame'],
+  'ROLE_ADMIN': ['/userpanel', '/userpanel/adduser']
 }
 
 

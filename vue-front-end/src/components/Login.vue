@@ -63,7 +63,7 @@ export default {
                     switch(roleCookie) {
                         case 'ROLE_EMPLOYEE': this.$router.push('/gamepanel'); break;
                         case 'ROLE_USER': this.$router.push('/home'); break;
-                        case 'ROLE_ADMIN': this.$router.push('/userconsole'); break;
+                        case 'ROLE_ADMIN': this.$router.push('/userpanel'); break;
                         default: this.message = "Login error occurred."
                     }
                     //this.$router.push('/register');
