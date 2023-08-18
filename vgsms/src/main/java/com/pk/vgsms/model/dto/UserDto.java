@@ -18,6 +18,9 @@ import lombok.ToString;
 @Builder
 @ToString
 public class UserDto {
+
+    private Long id;
+
     @NotBlank(message = "Username must not be blank!")
     @Size(min = 3, max = 45, message = "Username must contain more than 2 and less than 46 characters!")
     private String username;
@@ -46,5 +49,9 @@ public class UserDto {
     @Pattern(regexp = "^[A-Za-z0-9\\-.,\\/\\\\ ]+$", message = "Invalid address")
     private String address;
 
+    private String password;
+
     private String authorityName;
+
+    private Boolean enabled;
 }

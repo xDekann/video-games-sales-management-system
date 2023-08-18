@@ -32,7 +32,7 @@ public class RegisterService {
         userRepository.save(user);
     }
 
-    public UserDetails dtoToUserDetails(UserRegistrationDto userRegistrationDto) {
+    private UserDetails dtoToUserDetails(UserRegistrationDto userRegistrationDto) {
         return UserDetails.builder()
                 .name(userRegistrationDto.getName())
                 .surname(userRegistrationDto.getSurname())
@@ -42,7 +42,7 @@ public class RegisterService {
                 .build();
     }
 
-    public User dtoToUser(UserRegistrationDto userRegistrationDto) {
+    private User dtoToUser(UserRegistrationDto userRegistrationDto) {
         return User.builder()
                 .username(userRegistrationDto.getUsername())
                 .password(passwordEncoder.encode(userRegistrationDto.getPassword()))

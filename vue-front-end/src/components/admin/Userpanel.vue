@@ -25,8 +25,9 @@
           <p>Email: {{ user.email }}</p>
         </div>
         <div class="user-buttons">
-          <button @click="editUser(user.id)">Edit User</button>
-          <button @click="removeUser(user.id)">Remove User</button>
+          <button @click="editUser(user.id)" class="edit-user-button">Edit User</button>
+          <button v-if="user.enabled" @click="removeUser(user.id, user.username, user.enabled)" class="remove-user-button"> Remove User </button>
+          <button v-else @click="removeUser(user.id, user.username, user.enabled)" class="enable-user-button"> Enable User </button>
         </div>
       </li>
     </ul>
@@ -93,16 +94,30 @@ export default {
             this.fillOptions = [];
         },
         // ... (your existing methods)
-        /*
+        
         editUser(userId) {
-            // Implement the edit user functionality
-            // You can navigate to the edit user page or open a dialog/modal
+          console.log(userId);
+          this.$router.push({ name: 'edit-user', params: { id: userId } });
         },
-        removeUser(userId) {
-            // Implement the remove user functionality
-            // You can show a confirmation dialog and send a DELETE request to the server
+        async removeUser(userId, username, isEnabled) {
+          const confirmMessage = isEnabled
+        ? `Are you sure you want to delete the user '${username}'?`
+        : `Are you sure you want to enable the user '${username}'?`;
+
+          if (window.confirm(confirmMessage)) {
+            try {
+              await axios.delete(`/v1/admin/user`, {
+                params: {
+                  id: userId,
+                }
+              });
+              // Refresh the user list after successful deletion
+              this.clear();
+              } catch (error) {
+              console.error("Error deleting user:", error);
+            }
+          }
         },
-        */
         clear() {
             this.currentPage = 0;
             this.searchPhrase = '';
@@ -133,9 +148,10 @@ export default {
             axios
             .get("/v1/admin/users", {
                 params: {
-                phrase,
-                page: currentPage,
-                size,
+                  phrase,
+                  fill: isFill,
+                  page: currentPage,
+                  size,
                 },
             })
             .then((response) => {
@@ -294,9 +310,9 @@ button.clear-button {
 }
 
 .user-buttons button {
-  background-color: #dc3545;
   color: white;
   padding: 6px 12px;
+  width: 120px; /* Set a fixed width for the buttons */
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -312,6 +328,24 @@ button.clear-button {
   background-color: #c82333;
 }
 
+.enable-user-button {
+  background-color: #28a745; /* Green color */
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 6px;
+}
+
+.remove-user-button {
+    background-color: #dc3545;
+}
+
+.edit-user-button {
+  background-color: #007bff;
+}
 /* Other existing styles... */
 
 /* Media query for smaller screens */

@@ -21,4 +21,10 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Authority findAuthorityByAuthorityName(@Param("authorityName") String authorityName);
 
     Page<User> findAll(Specification<User> spec, Pageable pageable);
+
+    @Query("SELECT u FROM User u JOIN FETCH u.userDetails ud " +
+            "JOIN FETCH u.authority ua WHERE u.id = :id")
+    User findUserById(@Param("id") Long id);
+
+    Page<User> findAllByUsernameContainingIgnoreCaseAndUsernameNotOrderByUsername(String phrase, String loggedUserName, Pageable pageable);
 }
