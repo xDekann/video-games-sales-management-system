@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -19,6 +20,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -52,6 +55,9 @@ public class User {
     @JoinColumn(name = "fk_auth")
     private Authority authority;
 
+    @OneToMany(mappedBy = "user")
+    private List<Purchase> purchases;
+
     public void connectAuthority(Authority authority) {
         if (authority == null) {return;}
         this.authority = authority;
@@ -60,6 +66,12 @@ public class User {
     public void connectUserDetails(UserDetails userDetails) {
         if (userDetails == null) {return;}
         this.userDetails = userDetails;
+    }
+
+    public void addPurchase(Purchase purchase) {
+        if (purchase == null) {return;}
+        if (purchases == null) {purchases = new ArrayList<>();}
+        purchases.add(purchase);
     }
 
     @Override
