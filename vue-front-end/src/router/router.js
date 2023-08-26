@@ -6,6 +6,7 @@ import Addgame from '@/components/employee/Addgame.vue';
 import Userpanel from '@/components/admin/Userpanel.vue';
 import Edituser from '@/components/admin/EditUser.vue';
 import AddUser from '@/components/admin/AddUser.vue';
+import Games from '@/components/user/Games.vue';
 
 import jsCookie from 'js-cookie';
 const routes = [
@@ -15,15 +16,17 @@ const routes = [
   { path: '/gamepanel/addgame', component: Addgame},
   { path: '/userpanel', component: Userpanel},
   { path: '/userpanel/edituser/:id', name: "edit-user" , component: Edituser},
-  { path: '/userpanel/adduser', component: AddUser}
+  { path: '/userpanel/adduser', component: AddUser},
+  { path: '/games', component: Games}
 ]
 
 
 const protectedRoutes = ['/gamepanel', '/gamepanel/addgame',
- '/userpanel', '/userpanel/adduser', '/userpanel/edituser/']
+ '/userpanel', '/userpanel/adduser', '/userpanel/edituser/', '/games']
 const roleAllowedRoutes = {
   'ROLE_EMPLOYEE': ['/gamepanel', '/gamepanel/addgame'],
-  'ROLE_ADMIN': ['/userpanel', '/userpanel/adduser', '/userpanel/edituser/']
+  'ROLE_ADMIN': ['/userpanel', '/userpanel/adduser', '/userpanel/edituser/'],
+  'ROLE_USER': ['/games']
 }
 
 

@@ -35,7 +35,7 @@
 </template>
   
 <script>
-import { generateGameCategories } from "./gameCategories";
+import { generateGameCategories } from "../gameCategories";
 import axios from "axios";
 
 export default {

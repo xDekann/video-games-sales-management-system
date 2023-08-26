@@ -1,6 +1,7 @@
 package com.pk.vgsms.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,6 +57,7 @@ public class User {
     private Authority authority;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Purchase> purchases;
 
     public void connectAuthority(Authority authority) {

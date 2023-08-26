@@ -1,6 +1,7 @@
 package com.pk.vgsms.security;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,6 +39,7 @@ public class SecurityConfig {
                                 .requestMatchers("/v1/register").permitAll()
                                 .requestMatchers("/v1/employee/**").hasRole("EMPLOYEE")
                                 .requestMatchers(("/v1/admin/**")).hasRole("ADMIN")
+                                .requestMatchers(("/v1/user/**")).hasRole("USER")
                                 .anyRequest().permitAll())
                 //.formLogin(configurer -> configurer.loginPage("/v1/login"))
                 .logout(configurer -> configurer.permitAll()

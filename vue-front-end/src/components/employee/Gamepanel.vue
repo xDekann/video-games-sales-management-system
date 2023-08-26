@@ -59,7 +59,7 @@
 <script>
 // Add pop-ups for operations like stock/unstock (error/success)
 import axios from 'axios';
-import { generateGameCategories } from './gameCategories';
+import { generateGameCategories } from '../gameCategories';
 import { debounce } from 'lodash';
 import StockUnstockPrompt from './children-components/StockUnstockPrompt.vue';
 import LogoutButton from '@/components/LogoutButton.vue';
