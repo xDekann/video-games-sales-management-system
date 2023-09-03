@@ -66,11 +66,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `gamestore`.`purchase`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gamestore`.`purchase` (
-  `purchase_id` BIGINT NOT NULL AUTO_INCREMENT,
   `fk_user_id` BIGINT NOT NULL,
   `fk_product_id` BIGINT NOT NULL,
   `quantity` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`purchase_id`),
   INDEX `fk_user_idx` (`fk_user_id` ASC) VISIBLE,
   INDEX `fk_product_idx` (`fk_product_id` ASC) VISIBLE,
   CONSTRAINT `fk_product`

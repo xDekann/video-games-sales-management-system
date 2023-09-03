@@ -28,16 +28,16 @@ import java.util.Objects;
 @Table(name = "purchase")
 public class Purchase {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "purchase_id")
-    private Long id;
+    @EmbeddedId
+    private PurchaseId purchaseId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("user")
     @JoinColumn(name = "fk_user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("product")
     @JoinColumn(name = "fk_product_id")
     private Product product;
 

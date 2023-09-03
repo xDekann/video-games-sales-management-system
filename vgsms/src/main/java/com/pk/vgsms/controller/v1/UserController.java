@@ -1,5 +1,6 @@
 package com.pk.vgsms.controller.v1;
 
+import com.pk.vgsms.model.dto.CartPurchaseDto;
 import com.pk.vgsms.model.dto.GamePaginatedDto;
 import com.pk.vgsms.model.entity.Product;
 import com.pk.vgsms.model.entity.Purchase;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,4 +65,42 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/price")
+    public Double cartPrice() {
+        try {
+            return userService.getCartPrice();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            log.error(exception.getMessage());
+            return 0.0;
+        }
+    }
+
+    @GetMapping("/cart")
+    public List<CartPurchaseDto> userCartContent() {
+        try {
+            return userService.getUsersCartItems();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            log.error(exception.getMessage());
+            return List.of();
+        }
+    }
+
+    @DeleteMapping("/cart")
+    public ResponseEntity<String> deleteItemFromCart(@RequestParam("itemId") Long itemId) {
+        try {
+            if (userService.removeItemFromCart(itemId) == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            log.error(exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

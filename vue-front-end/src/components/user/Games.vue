@@ -7,9 +7,11 @@
             <!-- Profile Button -->
             <button class="profile-button" @click="redirectToProfile">Profile</button>
             <!-- Shopping Cart -->
-            <div class="cart-container">
-                <img src="shopping-cart.svg" alt="Shopping Cart" class="cart-icon" />
-                <div class="cart-count">{{ cartCount }}</div>
+            <div class="cart-container" @click="redirectToCart">
+              <img src="shopping-cart.svg" alt="Shopping Cart" class="cart-icon" />
+              <div class="cart-count">
+                <span class="price">{{ cartCount }}</span>
+              </div>
             </div>
         </div>
       </div>
@@ -72,6 +74,7 @@
   export default {
     mounted() {
         this.clear();
+        this.updateCartCount();
         //document.addEventListener('click', this.handleDocumentClick);
     },
     before() {
@@ -220,11 +223,27 @@
                 console.error("Error adding game to cart:", error);
                 this.closeAddToCartModal();
             });
+            this.updateCartCount();
       },
       redirectToProfile() {
       // Implement the logic to redirect the user to their profile page
       // You can use Vue Router for this navigation.
      },
+      async updateCartCount() {
+        try {
+            const response = await axios.get('/v1/user/price');
+          if (response.status === 200) {
+            this.cartCount = response.data; // Update cartCount with the response data
+          } else {
+            console.error('Failed to fetch user cart price:', response.statusText);
+          }
+        } catch (error) {
+          console.error('An error occurred while fetching user cart price:', error);
+        }
+     },
+      redirectToCart() {
+        this.$router.push('/cart');
+      },
     },
   };
   </script>
@@ -429,18 +448,26 @@
     margin-top: 0; /* Remove top margin */
 }
 
-/* Style for the cart count */
 .cart-count {
   background-color: #007bff;
   color: white;
-  border-radius: 50%; /* Make it a circle */
-  width: 24px;
-  height: 24px;
+  width: 100px; /* Increase the width to make the dot bigger */
+  height: 30px; /* Increase the height to make the dot bigger */
   display: flex;
   justify-content: center; /* Center the text horizontally */
   align-items: center; /* Center the text vertically */
-  font-size: 14px; /* Adjust the font size as needed */
+  font-size: 16px; /* Increase the font size for the price */
   margin-left: 5px; /* Add spacing between the cart icon and count */
+}
+.cart-count .price {
+  font-size: 16px; /* Increase the font size for the price */
+}
+
+/* Style for the "PLN" text */
+.cart-count::after {
+  content: "PLN";
+  font-size: 12px; /* Adjust the font size for "PLN" as needed */
+  margin-left: 2px; /* Add spacing between the price and "PLN" */
 }
 
 .profile-cart-container {
