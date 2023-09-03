@@ -1,9 +1,117 @@
-insert into authority(id_auth, authority_name) values (1, "USER");
-insert into authority(id_auth, authority_name) values (2, "ADMIN");
-insert into authority(id_auth, authority_name) values (3, "EMPLOYEE");
-insert into product(id_product,name,price,amount_available,category,producer) values(1,'Genshin', 15.59, 1, 'RPG', 'Mihoyo');
-insert into product(id_product,name,price,amount_available,category,producer) values(2,'Genshin2', 15.05, 1, 'HORROR', 'Mihoyo');
-insert into product(id_product,name,price,amount_available,category,producer) values(3,'Genshin3', 15, 1, 'FPS', 'Mihoyo');
-insert into product(id_product,name,price,amount_available,category,producer) values(4,'Genshin4', 15, 1, 'HORROR', 'Mihoyo');
-insert into product(id_product,name,price,amount_available,category,producer) values(5,'Genshin5', 15, 1, 'RPG', 'Mihoyo');
-insert into product(id_product,name,price,amount_available,category,producer) values(6,'Genshin6', 15, 1, 'RPG', 'Mihoyo');
+insert into authority(id_auth, authority_name) 
+VALUES 
+  (1, "USER"),
+  (2, "ADMIN"),
+  (3, "EMPLOYEE");
+INSERT INTO product (id_product, name, price, amount_available, category, producer)
+VALUES
+  (1, 'Resident Evil', 29.99, 5, 'HORROR', 'Capcom'),
+  (2, 'Call of Duty: Modern Warfare', 49.99, 10, 'FPS', 'Activision'),
+  (3, 'The Witcher 3: Wild Hunt', 39.99, 8, 'RPG', 'CD Projekt Red'),
+  (4, 'Silent Hill', 19.99, 3, 'HORROR', 'Konami'),
+  (5, 'Counter-Strike: Global Offensive', 14.99, 7, 'FPS', 'Valve'),
+  (6, 'Dark Souls III', 34.99, 6, 'RPG', 'Bandai Namco'),
+  (7, 'Dead Space', 24.99, 4, 'HORROR', 'Electronic Arts'),
+  (8, 'BioShock Infinite', 29.99, 5, 'FPS', '2K Games'),
+  (9, 'Divinity: Original Sin 2', 39.99, 8, 'RPG', 'Larian Studios'),
+  (10, 'Amnesia: The Dark Descent', 19.99, 3, 'HORROR', 'Frictional Games'),
+  (11, 'Half-Life 2', 9.99, 12, 'FPS', 'Valve'),
+  (12, 'Final Fantasy XV', 29.99, 5, 'RPG', 'Square Enix'),
+  (13, 'Outlast', 19.99, 3, 'HORROR', 'Red Barrels'),
+  (14, 'DOOM Eternal', 49.99, 10, 'FPS', 'Bethesda'),
+  (15, 'The Elder Scrolls V: Skyrim', 39.99, 8, 'RPG', 'Bethesda'),
+  (16, 'Dead by Daylight', 29.99, 5, 'HORROR', 'Behaviour Interactive'),
+  (17, 'Far Cry 5', 39.99, 8, 'FPS', 'Ubisoft'),
+  (18, 'Dark Souls', 19.99, 3, 'RPG', 'Bandai Namco'),
+  (19, 'Resident Evil 2 Remake', 29.99, 5, 'HORROR', 'Capcom'),
+  (20, 'Rainbow Six Siege', 29.99, 5, 'FPS', 'Ubisoft'),
+  (21, 'Divinity: Original Sin', 19.99, 3, 'RPG', 'Larian Studios'),
+  (22, 'Alien: Isolation', 24.99, 4, 'HORROR', 'SEGA'),
+  (23, 'Borderlands 2', 14.99, 7, 'FPS', '2K Games'),
+  (24, 'The Legend of Zelda: Breath of the Wild', 49.99, 10, 'RPG', 'Nintendo'),
+  (25, 'Resident Evil 7: Biohazard', 29.99, 5, 'HORROR', 'Capcom'),
+  (26, 'Dying Light', 24.99, 4, 'FPS', 'Techland'),
+  (27, 'Cyberpunk 2077', 59.99, 15, 'RPG', 'CD Projekt Red'),
+  (28, 'S.T.A.L.K.E.R.: Shadow of Chernobyl', 19.99, 3, 'HORROR', 'THQ'),
+  (29, 'Overwatch', 39.99, 8, 'FPS', 'Blizzard Entertainment'),
+  (30, 'Pillars of Eternity II: Deadfire', 34.99, 6, 'RPG', 'Obsidian Entertainment'),
+  (31, 'F.E.A.R.', 14.99, 7, 'HORROR', 'Warner Bros. Interactive Entertainment'),
+  (32, 'Team Fortress 2', 0.00, 20, 'FPS', 'Valve'),
+  (33, 'Kingdom Come: Deliverance', 29.99, 5, 'RPG', 'Warhorse Studios'),
+  (34, 'Layers of Fear', 19.99, 3, 'HORROR', 'Bloober Team'),
+  (35, 'Metro Exodus', 39.99, 8, 'FPS', 'Deep Silver'),
+  (36, 'Path of Exile', 0.00, 20, 'RPG', 'Grinding Gear Games'),
+  (37, 'Condemned: Criminal Origins', 9.99, 12, 'HORROR', 'Sega'),
+  (38, 'Bioshock', 14.99, 7, 'FPS', '2K Games'),
+  (39, 'Divinity: Original Sin Enhanced Edition', 24.99, 4, 'RPG', 'Larian Studios'),
+  (40, 'Outlast 2', 19.99, 3, 'HORROR', 'Red Barrels'),
+  (41, 'Far Cry 4', 29.99, 5, 'FPS', 'Ubisoft'),
+  (42, 'The Elder Scrolls IV: Oblivion', 14.99, 7, 'RPG', 'Bethesda'),
+  (43, 'The Evil Within', 19.99, 3, 'HORROR', 'Bethesda'),
+  (44, 'DOOM (2016)', 24.99, 4, 'FPS', 'Bethesda'),
+  (45, 'Dark Souls II', 19.99, 3, 'RPG', 'Bandai Namco'),
+  (46, 'Resident Evil 3 Remake', 29.99, 5, 'HORROR', 'Capcom'),
+  (47, 'Battlefield 5', 39.99, 8, 'FPS', 'Electronic Arts'),
+  (48, 'The Elder Scrolls III: Morrowind', 14.99, 7, 'RPG', 'Bethesda'),
+  (49, 'Aliens vs. Predator', 9.99, 12, 'HORROR', 'SEGA'),
+  (50, 'Call of Duty: Black Ops Cold War', 49.99, 10, 'FPS', 'Activision');
+
+INSERT INTO user (id, username, password, enabled, fk_auth)
+VALUES
+  (1, 'user1', '$2a$12$BaD1XoVK1A646ewO7LA.9OVQCd./5u6KWr0/H/gvMxL5V9EcieabO', 1, 1),
+  (2, 'user2', '$2a$12$K7zG8N/2hfio8uwtxOSy7ObtsgeZNmYvzf2Fra/IgmSa.YOkPDag.', 1, 1),
+  (3, 'user3', '$2a$12$hmtJFE666W5fd5BPjT8zEO/.hMZC3JQYggHZs0iCPaVUNvoFb0Hvi', 1, 1),
+  (4, 'user4', '$2a$12$ozYmaAuZynP93u6xSdzBa.9uD8mBcanPsbiuCLcrzzVX3F8HoY.9K', 1, 1),
+  (5, 'user5', '$2a$12$twv0Deh7kGRXLZKdSgNwL.uAqA.b2kvqrvLX6hz5IOvx.aOyLgNcC', 1, 1),
+  (6, 'user6', '$2a$12$v4Oz/Z4RH.QU6Ntep0iP6OSrFBPoSmUSN.vi.zuQeaZBRN5mwFCl6', 1, 1),
+  (7, 'user7', '$2a$12$UseWtH0UTZB4hDfqawbnNuuVEy1tjwduiJ16slFxGicHxyBlo5Hwq', 1, 1),
+  (8, 'user8', '$2a$12$IN9J16KrVD2BuPGty93M.us7hNFGBgv5JDLGvv0Pe2HYQrH1TUVIy', 1, 1),
+  (9, 'user9', '$2a$12$nWpf7ACY8oCpkJxAAbUm5ezjIRxAFBXGM/GbixToKHRZXgWYqFWky', 1, 1),
+  (10, 'user10', '$2a$12$0q81ldQtncy1LZSDxEFw5OVIiZCdSoyNeFG4c7ay4XTu/b0xo3Mom', 1, 1);
+
+-- Generate 5 ADMIN records
+INSERT INTO user (id, username, password, enabled, fk_auth)
+VALUES
+  (11, 'admin1', '$2a$12$HvaBfqHflCp8vGlXfG790uk9p6cy0.ruqzL1W7UK5GmHa6XRTm6Ru', 1, 2),
+  (12, 'admin2', '$2a$12$fOXpa8dHQDWEKnIeWF8FBuuyJ0pzf9coStNFzPqxtdhoczMKKItMy', 1, 2),
+  (13, 'admin3', '$2a$12$N3ByysplrgcfFheFiUqtne5V6osTFd0R4/Q3AF14FKGHhWc5JSHsq', 1, 2),
+  (14, 'admin4', '$2a$12$pMy9G.rq.vUvNOuh.pEjpONc5JRoJpe0HZ0DXaiwhc2SprRK0cNLy', 1, 2),
+  (15, 'admin5', '$2a$12$HRdJV97i80vEEzxS.SuaSOtItXuQ1G7Ga2M//XBrWqe5dP36j/lhK', 1, 2);
+
+-- Generate 5 EMPLOYEE records
+INSERT INTO user (id, username, password, enabled, fk_auth)
+VALUES
+  (16, 'employee1', '$2a$12$/ybs.T91ECmZyH0A2/PEvurwtx/BO41v9qpDu5lk/PxAfCkLbHyX2', 1, 3),
+  (17, 'employee2', '$2a$12$LC.WUaYH1XXHrbtOJINOE.fjAk3b0FdGmKMFonRAWv49NWIMB7lI.', 1, 3),
+  (18, 'employee3', '$2a$12$cdCh88O9tDcL8pm0kw3ff.LUHRxJC73v0STzGNTkxGcfLhWY6W2oq', 1, 3),
+  (19, 'employee4', '$2a$12$jQQFjjntebzJ/VemIzspQOws8QvGsb4optoGg.WpPBWDnTyMahgvq', 1, 3),
+  (20, 'employee5', '$2a$12$2cZ/puQ6fDXr7YGMeUU/geffZywUQBPAuedoC34DbfeRmtTBqO0MC', 1, 3);
+
+INSERT INTO user_detail (id_user_detail, name, surname, email, city, address)
+VALUES
+  (1, 'John', 'Doe', 'john.doe@example.com', 'New York', '123 Main St'),
+  (2, 'Jane', 'Smith', 'jane.smith@example.com', 'Los Angeles', '456 Elm St'),
+  (3, 'Michael', 'Johnson', 'michael.johnson@example.com', 'Chicago', '789 Oak St'),
+  (4, 'Emily', 'Brown', 'emily.brown@example.com', 'Houston', '101 Pine St'),
+  (5, 'Daniel', 'Lee', 'daniel.lee@example.com', 'Miami', '202 Cedar St'),
+  (6, 'Olivia', 'Williams', 'olivia.williams@example.com', 'San Francisco', '303 Birch St'),
+  (7, 'William', 'Jones', 'william.jones@example.com', 'Boston', '404 Maple St'),
+  (8, 'Ava', 'Miller', 'ava.miller@example.com', 'Dallas', '505 Walnut St'),
+  (9, 'James', 'Davis', 'james.davis@example.com', 'Seattle', '606 Redwood St'),
+  (10, 'Sophia', 'Garcia', 'sophia.garcia@example.com', 'Denver', '707 Spruce St');
+
+INSERT INTO user_detail (id_user_detail, name, surname, email, city, address)
+VALUES
+  (11, 'John', 'Smith', 'john.smith.admin@example.com', 'New York', '123 Admin St'),
+  (12, 'Robert', 'Johnson', 'robert.johnson.admin@example.com', 'Los Angeles', '456 Admin Rd'),
+  (13, 'Michael', 'Brown', 'michael.brown.admin@example.com', 'Chicago', '789 Admin Ave'),
+  (14, 'William', 'Davis', 'william.davis.admin@example.com', 'Houston', '101 Admin Blvd'),
+  (15, 'David', 'Wilson', 'david.wilson.admin@example.com', 'San Francisco', '202 Admin Lane');
+
+INSERT INTO user_detail (id_user_detail, name, surname, email, city, address)
+VALUES
+  (16, 'Sophia', 'Garcia', 'sophia.garcia.employee@example.com', 'Miami', '303 Employee St'),
+  (17, 'Olivia', 'Smith', 'olivia.smith.employee@example.com', 'Seattle', '404 Employee Rd'),
+  (18, 'Liam', 'Johnson', 'liam.johnson.employee@example.com', 'Boston', '505 Employee Ave'),
+  (19, 'Lucas', 'Davis', 'lucas.davis.employee@example.com', 'Dallas', '606 Employee Blvd'),
+  (20, 'Emma', 'Wilson', 'emma.wilson.employee@example.com', 'Phoenix', '707 Employee Lane');
