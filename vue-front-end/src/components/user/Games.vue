@@ -21,7 +21,6 @@
 
     <!-- Category search -->
     <div class="label-container">
-      <label for="category" class="category-label">Category:</label> <!-- Added category-label class for styling -->
       <select id="category" v-model="selectedCategory" class="form-select mt-1"> <!-- Added mt-1 for separation -->
         <option value="">Select Category</option>
         <option v-for="category in gameCategories" :key="category.label" :value="category.value">{{ category.label }}</option>

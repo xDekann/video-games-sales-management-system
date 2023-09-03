@@ -1,90 +1,120 @@
 <template>
-    <div>
-        <h2>Login</h2>
-        <form @submit.prevent="submitForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" v-model="username" />
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" v-model="password" />
-
-            <button type="submit">Login</button>
-        </form>
-        <p v-if="message">{{ message }}</p>
-    </div>
-    <!--
-    <div v-if="role">
-        <form @submit.prevent="logout">
-            <button type="submit">Logout</button>
-        </form>
-    </div>
--->
-</template>
+    <div class="login-container">
+      <h2 class="sign-in-title">Sign In</h2>
+      <div class="form-container mt-3">
+        <form @submit.prevent="submitForm" class="login-form">
+          <label for="username">Username:</label>
+          <input type="text" id="username" v-model="username" />
   
-<script>
-import axios from 'axios';
-import Cookies from 'js-cookie';
-//import { onMounted, ref } from 'vue';
-
-export default {
-    /*
-    setup() {
-        const role = ref(null);
-        onMounted(() => {
-            const roleCookie = Cookies.get('ROLE');
-            role.value = roleCookie ? atob(roleCookie) : null;
-        });
-        return {role};
-    },
-    */
+          <label for="password">Password:</label>
+          <input type="password" id="password" v-model="password" />
+  
+          <button type="submit">Sign In</button>
+        </form>
+      </div>
+      <p v-if="message" class="message">{{ message }}</p>
+      <router-link to="/register" class="register-link">Register</router-link>
+    </div>
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  import Cookies from 'js-cookie';
+  
+  export default {
     data() {
-        return {
-            username: '',
-            password: '',
-            message: '',
-        };
+      return {
+        username: '',
+        password: '',
+        message: '',
+      };
     },
     methods: {
-        async submitForm() {
-            try {
-                const response = await axios.post('/v1/login', {
-                    username: this.username,
-                    password: this.password
-                });
-
-                //this.message(response.data);
-
-                if (response.status === 200) {
-                    // Login successful, handle the logic here
-                    this.message = 'Login successful!';
-                    //this.message = response.headers['Set-Cookie'][0].split(';')[0].split('=')[1];
-                    //Cookies.set('ROLE', response.data.role, { expires: 1 }); // Set cookie to expire in 1 days
-                    const roleCookie = atob(Cookies.get('ROLE'))
-                    switch(roleCookie) {
-                        case 'ROLE_EMPLOYEE': this.$router.push('/gamepanel'); break;
-                        case 'ROLE_USER': this.$router.push('/games'); break;
-                        case 'ROLE_ADMIN': this.$router.push('/userpanel'); break;
-                        default: this.message = "Login error occurred."
-                    }
-                    //this.$router.push('/register');
-                } else {
-                    this.message = 'Login failed!';
-                }
-            } catch (error) {
-                this.message = 'An error occurred during login.';
+      async submitForm() {
+        try {
+          const response = await axios.post('/v1/login', {
+            username: this.username,
+            password: this.password,
+          });
+  
+          if (response.status === 200) {
+            this.message = 'Login successful!';
+            const roleCookie = atob(Cookies.get('ROLE'));
+            switch (roleCookie) {
+              case 'ROLE_EMPLOYEE':
+                this.$router.push('/gamepanel');
+                break;
+              case 'ROLE_USER':
+                this.$router.push('/games');
+                break;
+              case 'ROLE_ADMIN':
+                this.$router.push('/userpanel');
+                break;
+              default:
+                this.message = 'Login error occurred.';
             }
-        },
-        async logout() {
-            await axios.get('/v1/logout');
-            Cookies.remove('ROLE');
-            this.role = null;
+          } else {
+            this.message = 'Login failed!';
+          }
+        } catch (error) {
+          this.message = 'An error occurred during login.';
         }
-    }
-};
-</script>
-
+      },
+    },
+  };
+  </script>
   
+  <style scoped>
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
   
+  .login-form {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
   
+  .label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
   
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .register-link {
+    margin-top: 10px;
+    text-align: center;
+    text-decoration: underline;
+    color: #007bff;
+    cursor: pointer;
+  }
+  </style>
   
