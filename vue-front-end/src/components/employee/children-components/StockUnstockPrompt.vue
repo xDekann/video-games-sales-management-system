@@ -2,9 +2,11 @@
   <div class="prompt-overlay">
     <div class="prompt">
       <label for="quantity">Enter quantity:</label>
-      <input type="number" id="quantity" v-model="quantity" />
-      <button @click="confirm">Confirm</button>
-      <button @click="cancel">Cancel</button>
+      <input type="number" id="quantity" v-model="quantity" class="form-control" />
+      <div class="button-container mt-3">
+        <button @click="confirm" class="btn btn-primary">Confirm</button>
+        <button @click="cancel" class="btn btn-secondary">Cancel</button>
+      </div>
     </div>
   </div>
 </template>
@@ -56,6 +58,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1001; /* Adjust the z-index to ensure it's above other content */
 }
 
 /* Style for the prompt dialog */
@@ -65,5 +68,14 @@ export default {
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   text-align: center;
+  z-index: 1002; /* Ensure the dialog is above the overlay */
+}
+
+/* Style for the buttons container */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Add spacing between buttons */
 }
 </style>

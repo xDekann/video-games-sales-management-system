@@ -5,36 +5,43 @@
       <div class="form-group">
         <label for="username">Username:</label>
         <input type="text" id="username" v-model="username" class="form-control" />
+        <p v-if="errors.username" class="error-item">{{ errors.username }}</p>
       </div>
 
       <div class="form-group">
         <label for="password">Password:</label>
         <input type="password" id="password" v-model="password" class="form-control" />
+        <p v-if="errors.password" class="error-item">{{ errors.password }}</p>
       </div>
 
       <div class="form-group">
         <label for="name">Name:</label>
         <input type="text" id="name" v-model="name" class="form-control" />
+        <p v-if="errors.name" class="error-item">{{ errors.name }}</p>
       </div>
 
       <div class="form-group">
         <label for="surname">Surname:</label>
         <input type="text" id="surname" v-model="surname" class="form-control" />
+        <p v-if="errors.surname" class="error-item">{{ errors.surname }}</p>
       </div>
 
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" v-model="email" class="form-control" />
+        <p v-if="errors.email" class="error-item">{{ errors.email }}</p>
       </div>
 
       <div class="form-group">
         <label for="city">City:</label>
         <input type="text" id="city" v-model="city" class="form-control" />
+        <p v-if="errors.city" class="error-item">{{ errors.city }}</p>
       </div>
 
       <div class="form-group">
         <label for="address">Address:</label>
         <textarea id="address" v-model="address" class="form-control"></textarea>
+        <p v-if="errors.address" class="error-item">{{ errors.address }}</p>
       </div>
 
       <button type="submit" class="btn btn-primary">Register</button>
@@ -43,11 +50,6 @@
       <button @click="backToLogin" class="btn btn-link">Back to Login</button>
     </div>
     <p v-if="message" class="message">{{ message }}</p>
-    <div v-if="errors.length > 0" class="error-container">
-      <ul class="error-list">
-        <li v-for="error in errors" :key="error.id" class="error-item">{{ error.defaultMessage }}</li>
-      </ul>
-    </div>
   </div>
 </template>
   
@@ -65,7 +67,7 @@ export default {
       city: '',
       address: '',
       message: '',
-      errors: []
+      errors: {}
     };
   },
   methods: {
@@ -94,10 +96,17 @@ export default {
           this.message = 'Unauthorized!';
         }
         if (error.response.status === 400) {
-          this.errors = error.response.data.errors;
+          // Clear previous error messages
+          this.errors = {};
+
+          // Populate errors object with field-specific error messages
+          const validationErrors = error.response.data.errors;
+          for (const validationError of validationErrors) {
+            this.errors[validationError.field] = validationError.defaultMessage;
+          }
         }
         else {
-          this.message = "An error has occured";
+          this.message = "An error has occurred";
         } 
       }
     },
@@ -156,26 +165,14 @@ export default {
     margin-top: 10px;
   }
 
-  .error-container {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #ff6b6b;
-    border: 1px solid #e82727;
-    border-radius: 5px;
-  }
-
-  .error-list {
-    list-style: none;
-    padding: 0;
-  }
-
-.error-item {
+  .error-item {
     color: #e82727;
-    margin-bottom: 5px;
-}
-.center-button {
+    margin-top: 5px;
+  }
+
+  .center-button {
     display: flex;
     justify-content: center;
     margin-top: 10px;
-}
+  }
 </style>

@@ -71,8 +71,14 @@
     <!-- Pagination controls -->
     <div class="d-flex justify-content-center align-items-center mt-4">
       <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">Previous</button>
-      <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">Next</button>
+      <template v-if="games.length > 0">
+        <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">Next</button>
+      </template>
+      <template v-else>
+        <span class="page-number">Page {{ currentPage + 1 }} of 1</span>
+        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">Next</button>
+      </template>
     </div>
   </div>
 </template>
@@ -273,7 +279,6 @@ export default {
 }
 
 .no-results {
-  text-align: center;
   font-size: 18px;
   color: #777;
 }

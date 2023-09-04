@@ -1,63 +1,79 @@
 <template>
-  <div>
+  <div class="container mt-5">
     <!-- Upper side panel -->
-    <div class="button-container">
-      <button class="add-game-button" @click="goToAddGame">Add Game</button>
-      <LogoutButton class ="logout-button"></LogoutButton>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <button class="btn btn-primary add-game-button" @click="goToAddGame">Add Game</button>
+      <LogoutButton class="btn btn-danger"></LogoutButton>
     </div>
-    
+
     <!-- Category search -->
     <div class="label-container">
-      <label for="category">Category:</label>
-      <select id="category" v-model="selectedCategory">
+      <select id="category" v-model="selectedCategory" class="form-select mt-1">
         <option value="">Select Category</option>
         <option v-for="category in gameCategories" :key="category.label" :value="category.value">{{ category.label }}</option>
       </select>
     </div>
-    
+
     <!-- Searchbar -->
-    <div class="search-container" v-click-away="clearFill">
-      <input v-model="searchPhrase" @input="handleInput" placeholder="Search games..." />
-      <ul class="fill-options">
-        <li v-for="option in fillOptions" :key="option" @click="selectSuggestion(option)">{{ option.name }}</li>
+    <div class="search-container mt-2" v-click-away="clearFill">
+      <input v-model="searchPhrase" @input="handleInput" placeholder="Search games..." class="form-control" />
+      <ul class="fill-options" v-show="fillOptions.length > 0">
+        <li v-for="option in fillOptions" :key="option.id" @click="selectSuggestion(option)" class="fill-option">
+          {{ option.name }}
+        </li>
       </ul>
     </div>
-    <div class="search-controls">
-      <button class="search-button" @click="searchGames">Search</button>
-      <button class="clear-button" @click="clear">Clear</button>
+    <div class="search-controls mt-2">
+      <button class="btn btn-primary me-2" @click="searchGames">Search</button>
+      <button class="btn btn-secondary" @click="clear">Clear</button>
     </div>
 
     <!-- Displayed games -->
-    <ul>
-      <li v-for="game in games" :key="game.id" class="game-item">
-        <div class="game-info">
-          <strong>{{ game.name }}</strong>
-          <p>Price: {{ game.price }}</p>
-          <p>Amount Available: {{ game.amount }}</p>
-          <p>Producer: {{ game.producer }}</p>
-        </div>
-        <div class="game-buttons">
-          <button @click="stockGame(game.id, true)">Stock</button>
-          <button @click="stockGame(game.id, false)">Unstock</button>
-          <button @click="removeGame(game.id)">Remove</button>
-        </div>
-      </li>
-    </ul>
+    <div class="list-container mt-3">
+      <ul class="list-unstyled" style="list-style: none;">
+        <template v-if="games.length > 0">
+          <li v-for="game in games" :key="game.id" class="game-item border p-2">
+            <div class="game-info">
+              <strong>{{ game.name }}</strong>
+              <p>Price: {{ game.price }} PLN</p>
+              <p>Amount Available: {{ game.amount }}</p>
+              <p>Category: {{ game.category }}</p>
+              <p>Producer: {{ game.producer }}</p>
+            </div>
+            <div class="game-buttons mt-2">
+              <button @click="stockGame(game.id, true)" class="btn btn-success btn-sm btn-smaller mr-1">Stock</button>
+              <button @click="stockGame(game.id, false)" class="btn btn-warning btn-sm btn-smaller mr-1">Unstock</button>
+              <button @click="removeGame(game.id)" class="btn btn-danger btn-sm btn-smaller">Remove</button>
+            </div>
+          </li>
+        </template>
+        <template v-else>
+          <div class="no-results">
+            <p>No results found</p>
+          </div>
+        </template>
+      </ul>
+    </div>
 
     <!-- Action confirmation prompt -->
     <StockUnstockPrompt v-if="showingPrompt" :gameId="selectedGameId" :action="action" @close="closePrompt" />
 
     <!-- Pagination controls -->
-    <div class="pagination-controls">
-      <button @click="previousPage" :disabled="currentPage === 0">Previous</button>
-      <span class="page-number">{{ currentPage + 1 }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages - 1">Next</button>
+    <div class="d-flex justify-content-center align-items-center mt-4">
+      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">Previous</button>
+      <template v-if="games.length > 0">
+        <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">Next</button>
+      </template>
+      <template v-else>
+        <span class="page-number">Page {{ currentPage + 1 }} of 1</span>
+        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">Next</button>
+      </template>
     </div>
   </div>
 </template>
-  
+
 <script>
-// Add pop-ups for operations like stock/unstock (error/success)
 import axios from 'axios';
 import { generateGameCategories } from '../gameCategories';
 import { debounce } from 'lodash';
@@ -66,11 +82,7 @@ import LogoutButton from '@/components/LogoutButton.vue';
 
 export default {
   mounted() {
-      this.clear();
-      //document.addEventListener('click', this.handleDocumentClick);
-  },
-  before() {
-    //document.removeEventListener('click', this.handleDocumentClick);
+    this.clear();
   },
   components: {
     StockUnstockPrompt,
@@ -98,7 +110,7 @@ export default {
       this.$router.push('/gamepanel/addgame');
     },
     searchGames() {
-      if (this.searchPhrase.length < this.searchPhraseMinLetters) {
+      if (this.searchPhrase.length < this.searchPhraseMinLetters && this.selectedCategory == '') {
         this.clear();
         return;
       }
@@ -134,14 +146,14 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 300));
         this.currentPage--;
         this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);    
-        }
+      }
     },
     async nextPage() {
       if (this.currentPage < this.totalPages) {
         await new Promise(resolve => setTimeout(resolve, 300));
         this.currentPage++;
         this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);     
-       }
+      }
     },
     stockGame(gameId, givenAction) {
       this.showingPrompt = true;
@@ -150,7 +162,7 @@ export default {
     },
     async closePrompt() {
       this.showingPrompt = false;
-      await new Promise(resolve => setTimeout(resolve, 300)); // make sure the timeout is correct
+      await new Promise(resolve => setTimeout(resolve, 300));
       this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);
     },
     async removeGame(gameId) {
@@ -200,99 +212,25 @@ export default {
 <style scoped>
 .game-item {
   border: 1px solid #ccc;
-  border-radius: 4px;
   padding: 10px;
-  display: flex;
-  align-items: center;
   margin-bottom: 10px;
-  /* margin-left: 10px; */ /* Remove this line */
 }
 
-.game-info {
-  flex: 1;
-  margin-right: 10px;
+.btn-smaller {
+  padding: 5px 10px;
+  font-size: 12px;
 }
 
-.game-buttons {
-  display: flex;
-  flex-direction: column; /* Change the flex direction to column */
-  gap: 10px;
-  align-items: flex-start; /* Align items to the start of the column */
+.no-results {
+  font-size: 18px;
+  color: #777;
 }
 
-.game-buttons button {
-  width: 100%; /* Set the width to 100% for all buttons */
-}
-.pagination-controls {
-  display: flex;
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
-  margin-top: 20px;
-}
-
-.pagination-controls button {
-  padding: 6px 12px; /* Adjust padding for a smaller size */
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.pagination-controls button:hover {
-  background-color: #ddd;
-}
-
-.pagination-controls button:disabled {
-  background-color: #e0e0e0;
-  cursor: not-allowed;
-}
-
-/* Style for the "Add Game" button */
-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 10px; /* Add a bottom margin for spacing */
-}
-
-/* Style for the label and select input */
-label {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-/* Add padding to the label and select input container */
-.label-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px; /* Add a bottom margin for spacing */
-}
-
-select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* Style for the search container */
 .search-container {
   position: relative;
-  display: inline-block;
+  z-index: 1000;
 }
 
-/* Style for the search input */
-.search-container input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 200px;
-}
-
-/* Style for the fill options dropdown */
 .fill-options {
   position: absolute;
   top: 100%;
@@ -305,6 +243,7 @@ select {
   padding: 0;
   margin: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
 }
 
 .fill-options li {
@@ -317,77 +256,8 @@ select {
   background-color: #f0f0f0;
 }
 
-.search-controls {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-/* Style for the "Search" button */
-button.search-button {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button.clear-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.page-number {
-  font-size: 18px;
-  color: #333;
-  margin: -8px 10px 0; /* Add horizontal spacing */
-}
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.add-game-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.logout-button {
-  background-color: #ccc;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-ul {
-  list-style: none;
-  margin: 0; /* Reset margin */
-  padding: 0; /* Reset padding */
-}
-
-@media (max-width: 600px) {
-  .button-container {
-    flex-direction: column; /* Change to column layout on smaller screens */
-  }
-  
-  .add-game-button,
-  .logout-button {
-    width: 100%; /* Make the button take full width on shrink */
-    padding: 10px; /* Add padding for smaller screens */
-    margin-bottom: 10px; /* Add margin between the buttons on smaller screens */
-  }
+.game-buttons button {
+  margin-right: 5px; /* Adjust the margin size as needed */
 }
 </style>
   
