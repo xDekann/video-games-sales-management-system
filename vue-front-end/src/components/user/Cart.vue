@@ -106,7 +106,7 @@
             // Send a DELETE request to the server with the itemId as a parameter
             const response = await axios.delete('/v1/user/cart', {
                 params: {
-                itemId: itemId,
+                  itemId: itemId,
                 },
             });
 
