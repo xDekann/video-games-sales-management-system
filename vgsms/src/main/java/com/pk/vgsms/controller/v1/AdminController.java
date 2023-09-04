@@ -32,10 +32,9 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public UserPaginatedDto getUsers(Pageable pageable, @RequestParam(name = "phrase", required = false) String username,
-                                     @RequestParam("fill") Boolean isFill) {
+    public UserPaginatedDto getUsers(Pageable pageable, @RequestParam(name = "phrase", required = false) String username) {
         try {
-            return adminService.getUsers(pageable, username, isFill);
+            return adminService.getUsers(pageable, username);
         } catch (Exception exception) {
             exception.printStackTrace();
             log.error("Error while trying to retrieve a list of users." + exception.getMessage());
@@ -78,7 +77,7 @@ public class AdminController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<String> addUser(@RequestBody UserRegistrationDto userRegistrationDto) {
+    public ResponseEntity<String> addUser(@RequestBody @Valid UserRegistrationDto userRegistrationDto) {
         String role = userRegistrationDto.getAuthorityName();
         if (!role.equals("USER") && !role.equals("EMPLOYEE") && !role.equals("ADMIN")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role");

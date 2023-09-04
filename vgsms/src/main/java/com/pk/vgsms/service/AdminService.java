@@ -31,22 +31,8 @@ public class AdminService {
         this.registerService = registerService;
     }
 
-    public UserPaginatedDto getUsers(Pageable pageable, String username, Boolean isFill) {
+    public UserPaginatedDto getUsers(Pageable pageable, String username) {
         String loggedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (username != null && !username.isBlank() && !isFill) {
-            final int ONE_PAGE_ONLY = 1;
-            User pickedUser = userRepository.findUserByName(username);
-            List<UserDto> users = new ArrayList<>();
-            if (pickedUser != null) {
-                users = usersToUsersDto(List.of(pickedUser), loggedUserName);
-            }
-            return UserPaginatedDto.builder()
-                    .users(users)
-                    .totalPages(ONE_PAGE_ONLY)
-                    .build();
-        }
-
-
         Page<User> userPagesFromDb = userRepository.findAllByUsernameContainingIgnoreCaseAndUsernameNotOrderByUsername(username, loggedUserName, pageable);
         List<UserDto> users = usersToUsersDto(userPagesFromDb.getContent(), loggedUserName);
         return UserPaginatedDto.builder()
