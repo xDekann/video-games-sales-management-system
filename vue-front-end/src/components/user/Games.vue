@@ -12,7 +12,7 @@
           <img src="shopping-cart.svg" alt="Shopping Cart" class="cart-icon" />
           <div class="cart-count">
             <span class="price">{{ cartCount }}</span>
-            <span class="currency-separator"></span> <!-- Added separator element -->
+            <span class="currency-separator"></span>
             <span class="currency">PLN</span>
           </div>
         </div>
@@ -21,14 +21,14 @@
 
     <!-- Category search -->
     <div class="label-container">
-      <select id="category" v-model="selectedCategory" class="form-select mt-1"> <!-- Added mt-1 for separation -->
+      <select id="category" v-model="selectedCategory" class="form-select mt-1">
         <option value="">Select Category</option>
         <option v-for="category in gameCategories" :key="category.label" :value="category.value">{{ category.label }}</option>
       </select>
     </div>
 
     <!-- Searchbar -->
-    <div class="search-container mt-2"> <!-- Added mt-2 for separation -->
+    <div class="search-container mt-2" v-click-away="clearFill">
       <input v-model="searchPhrase" @input="handleInput" placeholder="Search games..." class="form-control" />
       <ul class="fill-options" v-show="fillOptions.length > 0">
         <li v-for="option in fillOptions" :key="option.id" @click="selectSuggestion(option)" class="fill-option">
@@ -48,8 +48,9 @@
           <li v-for="game in games" :key="game.id" class="game-item border p-2">
             <div class="game-info">
               <strong>{{ game.name }}</strong>
-              <p>Price: {{ game.price }} PLN</p> <!-- Add "PLN" on the right -->
+              <p>Price: {{ game.price }} PLN</p>
               <p>Amount Available: {{ game.amount }}</p>
+              <p>Category: {{ game.category }}</p>
               <p>Producer: {{ game.producer }}</p>
             </div>
             <div class="game-buttons">
@@ -77,21 +78,16 @@
 </template>
 
 <script>
-// Add pop-ups for operations like stock/unstock (error/success)
 import axios from 'axios';
 import { generateGameCategories } from '@/components/gameCategories';
 import { debounce } from 'lodash';
 import LogoutButton from '@/components/LogoutButton.vue';
-import AddToCartModal from '@/components/user/children-components/AddToCartModal.vue'; // Create this modal component
+import AddToCartModal from '@/components/user/children-components/AddToCartModal.vue';
 
 export default {
   mounted() {
     this.clear();
     this.updateCartCount();
-    //document.addEventListener('click', this.handleDocumentClick);
-  },
-  before() {
-    //document.removeEventListener('click', this.handleDocumentClick);
   },
   components: {
     AddToCartModal,
@@ -119,7 +115,7 @@ export default {
   },
   methods: {
     searchGames() {
-      if (this.searchPhrase.length < this.searchPhraseMinLetters) {
+      if (this.searchPhrase.length < this.searchPhraseMinLetters && this.selectedCategory == '') {
         this.clear();
         return;
       }
@@ -217,21 +213,17 @@ export default {
         })
         .then((response) => {
           if (response.status === 200) {
-            // Show a success message using a JavaScript alert
             alert("Game added to cart successfully.");
           } else if (response.status === 204) {
-            // Show an "unavailable" message using a JavaScript alert
             alert("Product is unavailable.");
           } else if (response.status === 400) {
             alert("Invalid input.");
           } else {
-            // Show an error message using a JavaScript alert
             alert("An error has occurred, please try again later.");
           }
           this.closeAddToCartModal();
         })
         .catch((error) => {
-          // Show an error message using a JavaScript alert
           alert("An error has occurred, please try again later.");
           console.error("Error adding game to cart:", error);
           this.closeAddToCartModal();
@@ -246,7 +238,7 @@ export default {
       try {
         const response = await axios.get('/v1/user/price');
         if (response.status === 200) {
-          this.cartCount = response.data; // Update cartCount with the response data
+          this.cartCount = response.data;
         } else {
           console.error('Failed to fetch user cart price:', response.statusText);
         }
@@ -262,28 +254,24 @@ export default {
 </script>
 
 <style scoped>
-/* Custom style for the cart icon image */
 .cart-icon {
-  width: 40px; /* Adjust the width as needed */
-  height: auto; /* Auto-adjust the height to maintain aspect ratio */
-  margin-right: 10px; /* Add spacing between the cart icon and count */
-  cursor: pointer; /* Change cursor to hand on hover */
+  width: 40px;
+  height: auto;
+  margin-right: 10px;
+  cursor: pointer;
 }
 
-/* Add a border and padding to the game items */
 .game-item {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 10px;
 }
 
-/* Make the "Add to Cart" button smaller */
 .btn-smaller {
   padding: 5px 10px;
   font-size: 12px;
 }
 
-/* Center the "No results found" message */
 .no-results {
   text-align: center;
   font-size: 18px;
@@ -295,7 +283,6 @@ export default {
   z-index: 1000;
 }
 
-/* Adjust the z-index for .fill-options */
 .fill-options {
   position: absolute;
   top: 100%;
@@ -322,6 +309,6 @@ export default {
 }
 
 .currency-separator {
-    margin-right: 4px; /* Adjust the margin as needed for separation */
-  }
+    margin-right: 4px;
+}
 </style>
