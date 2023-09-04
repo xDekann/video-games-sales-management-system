@@ -1,6 +1,7 @@
 package com.pk.vgsms.service;
 
 import com.pk.vgsms.model.dto.CartPurchaseDto;
+import com.pk.vgsms.model.dto.UserDto;
 import com.pk.vgsms.model.entity.Product;
 import com.pk.vgsms.model.entity.Purchase;
 import com.pk.vgsms.model.entity.PurchaseId;
@@ -135,5 +136,16 @@ public class UserService {
             return purchaseToDelete;
         }
         return null;
+    }
+
+    public UserDto getUserDetails() {
+        User loggedUser = getLoggedUser();
+        return UserDto.builder()
+                .email(loggedUser.getUserDetails().getEmail())
+                .city(loggedUser.getUserDetails().getCity())
+                .name(loggedUser.getUserDetails().getName())
+                .surname(loggedUser.getUserDetails().getSurname())
+                .address(loggedUser.getUserDetails().getAddress())
+                .build();
     }
 }

@@ -28,7 +28,6 @@
             <strong>{{ user.name }} {{ user.surname }}</strong>
             <p>Username: {{ user.username }}</p>
             <p>Email: {{ user.email }}</p>
-            <!-- Move buttons under Email and add margin -->
             <div class="user-buttons mt-2">
               <button @click="editUser(user.id)" class="btn btn-success btn-sm btn-smaller">Edit User</button>
               <span style="margin: 0 2px;"></span>
@@ -88,7 +87,7 @@ export default {
   },
   methods: {
     goToAddUser() {
-      this.$router.push("/userpanel/adduser"); // Replace with your route
+      this.$router.push("/userpanel/adduser");
     },
     searchUsers() {
       if (this.searchPhrase.length < this.searchPhraseMinLetters) {
@@ -126,10 +125,9 @@ export default {
               id: userId,
             },
           });
-          // Refresh the user list after successful deletion
           this.clear();
         } catch (error) {
-          console.error("Error deleting user:", error);
+          return;
         }
       }
     },
@@ -185,12 +183,10 @@ export default {
 </script>
 
 <style scoped>
-/* Style to highlight invalid input fields */
 .form-control.is-invalid {
   border-color: #dc3545;
 }
 
-/* Apply your existing styles here */
 .button-container {
   display: flex;
   justify-content: space-between;
@@ -280,7 +276,6 @@ export default {
   margin: 0px 3px 0;
 }
 
-/* Your existing user list styles */
 .user-list {
   list-style-type: none;
   padding: 0;
@@ -322,7 +317,6 @@ export default {
   background-color: #28a745;
 }
 
-/* Add this CSS to move the Edit and Remove User buttons next to each other with a smaller margin */
 .user-info {
   display: flex;
   flex-direction: column;
@@ -333,11 +327,10 @@ export default {
   margin-top: 10px;
 }
 
-/* Make the buttons smaller */
 .user-buttons button {
   width: auto;
   padding: 4px 8px;
-  margin: 0; /* Reset margin */
+  margin: 0;
 }
 
 .fill-options {

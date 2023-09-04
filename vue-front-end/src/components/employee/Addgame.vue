@@ -94,12 +94,10 @@ export default {
 </script>
 
 <style scoped>
-/* Style to highlight invalid input fields */
 .form-control.is-invalid {
   border-color: #dc3545;
 }
 
-/* Style for error messages */
 .invalid-feedback {
   color: #dc3545;
 }

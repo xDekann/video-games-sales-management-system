@@ -110,8 +110,8 @@ export default {
           this.selectedRole = userData.authorityName;
         })
         .catch((error) => {
-          this.errors.fetchError = "Error fetching user data.";
-          console.error("Error fetching user data:", error);
+          this.errors.fetchError = "Error fetching user data." + error.message;
+          return;
         });
     },
     submitForm() {
@@ -131,22 +131,17 @@ export default {
         .put(`/v1/admin/user`, updatedUser)
         .then(() => {
           this.message = "Successfully updated user!";
-          // Clear errors when the form is successfully submitted
           this.errors = {};
         })
         .catch((error) => {
           if (error.response && error.response.status === 400) {
-            // Clear previous error messages
             this.errors = {};
-
-            // Populate errors object with field-specific error messages
             const validationErrors = error.response.data.errors;
             for (const validationError of validationErrors) {
               this.errors[validationError.field] = validationError.defaultMessage;
             }
             this.message = "";
           } else {
-            console.error("Error updating user:", error);
             this.message = "An error has occurred";
           }
         });

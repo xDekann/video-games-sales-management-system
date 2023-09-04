@@ -173,10 +173,10 @@ export default {
           if (response.status === 200) {
             this.clear();
           } else {
-            console.error("Error removing game:", response.statusText);
+            return;
           }
         } catch (error) {
-          console.error("Error removing game:", error);
+          return error;
         }
       }
     },
@@ -257,7 +257,7 @@ export default {
 }
 
 .game-buttons button {
-  margin-right: 5px; /* Adjust the margin size as needed */
+  margin-right: 5px;
 }
 </style>
   

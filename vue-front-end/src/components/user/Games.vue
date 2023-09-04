@@ -188,15 +188,13 @@ export default {
         .then((response) => {
           if (isFill) {
             this.fillOptions = response.data.products;
-            console.log(this.fillOptions);
           } else {
             this.games = response.data.products;
-            console.log(this.games);
             this.totalPages = response.data.totalPages;
           }
         })
         .catch((error) => {
-          console.error("Error fetching games:", error);
+          return error;
         });
     },
     addToCart(game) {
@@ -208,8 +206,6 @@ export default {
       this.showAddToCartModal = false;
     },
     addToCartBackend(quantity) {
-      console.log(this.selectedGame.id);
-      console.log(quantity);
       axios
         .post("/v1/user/game", null, {
           params: {
@@ -230,26 +226,25 @@ export default {
           this.closeAddToCartModal();
         })
         .catch((error) => {
-          alert("An error has occurred, please try again later.");
-          console.error("Error adding game to cart:", error);
+          alert("An error has occurred, please try again later." + error.message);
           this.closeAddToCartModal();
         });
       this.updateCartCount();
     },
     redirectToProfile() {
-      // Implement the logic to redirect the user to their profile page
-      // You can use Vue Router for this navigation.
+      alert("To implement profile");
     },
     async updateCartCount() {
+      await new Promise(resolve => setTimeout(resolve, 700));
       try {
         const response = await axios.get('/v1/user/price');
         if (response.status === 200) {
           this.cartCount = response.data;
         } else {
-          console.error('Failed to fetch user cart price:', response.statusText);
+          return;
         }
       } catch (error) {
-        console.error('An error occurred while fetching user cart price:', error);
+        return error;
       }
     },
     redirectToCart() {

@@ -91,17 +91,13 @@ export default {
         }
       } catch (error) {
         if (error.response && error.response.status === 400) {
-            // Clear previous error messages
             this.errors = {};
-
-            // Populate errors object with field-specific error messages
             const validationErrors = error.response.data.errors;
             for (const validationError of validationErrors) {
               this.errors[validationError.field] = validationError.defaultMessage;
             }
             this.message = "";
           } else {
-            console.error("Error updating user:", error);
             this.message = "An error has occurred";
           }
       }

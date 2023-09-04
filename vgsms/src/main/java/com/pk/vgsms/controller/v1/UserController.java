@@ -2,6 +2,7 @@ package com.pk.vgsms.controller.v1;
 
 import com.pk.vgsms.model.dto.CartPurchaseDto;
 import com.pk.vgsms.model.dto.GamePaginatedDto;
+import com.pk.vgsms.model.dto.UserDto;
 import com.pk.vgsms.model.entity.Product;
 import com.pk.vgsms.model.entity.Purchase;
 import com.pk.vgsms.service.UserService;
@@ -103,4 +104,14 @@ public class UserController {
         }
     }
 
+    @GetMapping
+    public UserDto getUserDetails() {
+        try {
+            return userService.getUserDetails();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            log.error(exception.getMessage());
+            return new UserDto();
+        }
+    }
 }

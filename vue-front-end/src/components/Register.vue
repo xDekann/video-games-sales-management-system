@@ -96,10 +96,7 @@ export default {
           this.message = 'Unauthorized!';
         }
         if (error.response.status === 400) {
-          // Clear previous error messages
           this.errors = {};
-
-          // Populate errors object with field-specific error messages
           const validationErrors = error.response.data.errors;
           for (const validationError of validationErrors) {
             this.errors[validationError.field] = validationError.defaultMessage;
@@ -176,12 +173,10 @@ export default {
     margin-top: 10px;
   }
 
-  /* Style to highlight invalid input fields */
   .form-control.is-invalid {
     border-color: #e82727;
   }
 
-  /* Style for error messages */
   .invalid-feedback {
     color: #e82727;
   }

@@ -15,7 +15,7 @@
             <th>Product</th>
             <th>Price (PLN)</th>
             <th>Amount</th>
-            <th>Action</th> <!-- New column for action buttons -->
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -24,7 +24,6 @@
             <td>{{ item.price }}</td>
             <td>{{ item.amount }}</td>
             <td>
-              <!-- Button to delete the item -->
               <button @click="deleteCartItem(item.itemId)" class="btn btn-danger">Delete</button>
             </td>
           </tr>
@@ -46,7 +45,7 @@
   
   <script>
   import axios from 'axios';
-  import LogoutButton from '@/components/LogoutButton.vue'; // Import LogoutButton component
+  import LogoutButton from '@/components/LogoutButton.vue';
   
   export default {
     components: {
@@ -54,82 +53,70 @@
     },
     data() {
       return {
-        cartItems: [], // Array to store cart items
+        cartItems: [],
         cartCount: 0,
       };
     },
     mounted() {
-      // Fetch cart items from the API
       this.fetchCartItems();
       this.updatePrice();
     },
     methods: {
       fetchCartItems() {
-        // Make a GET request to the /v1/user/cart API to fetch cart items
         axios
           .get('/v1/user/cart')
           .then((response) => {
             this.cartItems = response.data;
           })
           .catch((error) => {
-            console.error('Error fetching cart items:', error);
+            return error;
           });
       },
       redirectToGames() {
-        // Use Vue Router to navigate back to the "/games" route
         this.$router.push('/games');
       },
       checkout() {
-        // Implement the checkout logic (e.g., sending a request to the server)
-        // This is where you would handle the checkout process
-        // For now, it's left as a placeholder
-        alert('Checkout functionality will be implemented in the future.');
+        const confirmCheckout = confirm('Are you sure you want to proceed with the checkout?');
+        if (confirmCheckout) {
+          this.$router.push("/checkout");
+        }
       },
       async updatePrice() {
         try {
             const response = await axios.get('/v1/user/price');
           if (response.status === 200) {
-            this.cartCount = response.data; // Update cartCount with the response data
+            this.cartCount = response.data;
           } else {
-            console.error('Failed to fetch user cart price:', response.statusText);
+            return;
           }
         } catch (error) {
-          console.error('An error occurred while fetching user cart price:', error);
+          return error;
         }
      },
       async deleteCartItem(itemId) {
-        // Show a confirmation dialog to confirm the deletion
         const confirmDelete = confirm('Are you sure you want to delete this item from your cart?');
-
         if (confirmDelete) {
             try {
-            // Send a DELETE request to the server with the itemId as a parameter
-            const response = await axios.delete('/v1/user/cart', {
-                params: {
-                  itemId: itemId,
-                },
-            });
-
-            if (response.status === 200) {
-                // Item deleted successfully, refresh the cart items
-                this.fetchCartItems(); // Await for the updated cart items
-                this.updatePrice(); // Update the cart count
-            } else {
-                console.error('Failed to delete cart item:', response.statusText);
-            }
+              const response = await axios.delete('/v1/user/cart', {
+                  params: {
+                    itemId: itemId,
+                  },
+              });
+              if (response.status === 200) {
+                  this.fetchCartItems();
+                  this.updatePrice();
+              } else {
+                  return;
+              }
             } catch (error) {
-            console.error('An error occurred while deleting cart item:', error);
+              return error;
             }
         } else {
-            // User canceled the deletion, do nothing or provide feedback to the user.
+            return;
         }
     },
     },
   };
   </script>
-  
-  <style scoped>
-
-  </style>
   
   
