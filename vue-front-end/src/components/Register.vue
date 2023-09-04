@@ -4,44 +4,44 @@
     <form @submit.prevent="submitForm" class="registration-form">
       <div class="form-group">
         <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" class="form-control" />
-        <p v-if="errors.username" class="error-item">{{ errors.username }}</p>
+        <input type="text" id="username" v-model="username" class="form-control" :class="{ 'is-invalid': errors.username }" />
+        <div class="invalid-feedback" v-if="errors.username">{{ errors.username }}</div>
       </div>
 
       <div class="form-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" class="form-control" />
-        <p v-if="errors.password" class="error-item">{{ errors.password }}</p>
+        <input type="password" id="password" v-model="password" class="form-control" :class="{ 'is-invalid': errors.password }" />
+        <div class="invalid-feedback" v-if="errors.password">{{ errors.password }}</div>
       </div>
 
       <div class="form-group">
         <label for="name">Name:</label>
-        <input type="text" id="name" v-model="name" class="form-control" />
-        <p v-if="errors.name" class="error-item">{{ errors.name }}</p>
+        <input type="text" id="name" v-model="name" class="form-control" :class="{ 'is-invalid': errors.name }" />
+        <div class="invalid-feedback" v-if="errors.name">{{ errors.name }}</div>
       </div>
 
       <div class="form-group">
         <label for="surname">Surname:</label>
-        <input type="text" id="surname" v-model="surname" class="form-control" />
-        <p v-if="errors.surname" class="error-item">{{ errors.surname }}</p>
+        <input type="text" id="surname" v-model="surname" class="form-control" :class="{ 'is-invalid': errors.surname }" />
+        <div class="invalid-feedback" v-if="errors.surname">{{ errors.surname }}</div>
       </div>
 
       <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" v-model="email" class="form-control" />
-        <p v-if="errors.email" class="error-item">{{ errors.email }}</p>
+        <input type="email" id="email" v-model="email" class="form-control" :class="{ 'is-invalid': errors.email }" />
+        <div class="invalid-feedback" v-if="errors.email">{{ errors.email }}</div>
       </div>
 
       <div class="form-group">
         <label for="city">City:</label>
-        <input type="text" id="city" v-model="city" class="form-control" />
-        <p v-if="errors.city" class="error-item">{{ errors.city }}</p>
+        <input type="text" id="city" v-model="city" class="form-control" :class="{ 'is-invalid': errors.city }" />
+        <div class="invalid-feedback" v-if="errors.city">{{ errors.city }}</div>
       </div>
 
       <div class="form-group">
         <label for="address">Address:</label>
-        <textarea id="address" v-model="address" class="form-control"></textarea>
-        <p v-if="errors.address" class="error-item">{{ errors.address }}</p>
+        <textarea id="address" v-model="address" class="form-control" :class="{ 'is-invalid': errors.address }"></textarea>
+        <div class="invalid-feedback" v-if="errors.address">{{ errors.address }}</div>
       </div>
 
       <button type="submit" class="btn btn-primary">Register</button>
@@ -52,7 +52,7 @@
     <p v-if="message" class="message">{{ message }}</p>
   </div>
 </template>
-  
+
 <script>
 import axios from 'axios';
 
@@ -174,5 +174,15 @@ export default {
     display: flex;
     justify-content: center;
     margin-top: 10px;
+  }
+
+  /* Style to highlight invalid input fields */
+  .form-control.is-invalid {
+    border-color: #e82727;
+  }
+
+  /* Style for error messages */
+  .invalid-feedback {
+    color: #e82727;
   }
 </style>
