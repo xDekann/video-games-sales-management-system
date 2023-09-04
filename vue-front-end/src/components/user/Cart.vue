@@ -38,7 +38,7 @@
         </div>
   
         <!-- Checkout Button -->
-        <button class="btn btn-success" @click="checkout">Check Out</button>
+        <button class="btn btn-success" @click="checkout" v-if="cartCount != 0">Check Out</button>
       </div>
     </div>
   </template>

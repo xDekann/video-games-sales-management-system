@@ -81,9 +81,9 @@
       };
     },
     mounted() {
+      this.fetchTotalCartAmount();
       this.fetchUserDetails();
       this.fetchCartItems();
-      this.fetchTotalCartAmount();
     },
     methods: {
       fetchUserDetails() {
@@ -111,6 +111,9 @@
             const response = await axios.get('/v1/user/price');
           if (response.status === 200) {
             this.totalCartAmount = response.data;
+            if (this.totalCartAmount == 0) {
+              this.$router.push("/games");
+            }
           } else {
             return;
           }
