@@ -1,6 +1,7 @@
 package com.pk.vgsms.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -49,6 +50,7 @@ public class UserDetails {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id_user_detail")
+    @JsonIgnore
     private User user;
 
     public void connectUser(User user) {

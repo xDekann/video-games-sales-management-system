@@ -40,7 +40,7 @@ public class UserService {
         return employeeService.getProducts(phrase, category, pageable);
     }
 
-    private User getLoggedUser() {
+    protected User getLoggedUser() {
         String loggedUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findUserByName(loggedUserName);
     }

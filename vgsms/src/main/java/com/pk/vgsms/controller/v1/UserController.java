@@ -5,6 +5,7 @@ import com.pk.vgsms.model.dto.GamePaginatedDto;
 import com.pk.vgsms.model.dto.UserDto;
 import com.pk.vgsms.model.entity.Product;
 import com.pk.vgsms.model.entity.Purchase;
+import com.pk.vgsms.service.StripeService;
 import com.pk.vgsms.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final StripeService stripeService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, StripeService stripeService) {
         this.userService = userService;
+        this.stripeService = stripeService;
     }
 
     @GetMapping("/game")
@@ -112,6 +115,19 @@ public class UserController {
             exception.printStackTrace();
             log.error(exception.getMessage());
             return new UserDto();
+        }
+    }
+
+    @GetMapping("/checkout")
+    public ResponseEntity<String> getStripeCheckoutUrl() {
+        try {
+            String url = stripeService.createStripeCheckoutSession();
+            System.out.println(url);
+            return ResponseEntity.status(HttpStatus.OK).body(url);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            log.error(exception.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

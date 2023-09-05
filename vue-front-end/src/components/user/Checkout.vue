@@ -124,8 +124,18 @@
       goBackToCart() {
         this.$router.push("/cart");
       },
-      payNow() {
-        alert("To implement");
+      async payNow() {
+        try {
+          const response = await axios.get('/v1/user/checkout');
+          if (response.status === 200 && response.data) {
+            window.location.href = response.data;
+          } else {
+            this.$router.push('/cart');
+          }
+        } catch (error) {
+          console.error('Error during payment:', error);
+          this.$router.push('/cart');
+        }
       },
     },
   };
