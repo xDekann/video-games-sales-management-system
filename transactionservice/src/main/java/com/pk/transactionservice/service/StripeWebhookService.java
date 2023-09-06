@@ -14,7 +14,15 @@ import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -22,19 +30,24 @@ import java.util.Map;
 @Service
 public class StripeWebhookService {
 
-    private final String webhookSecret;
+    private final String WEBHOOK_SECRET;
     private final ObjectMapper objectMapper;
     private final PurchaseRepository purchaseRepository;
+    private final String PURCHASE_REMOVAL_URL;
+    private final RestTemplate restTemplate;
 
     public StripeWebhookService(@Value("${webhook.secretKey}") String webhookSecret,
-                                ObjectMapper objectMapper, PurchaseRepository purchaseRepository) {
-        this.webhookSecret = webhookSecret;
+                                ObjectMapper objectMapper, PurchaseRepository purchaseRepository,
+                                @Value("${purchaseRemovalUrl}") String purchaseRemovalUrl, RestTemplate restTemplate) {
+        this.WEBHOOK_SECRET = webhookSecret;
         this.objectMapper = objectMapper;
         this.purchaseRepository = purchaseRepository;
+        this.PURCHASE_REMOVAL_URL = purchaseRemovalUrl;
+        this.restTemplate = restTemplate;
     }
 
-    public Purchase handleWebhook(String payload, String signatureHeader) throws SignatureVerificationException, JsonProcessingException {
-        Event webhookEvent = Webhook.constructEvent(payload, signatureHeader, webhookSecret);
+    public Purchase handleWebhook(String payload, String signatureHeader) throws Exception {
+        Event webhookEvent = Webhook.constructEvent(payload, signatureHeader, WEBHOOK_SECRET);
         EventDataObjectDeserializer dataObjectDeserializer = webhookEvent.getDataObjectDeserializer();
         PaymentIntent paymentIntent = (PaymentIntent) dataObjectDeserializer.getObject().orElse(null);
 
@@ -45,8 +58,10 @@ public class StripeWebhookService {
         Purchase purchase = createPurchaseDbObject(paymentIntent);
         switch (webhookEvent.getType()) {
             case "payment_intent.succeeded" -> {
+                if (!removePurchaseFromMainDb(purchase.getUserId()).is2xxSuccessful()) {
+                    throw new Exception("Main service failure");
+                }
                 purchase.setStatus(Status.SUCCESS);
-                // send id to the main service in order to clear db and decrement order amount
             }
             case "payment_intent.canceled" -> {
                 purchase.setStatus(Status.CANCELED);
@@ -68,5 +83,18 @@ public class StripeWebhookService {
                 .userDetails(objectMapper.readValue(metadata.get("userDetails"), UserDetails.class))
                 .purchaseItems(objectMapper.readValue(metadata.get("purchase"), new TypeReference<List<CartItem>>() {}))
                 .build();
+    }
+
+    private HttpStatusCode removePurchaseFromMainDb(String userId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(userId, headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                PURCHASE_REMOVAL_URL,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+        return responseEntity.getStatusCode();
     }
 }

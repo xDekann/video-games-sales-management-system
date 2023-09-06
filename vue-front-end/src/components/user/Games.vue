@@ -42,6 +42,7 @@
     </div>
 
     <!-- Displayed games -->
+    <!-- When the game amount <=0, display "unavailable" instead of 0 and make it darker-->
     <div class="list-container mt-3">
       <ul class="list-unstyled" style="list-style: none;">
         <template v-if="games.length > 0">

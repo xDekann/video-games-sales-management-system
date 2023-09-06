@@ -52,7 +52,7 @@ public class UserService {
         if (wantedGameDbResponse.isPresent()) {
             wantedGame = wantedGameDbResponse.get();
         }
-        if (wantedGame == null || wantedGame.getAmount() < amount) {
+        if (wantedGame == null || wantedGame.getAmount() < amount || wantedGame.getAmount() <= 0) {
             return null;
         }
         User loggedUser = getLoggedUser();
