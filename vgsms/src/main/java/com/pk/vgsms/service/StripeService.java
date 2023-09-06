@@ -41,6 +41,7 @@ public class StripeService {
 
     public String createStripeCheckoutSession() throws StripeException, JsonProcessingException {
         // check if there are enough items in database in order to do the transaction (separate method? handle in
+        // add date to metadata
         User loggedUser = userService.getLoggedUser();
         final String TRANSACTION_UUID = UUID.randomUUID().toString();
         SessionCreateParams.Builder stripeCheckoutBuilder = SessionCreateParams.builder()
