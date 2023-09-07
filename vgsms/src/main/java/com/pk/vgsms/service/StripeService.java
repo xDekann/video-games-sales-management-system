@@ -3,6 +3,8 @@ package com.pk.vgsms.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pk.vgsms.config.StripeConfig;
+import com.pk.vgsms.model.entity.Product;
+import com.pk.vgsms.model.entity.Purchase;
 import com.pk.vgsms.model.entity.User;
 import com.pk.vgsms.repository.ProductRepository;
 import com.pk.vgsms.repository.PurchaseRepository;
@@ -13,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,7 +46,6 @@ public class StripeService {
 
     public String createStripeCheckoutSession() throws StripeException, JsonProcessingException {
         // check if there are enough items in database in order to do the transaction (separate method? handle in
-        // add date to metadata
         User loggedUser = userService.getLoggedUser();
         final String TRANSACTION_UUID = UUID.randomUUID().toString();
         SessionCreateParams.Builder stripeCheckoutBuilder = SessionCreateParams.builder()
@@ -72,9 +76,19 @@ public class StripeService {
                                 .putMetadata("transactionId", TRANSACTION_UUID)
                                 .putMetadata("purchase", objectMapper.writeValueAsString(userService.getUsersCartItems()))
                                 .putMetadata("userDetails", objectMapper.writeValueAsString(loggedUser.getUserDetails()))
+                                .putMetadata("transactionDate", objectMapper.writeValueAsString(new Date(System.currentTimeMillis())))
                                 .build()
                 );
         Session session = Session.create(stripeCheckoutBuilder.build());
         return session.getUrl();
+    }
+
+    public List<Purchase> confirmProductAvailability() {
+        return userService.getUserPurchases().stream()
+                .filter(purchase -> {
+                    System.out.println("AVAILABILITY: " + purchase.getQuantity() + " " + purchase.getProduct().getAmount());
+                    return purchase.getQuantity() > purchase.getProduct().getAmount();
+                })
+                .toList();
     }
 }

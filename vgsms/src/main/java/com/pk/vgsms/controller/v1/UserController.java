@@ -121,6 +121,9 @@ public class UserController {
     @GetMapping("/checkout")
     public ResponseEntity<String> getStripeCheckoutUrl() {
         try {
+            if (!stripeService.confirmProductAvailability().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
             String url = stripeService.createStripeCheckoutSession();
             System.out.println(url);
             return ResponseEntity.status(HttpStatus.OK).body(url);

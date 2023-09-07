@@ -11,6 +11,7 @@ import lombok.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -30,4 +31,5 @@ public class Purchase {
     private String userId;
     private Double transactionValue;
     private Status status;
+    private Date transactionDate;
 }

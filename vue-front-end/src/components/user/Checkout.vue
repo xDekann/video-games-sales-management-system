@@ -129,11 +129,14 @@
           const response = await axios.get('/v1/user/checkout');
           if (response.status === 200 && response.data) {
             window.location.href = response.data;
+          }
+          if (response.status === 204) {
+            alert("Some of the picked items are no longer available");
           } else {
             this.$router.push('/cart');
           }
         } catch (error) {
-          console.error('Error during payment:', error);
+          alert('Error has occured during payment:', error);
           this.$router.push('/cart');
         }
       },

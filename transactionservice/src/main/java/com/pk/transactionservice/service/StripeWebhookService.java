@@ -8,7 +8,6 @@ import com.pk.transactionservice.model.entity.purchase.Purchase;
 import com.pk.transactionservice.model.entity.purchase.Status;
 import com.pk.transactionservice.model.entity.purchase.UserDetails;
 import com.pk.transactionservice.repository.PurchaseRepository;
-import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.PaymentIntent;
@@ -17,13 +16,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +54,7 @@ public class StripeWebhookService {
             return null;
         }
 
-        Purchase purchase = createPurchaseDbObject(paymentIntent);
+        Purchase purchase = preparePurchaseDbObject(paymentIntent);
         switch (webhookEvent.getType()) {
             case "payment_intent.succeeded" -> {
                 if (!removePurchaseFromMainDb(purchase.getUserId()).is2xxSuccessful()) {
@@ -74,14 +73,19 @@ public class StripeWebhookService {
         return purchase;
     }
 
-    private Purchase createPurchaseDbObject(PaymentIntent paymentIntent) throws JsonProcessingException {
+    private Purchase preparePurchaseDbObject(PaymentIntent paymentIntent) throws JsonProcessingException {
         Map<String, String> metadata = paymentIntent.getMetadata();
+        Purchase purchase = purchaseRepository.findByTransactionId(metadata.get("transactionId"));
+        if (purchase != null) {
+            return purchase;
+        }
         return Purchase.builder()
                 .userId(metadata.get("userId"))
                 .transactionId(metadata.get("transactionId"))
                 .transactionValue(paymentIntent.getAmount() / 100.00)
                 .userDetails(objectMapper.readValue(metadata.get("userDetails"), UserDetails.class))
-                .purchaseItems(objectMapper.readValue(metadata.get("purchase"), new TypeReference<List<CartItem>>() {}))
+                .purchaseItems(objectMapper.readValue(metadata.get("purchase"), new TypeReference<>() {}))
+                .transactionDate(objectMapper.readValue(metadata.get("transactionDate"), Date.class))
                 .build();
     }
 
@@ -91,7 +95,7 @@ public class StripeWebhookService {
         HttpEntity<String> requestEntity = new HttpEntity<>(userId, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 PURCHASE_REMOVAL_URL,
-                HttpMethod.POST,
+                HttpMethod.DELETE,
                 requestEntity,
                 String.class
         );

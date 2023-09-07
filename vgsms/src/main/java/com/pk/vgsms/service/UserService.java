@@ -78,7 +78,7 @@ public class UserService {
         return cartRecord;
     }
 
-    private List<Purchase> getUserPurchases() {
+    protected List<Purchase> getUserPurchases() {
         return purchaseRepository.findByUserId(getLoggedUser().getId());
     }
 
@@ -147,5 +147,13 @@ public class UserService {
                 .surname(loggedUser.getUserDetails().getSurname())
                 .address(loggedUser.getUserDetails().getAddress())
                 .build();
+    }
+
+    public void deleteTransactionItemsAfterSucceed(String userId) {
+        List<Purchase> userPurchases = purchaseRepository.findAllByUserId(Long.valueOf(userId));
+        userPurchases.forEach(purchase -> purchase.getProduct()
+                .setAmount(purchase.getProduct().getAmount() - purchase.getQuantity()));
+        purchaseRepository.saveAll(userPurchases);
+        purchaseRepository.deleteAll(userPurchases);
     }
 }

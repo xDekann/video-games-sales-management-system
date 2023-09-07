@@ -12,4 +12,5 @@ import java.util.List;
 public interface PurchaseRepository extends JpaRepository<Purchase, PurchaseId> {
     List<Purchase> findByUserId(Long userId);
     Purchase findByPurchaseId(PurchaseId purchaseId);
+    List<Purchase> findAllByUserId(Long userId);
 }
