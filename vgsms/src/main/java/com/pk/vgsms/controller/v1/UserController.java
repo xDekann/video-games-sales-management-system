@@ -7,6 +7,7 @@ import com.pk.vgsms.model.entity.Product;
 import com.pk.vgsms.model.entity.Purchase;
 import com.pk.vgsms.service.StripeService;
 import com.pk.vgsms.service.UserService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -119,12 +121,17 @@ public class UserController {
     }
 
     @GetMapping("/checkout")
-    public ResponseEntity<String> getStripeCheckoutUrl() {
+    public ResponseEntity<String> getStripeCheckoutUrl(@RequestParam("selectedPaymentMethod") String paymentMethod,
+                                                       @RequestParam("selectedDeliveryMethod") String deliveryMethod) {
         try {
             if (!stripeService.confirmProductAvailability().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
-            String url = stripeService.createStripeCheckoutSession();
+            if (!stripeService.checkPaymentAndDelivery(paymentMethod, deliveryMethod)) {
+                System.out.println("ERROR IN NAMING");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            String url = stripeService.createStripeCheckoutSession(paymentMethod, deliveryMethod);
             System.out.println(url);
             return ResponseEntity.status(HttpStatus.OK).body(url);
         } catch (Exception exception) {

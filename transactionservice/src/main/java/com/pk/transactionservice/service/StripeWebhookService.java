@@ -86,6 +86,7 @@ public class StripeWebhookService {
                 .userDetails(objectMapper.readValue(metadata.get("userDetails"), UserDetails.class))
                 .purchaseItems(objectMapper.readValue(metadata.get("purchase"), new TypeReference<>() {}))
                 .transactionDate(objectMapper.readValue(metadata.get("transactionDate"), Date.class))
+                .deliveryMethod(objectMapper.readValue(metadata.get("deliveryMethod"), String.class))
                 .build();
     }
 

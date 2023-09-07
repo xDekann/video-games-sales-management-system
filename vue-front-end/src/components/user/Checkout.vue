@@ -35,10 +35,8 @@
         <div class="d-flex">
           <label v-for="method in paymentMethods" :key="method" class="mr-3">
             <input type="radio" v-model="selectedPaymentMethod" :value="method" />
-            <img v-if="method === 'VISA'" src="visa.png" alt="VISA Logo" class="payment-logo" />
-            <img v-if="method === 'Mastercard'" src="mastercard.png" alt="Mastercard Logo" class="payment-logo" />
+            <img v-if="method === 'Card'" src="visa-and-mastercard.png" alt="Card logo" class="payment-logo" />
             <img v-if="method === 'Paypal'" src="paypal.png" alt="Paypal Logo" class="payment-logo" />
-            <img v-if="method === 'Cash'" src="cash.png" alt="Cash Logo" class="payment-logo" />
           </label>
         </div>
       </div>
@@ -74,8 +72,8 @@
         userDetails: {},
         cartItems: [],
         totalCartAmount: 0,
-        paymentMethods: ["VISA", "Mastercard", "Paypal", "Cash"],
-        selectedPaymentMethod: "VISA",
+        paymentMethods: ["Card", "Paypal"],
+        selectedPaymentMethod: "Card",
         deliveryMethods: ["Courier", "Self Pickup", "Paczkomat"],
         selectedDeliveryMethod: "Courier",
       };
@@ -126,7 +124,15 @@
       },
       async payNow() {
         try {
-          const response = await axios.get('/v1/user/checkout');
+
+          const paymentData = {
+            selectedPaymentMethod: this.selectedPaymentMethod,
+            selectedDeliveryMethod: this.selectedDeliveryMethod,
+          };
+
+          const response = await axios.get('/v1/user/checkout', {
+            params: paymentData,
+          });
           if (response.status === 200 && response.data) {
             window.location.href = response.data;
           }

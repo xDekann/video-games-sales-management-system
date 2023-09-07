@@ -32,4 +32,5 @@ public class Purchase {
     private Double transactionValue;
     private Status status;
     private Date transactionDate;
+    private String deliveryMethod;
 }

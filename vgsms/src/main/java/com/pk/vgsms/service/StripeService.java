@@ -6,14 +6,19 @@ import com.pk.vgsms.config.StripeConfig;
 import com.pk.vgsms.model.entity.Product;
 import com.pk.vgsms.model.entity.Purchase;
 import com.pk.vgsms.model.entity.User;
+import com.pk.vgsms.model.entity.payment.Deliveries;
+import com.pk.vgsms.model.entity.payment.Payments;
 import com.pk.vgsms.repository.ProductRepository;
 import com.pk.vgsms.repository.PurchaseRepository;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
+import com.stripe.param.SubscriptionUpdateParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -23,33 +28,27 @@ import java.util.UUID;
 @Service
 public class StripeService {
 
-    private final StripeConfig stripeConfig;
     private final UserService userService;
-    private final PurchaseRepository purchaseRepository;
-    private final ProductRepository productRepository;
     private final String successUrl;
     private final String cancelUrl;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public StripeService(StripeConfig stripeConfig, @Value("${successUrl}") String successUrl,
-                         @Value("${cancelUrl}") String cancelUrl, UserService userService, ProductRepository productRepository,
-                         PurchaseRepository purchaseRepository, ObjectMapper objectMapper) {
-        this.stripeConfig = stripeConfig;
+    public StripeService(@Value("${successUrl}") String successUrl,
+                         @Value("${cancelUrl}") String cancelUrl, UserService userService,
+                         ObjectMapper objectMapper) {
         this.successUrl = successUrl;
         this.cancelUrl = cancelUrl;
         this.userService = userService;
-        this.purchaseRepository = purchaseRepository;
-        this.productRepository = productRepository;
         this.objectMapper = objectMapper;
     }
 
-    public String createStripeCheckoutSession() throws StripeException, JsonProcessingException {
-        // check if there are enough items in database in order to do the transaction (separate method? handle in
+    public String createStripeCheckoutSession(String paymentMethod, String deliveryMethod) throws StripeException, JsonProcessingException {
         User loggedUser = userService.getLoggedUser();
         final String TRANSACTION_UUID = UUID.randomUUID().toString();
+
         SessionCreateParams.Builder stripeCheckoutBuilder = SessionCreateParams.builder()
-                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.PAYPAL)
+                .addPaymentMethodType(getPaymentMethodType(paymentMethod))
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl(successUrl)
                 .setCancelUrl(cancelUrl)
@@ -77,6 +76,7 @@ public class StripeService {
                                 .putMetadata("purchase", objectMapper.writeValueAsString(userService.getUsersCartItems()))
                                 .putMetadata("userDetails", objectMapper.writeValueAsString(loggedUser.getUserDetails()))
                                 .putMetadata("transactionDate", objectMapper.writeValueAsString(new Date(System.currentTimeMillis())))
+                                .putMetadata("deliveryMethod", objectMapper.writeValueAsString(deliveryMethod))
                                 .build()
                 );
         Session session = Session.create(stripeCheckoutBuilder.build());
@@ -85,10 +85,19 @@ public class StripeService {
 
     public List<Purchase> confirmProductAvailability() {
         return userService.getUserPurchases().stream()
-                .filter(purchase -> {
-                    System.out.println("AVAILABILITY: " + purchase.getQuantity() + " " + purchase.getProduct().getAmount());
-                    return purchase.getQuantity() > purchase.getProduct().getAmount();
-                })
+                .filter(purchase -> purchase.getQuantity() > purchase.getProduct().getAmount())
                 .toList();
+    }
+
+    public Boolean checkPaymentAndDelivery(String paymentMethod, String deliveryMethod) {
+        return Payments.containsPayment(paymentMethod) && Deliveries.containsDelivery(deliveryMethod);
+    }
+
+    private SessionCreateParams.PaymentMethodType getPaymentMethodType(String paymentMethod) {
+        if (paymentMethod.equals(Payments.CARD.paymentName)) {
+            return SessionCreateParams.PaymentMethodType.CARD;
+        } else {
+            return SessionCreateParams.PaymentMethodType.PAYPAL;
+        }
     }
 }
