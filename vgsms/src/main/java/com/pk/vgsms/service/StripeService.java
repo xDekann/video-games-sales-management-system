@@ -72,6 +72,7 @@ public class StripeService {
                 .setPaymentIntentData(
                         SessionCreateParams.PaymentIntentData.builder()
                                 .putMetadata("userId", loggedUser.getId().toString())
+                                .putMetadata("username", loggedUser.getUsername())
                                 .putMetadata("transactionId", TRANSACTION_UUID)
                                 .putMetadata("purchase", objectMapper.writeValueAsString(userService.getUsersCartItems()))
                                 .putMetadata("userDetails", objectMapper.writeValueAsString(loggedUser.getUserDetails()))

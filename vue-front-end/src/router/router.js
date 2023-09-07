@@ -8,7 +8,8 @@ import Edituser from '@/components/admin/EditUser.vue';
 import AddUser from '@/components/admin/AddUser.vue';
 import Games from '@/components/user/Games.vue';
 import Cart from '@/components/user/Cart.vue';
-import Checkout from '@/components/user/Checkout.vue'
+import Checkout from '@/components/user/Checkout.vue';
+import TransactionHistory from '@/components/user/TransactionHistory.vue';
 
 import jsCookie from 'js-cookie';
 const routes = [
@@ -22,15 +23,17 @@ const routes = [
   { path: '/games', component: Games},
   { path: '/cart',  component: Cart},
   { path: '/checkout', component: Checkout },
+  { path: '/profile', component: TransactionHistory}
 ]
 
 
 const protectedRoutes = ['/gamepanel', '/gamepanel/addgame',
- '/userpanel', '/userpanel/adduser', '/userpanel/edituser/', '/games', '/cart', '/checkout']
+ '/userpanel', '/userpanel/adduser', '/userpanel/edituser/', '/games', 
+ '/cart', '/checkout', '/profile']
 const roleAllowedRoutes = {
   'ROLE_EMPLOYEE': ['/gamepanel', '/gamepanel/addgame'],
   'ROLE_ADMIN': ['/userpanel', '/userpanel/adduser', '/userpanel/edituser/'],
-  'ROLE_USER': ['/games', '/cart', '/checkout']
+  'ROLE_USER': ['/games', '/cart', '/checkout', '/profile']
 }
 
 

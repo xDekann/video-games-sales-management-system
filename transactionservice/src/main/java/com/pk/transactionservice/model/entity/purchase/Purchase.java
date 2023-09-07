@@ -25,6 +25,7 @@ import java.util.List;
 public class Purchase {
     @Id
     private String id;
+    private String username;
     private List<CartItem> purchaseItems;
     private String transactionId;
     private UserDetails userDetails;

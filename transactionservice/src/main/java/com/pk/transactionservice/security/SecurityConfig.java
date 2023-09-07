@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain web(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(configurer ->
-                        configurer.requestMatchers("/stripe-webhook").anonymous()
+                        configurer.requestMatchers("/transactionservice/v1/purchase").hasRole("USER")
                                 .anyRequest().permitAll())
                 .csrf(csrf -> csrf.disable())
                 .build();

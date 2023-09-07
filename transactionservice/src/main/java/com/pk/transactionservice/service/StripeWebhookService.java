@@ -81,6 +81,7 @@ public class StripeWebhookService {
         }
         return Purchase.builder()
                 .userId(metadata.get("userId"))
+                .username(metadata.get("username"))
                 .transactionId(metadata.get("transactionId"))
                 .transactionValue(paymentIntent.getAmount() / 100.00)
                 .userDetails(objectMapper.readValue(metadata.get("userDetails"), UserDetails.class))
