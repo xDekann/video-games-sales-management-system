@@ -124,7 +124,6 @@
       },
       async payNow() {
         try {
-
           const paymentData = {
             selectedPaymentMethod: this.selectedPaymentMethod,
             selectedDeliveryMethod: this.selectedDeliveryMethod,

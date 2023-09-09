@@ -78,8 +78,7 @@ public class StripeService {
                                 .putMetadata("userDetails", objectMapper.writeValueAsString(loggedUser.getUserDetails()))
                                 .putMetadata("transactionDate", objectMapper.writeValueAsString(new Date(System.currentTimeMillis())))
                                 .putMetadata("deliveryMethod", objectMapper.writeValueAsString(deliveryMethod))
-                                .build()
-                );
+                                .putMetadata("paymentMethod", objectMapper.writeValueAsString(paymentMethod)).build());
         Session session = Session.create(stripeCheckoutBuilder.build());
         return session.getUrl();
     }

@@ -15,14 +15,17 @@
             <th>Product</th>
             <th>Price (PLN)</th>
             <th>Amount</th>
+            <th>Amount left</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
+          <!-- When the game amount <=0, display "unavailable" instead of 0 and make it darker-->
           <tr v-for="item in cartItems" :key="item.itemId">
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.amount }}</td>
+            <td>{{ item.amountLeft }}</td>
             <td>
               <button @click="deleteCartItem(item.itemId)" class="btn btn-danger">Delete</button>
             </td>
