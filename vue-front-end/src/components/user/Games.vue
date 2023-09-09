@@ -2,12 +2,9 @@
   <div class="container mt-5 main-container">
     <!-- Upper side panel -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <!-- Logout Button (Top Right) -->
       <LogoutButton class="btn btn-danger"></LogoutButton>
       <div class="profile-cart-container">
-        <!-- Profile Button (Top Right) -->
         <button class="btn btn-primary me-2" @click="redirectToProfile">Profile</button>
-        <!-- Shopping Cart (Top Right) -->
         <div class="cart-container" @click="redirectToCart">
           <img src="shopping-cart.svg" alt="Shopping Cart" class="cart-icon" />
           <div class="cart-count">
@@ -42,7 +39,6 @@
     </div>
 
     <!-- Displayed games -->
-    <!-- When the game amount <=0, display "unavailable" instead of 0 and make it darker-->
     <div class="list-container mt-3">
     <ul class="list-unstyled" style="list-style: none;">
       <template v-if="games.length > 0">
@@ -347,10 +343,10 @@ export default {
 }
 
 .unavailable-row {
-  opacity: 0.6; /* Adjust the opacity value as needed (0.0 to 1.0) */
+  opacity: 0.6;
 }
 
 .unavailable-text {
-  color: red; /* Text color for "Unavailable" text */
+  color: red;
 }
 </style>

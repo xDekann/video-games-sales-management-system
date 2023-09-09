@@ -19,8 +19,8 @@
   
   <style scoped>
   .footer {
-    background-color: hsl(0, 3%, 12%); /* Lighter background color */
-    color: white; /* Text color is white */
+    background-color: hsl(0, 3%, 12%);
+    color: white;
     padding: 10px 0;
     position: fixed;
     bottom: 0;
@@ -34,8 +34,8 @@
   }
   
   .content {
-    font-size: 12px; /* Adjust the font size as needed */
-    margin: 0 auto; /* Center the text horizontally */
+    font-size: 12px;
+    margin: 0 auto;
   }
   
   </style>

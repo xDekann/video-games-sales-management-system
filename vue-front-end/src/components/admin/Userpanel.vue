@@ -1,10 +1,12 @@
 <template>
   <div class="container mt-5">
+
     <!-- Upper side panel -->
     <div class="button-container">
       <LogoutButton class="btn btn-danger logout-button"></LogoutButton>
       <button class="btn btn-primary add-user-button" @click="goToAddUser">Add User</button>
     </div>
+
     <!-- Searchbar -->
     <div class="search-container" v-click-away="clearFill">
       <input v-model="searchPhrase" @input="handleInput" class="form-control" placeholder="Search users..." />
@@ -19,6 +21,7 @@
       <span style="margin: 0 5px;"></span>
       <button class="btn btn-secondary clear-button" @click="clear">Clear</button>
     </div>
+
     <!-- Displayed users -->
     <div class="list-container mt-2">
       <ul class="user-list mt-2">
@@ -44,6 +47,7 @@
         </template>
       </ul>
     </div>
+    
     <!-- Pagination controls -->
     <div class="d-flex justify-content-center align-items-center mt-4">
       <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">Previous</button>

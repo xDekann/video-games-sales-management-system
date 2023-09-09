@@ -29,15 +29,13 @@
             <th>Status</th>
             <th>Date</th>
             <th>Delivery Method</th>
-            <th>Options</th> <!-- New column for "Get Invoice" button -->
+            <th>Options</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Loop through PurchaseDto items -->
           <tr v-for="(purchase, index) in purchases" :key="purchase.id" :class="{'clickable-row': clickedRowIndex === index}">
             <td>
               {{ purchase.id }}
-              <!-- Display the item list if the row is clicked -->
               <ul v-if="clickedRowIndex === index" class="item-list">
                 <li v-for="item in purchase.items" :key="item.name">
                   {{ item.name }} - {{ item.price }} PLN - Amount: {{ item.amount }}
@@ -83,7 +81,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
   mounted() {
-    this.fetchPurchases(); // Fetch initial data when the component is mounted
+    this.fetchPurchases();
     this.fetchUserDetails();
     console.log(this.purchases);
   },
@@ -105,11 +103,11 @@ export default {
   data() {
     return {
       userDetails: {},
-      purchases: [], // Store PurchaseDto items here
+      purchases: [],
       currentPage: 0,
       totalPages: 0,
-      size: 2, // Number of items per page
-      clickedRowIndex: -1, // Initialize as -1 to indicate no row is clicked
+      size: 2,
+      clickedRowIndex: -1,
     };
   },
   methods: {
@@ -149,10 +147,8 @@ export default {
     },
     toggleRow(index) {
       if (this.clickedRowIndex === index) {
-        // If the same row is clicked again, hide it
         this.clickedRowIndex = -1;
       } else {
-        // Otherwise, show the clicked row
         this.clickedRowIndex = index;
       }
     },
@@ -175,7 +171,6 @@ export default {
           } else {
             const blob = new Blob([response.data], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);
-
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', purchase.id + '.pdf');
@@ -213,7 +208,6 @@ export default {
 </script>
 
 <style scoped>
-/* Style for the hidden item list */
 .button-container {
   display: flex;
   justify-content: space-between;
@@ -224,7 +218,7 @@ export default {
 .item-list {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
-  border-top: 1px solid #ccc; /* Add a 2px solid top border */
+  border-top: 1px solid #ccc;
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -234,7 +228,6 @@ export default {
   margin: 5px 0;
 }
 
-/* Style for the clickable row */
 .clickable-row {
   cursor: pointer;
   transition: background-color 0.2s;
@@ -245,28 +238,26 @@ export default {
 }
 
 .disabled-button {
-  background-color: #f0f0f0; /* Gray background color */
-  color: #777; /* Gray text color */
-  cursor: not-allowed; /* Change cursor to not-allowed */
+  background-color: #f0f0f0;
+  color: #777;
+  cursor: not-allowed;
 }
-/* Add a class for the cell containing the buttons */
+
 .button-cell {
   display: flex;
   align-items: center;
 }
 
-/* Use a flex container for the buttons */
 .button-group {
   display: flex;
-  flex-direction: column; /* Change to column layout */
-  align-items: flex-start; /* Adjust as needed */
-  justify-content: flex-start; /* Adjust as needed */
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
-/* Set a fixed width for the buttons */
 .button-group button {
-  width: 100%; /* Set the width to 100% to make them the same width */
-  margin-bottom: 5px; /* Adjust as needed */
+  width: 100%;
+  margin-bottom: 5px;
 }
 
 .d-flex.justify-content-center.align-items-center {

@@ -5,10 +5,8 @@
         <form @submit.prevent="submitForm" class="login-form">
           <label for="username">Username:</label>
           <input type="text" id="username" v-model="username" />
-  
           <label for="password">Password:</label>
           <input type="password" id="password" v-model="password" />
-  
           <button type="submit">Sign In</button>
         </form>
       </div>

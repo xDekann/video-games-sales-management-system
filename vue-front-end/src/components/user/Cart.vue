@@ -2,9 +2,7 @@
   <div class="container mt-5">
     <!-- Upper side panel -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <!-- Logout Button (Top Right) -->
       <LogoutButton class="btn btn-danger"></LogoutButton>
-      <!-- Back Button (Top Right) -->
       <button class="btn btn-secondary" @click="redirectToGames">Back</button>
     </div>
 
@@ -21,7 +19,6 @@
           </tr>
         </thead>
         <tbody>
-          <!-- When the game amount <=0, display "unavailable" instead of 0 and make it darker-->
           <tr v-for="item in cartItems" :key="item.itemId">
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
@@ -41,12 +38,9 @@
 
     <!-- Checkout Container -->
     <div class="d-flex justify-content-between align-items-center mt-4">
-      <!-- Total Cart Price -->
       <div class="font-weight-bold">
         Total Cart Price: {{ cartCount }} PLN
       </div>
-
-      <!-- Checkout Button -->
       <button class="btn btn-success" @click="checkout" v-if="cartCount != 0">Check Out</button>
     </div>
   </div>
@@ -169,7 +163,7 @@ export default {
 </script>
 <style scoped>
 .unavailable-text {
-  color: red; /* Text color for "Unavailable" text */
+  color: red;
 }
 </style>
   
