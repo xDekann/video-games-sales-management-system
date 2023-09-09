@@ -76,6 +76,7 @@
 import axios from 'axios';
 import LogoutButton from '@/components/LogoutButton.vue';
 import Footer from '@/components/Footer.vue';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
   mounted() {
@@ -141,7 +142,7 @@ export default {
         this.clickedRowIndex = index;
       }
     },
-    getInvoice(purchase) {
+    async getInvoice(purchase) {
       axios
         .get("/transactionservice/v1/purchase/pdf", {
           params: {
@@ -151,7 +152,12 @@ export default {
         })
         .then((response) => {
           if (response.status === 204) {
-            alert('Invalid transaction');
+            this.$swal.fire({
+              title: 'Failure',
+              text: 'Invalid transaction.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
           } else {
             const blob = new Blob([response.data], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);

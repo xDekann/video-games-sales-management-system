@@ -117,11 +117,16 @@ export default {
       this.$router.push({ name: 'edit-user', params: { id: userId } });
     },
     async removeUser(userId, username, isEnabled) {
-      const confirmMessage = isEnabled
-        ? `Are you sure you want to delete the user '${username}'?`
-        : `Are you sure you want to enable the user '${username}'?`;
-
-      if (window.confirm(confirmMessage)) {
+      const confirmResult = await this.$swal({
+        title: 'Are you sure?',
+        text: isEnabled ? 'Are you sure you want to delete user ' + username + '?' : 'Are you sure you want to enable user ' + username + '?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+      });
+      if (confirmResult.isConfirmed) {
         try {
           await axios.delete(`/v1/admin/user`, {
             params: {
@@ -184,7 +189,6 @@ export default {
           if (error.response.status === 403) {
             this.$router.push("/login");
           }
-          console.error("Error fetching users:", error);
         });
     },
   },

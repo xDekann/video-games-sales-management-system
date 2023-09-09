@@ -43,7 +43,7 @@
             <div class="game-buttons mt-2">
               <button @click="stockGame(game.id, true)" class="btn btn-success btn-sm btn-smaller mr-1">Stock</button>
               <button @click="stockGame(game.id, false)" class="btn btn-warning btn-sm btn-smaller mr-1">Unstock</button>
-              <button @click="removeGame(game.id)" class="btn btn-danger btn-sm btn-smaller">Remove</button>
+              <button @click="removeGame(game.id, game.name)" class="btn btn-danger btn-sm btn-smaller">Remove</button>
             </div>
           </li>
         </template>
@@ -168,9 +168,17 @@ export default {
       await new Promise(resolve => setTimeout(resolve, 300));
       this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);
     },
-    async removeGame(gameId) {
-      const confirmed = window.confirm("Are you sure you want to remove this game?");
-      if (confirmed) {
+    async removeGame(gameId, gameName) {
+      const confirmResult = await this.$swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to delete game ' + gameName + '?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+      });      
+      if (confirmResult.isConfirmed) {
         try {
           const response = await axios.delete(`/v1/employee/game`, {params: {id: gameId}});
           if (response.status === 200) {

@@ -67,6 +67,7 @@
   <script>
   import axios from "axios";
   import Footer from '@/components/Footer.vue';
+  import 'sweetalert2/dist/sweetalert2.min.css';
   
   export default {
     data() {
@@ -147,7 +148,12 @@
             window.location.href = response.data;
           }
           if (response.status === 204) {
-            alert("Some of the picked items are no longer available");
+            await this.$swal.fire({
+              title: 'Error',
+              text: 'Some of the picked items are no longer available.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
           } else {
             this.$router.push('/cart');
           }
@@ -155,7 +161,12 @@
           if (error.response.status === 403) {
             this.$router.push("/login");
           }
-          alert('Error has occured during payment:', error);
+          await this.$swal.fire({
+              title: 'Error',
+              text: 'An error has occurred while processing your payment',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
           this.$router.push('/cart');
         }
       },
