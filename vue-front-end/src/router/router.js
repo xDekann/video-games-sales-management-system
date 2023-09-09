@@ -15,6 +15,8 @@ import jsCookie from 'js-cookie';
 const routes = [
   { path: '/register', component: Register },
   { path: '/login', component: Login },
+  { path: '/', redirect: '/login'},
+  { path: '/home', redirect: '/login'},
   { path: '/gamepanel', component: Gamepanel},
   { path: '/gamepanel/addgame', component: Addgame},
   { path: '/userpanel', component: Userpanel},

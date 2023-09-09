@@ -67,6 +67,17 @@ export default {
       cartCount: 0,
     };
   },
+  created() {
+    const transaction = this.$route.query.transaction;
+    if (transaction === "cancelled") {
+      this.$swal.fire({
+          title: 'Error',
+          text: 'Transaction has ben cancelled',
+          icon: 'error',
+          confirmButtonText: 'OK',
+      });
+    }
+  },
   mounted() {
     this.fetchCartItems();
     this.updatePrice();

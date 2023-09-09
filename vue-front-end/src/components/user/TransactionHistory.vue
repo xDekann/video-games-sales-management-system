@@ -84,6 +84,17 @@ export default {
     this.fetchUserDetails();
     console.log(this.purchases);
   },
+  created() {
+    const transaction = this.$route.query.transaction;
+    if (transaction === "success") {
+      this.$swal.fire({
+          title: 'Success',
+          text: 'Transaction has been completed successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+      });
+    }
+  },
   components: {
     LogoutButton,
     Footer,
