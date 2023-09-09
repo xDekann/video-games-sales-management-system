@@ -1,11 +1,10 @@
 <template>
   <div class="container mt-5">
     <!-- Upper side panel -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <!-- Logout Button (Top Right) -->
-      <LogoutButton class="btn btn-danger"></LogoutButton>
-      <!-- Back Button (Top Right) -->
-      <button class="btn btn-secondary" @click="redirectToGames">Back To Games</button>
+    <div class="button-container">
+        <LogoutButton class="btn btn-danger"></LogoutButton>
+        <button class="btn btn-secondary" @click="redirectToGames">Back To Games</button>
+
     </div>
 
     <!-- User Details -->
@@ -21,43 +20,47 @@
     </div>
 
     <!-- Transaction history table -->
-    <table class="table mt-4">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Value</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Delivery Method</th>
-          <th>Options</th> <!-- New column for "Get Invoice" button -->
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Loop through PurchaseDto items -->
-        <tr v-for="(purchase, index) in purchases" :key="purchase.id" :class="{'clickable-row': clickedRowIndex === index}">
-          <td>
-            {{ purchase.id }}
-            <!-- Display the item list if the row is clicked -->
-            <ul v-if="clickedRowIndex === index" class="item-list">
-              <li v-for="item in purchase.items" :key="item.name">
-                {{ item.name }} - {{ item.price }} PLN - Amount: {{ item.amount }}
-              </li>
-            </ul>
-          </td>
-          <td>{{ purchase.value }} PLN</td>
-          <td>{{ purchase.status }}</td>
-          <td>{{ purchase.date }}</td>
-          <td>{{ purchase.deliveryMethod }}</td>
-          <td>
-            <button @click="getInvoice(purchase)" class="btn btn-secondary invoice-button">Get Invoice</button>
-            <button @click="toggleRow(index)" class="btn btn-secondary">Show Details</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table mt-4">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Value</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Delivery Method</th>
+            <th>Options</th> <!-- New column for "Get Invoice" button -->
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through PurchaseDto items -->
+          <tr v-for="(purchase, index) in purchases" :key="purchase.id" :class="{'clickable-row': clickedRowIndex === index}">
+            <td>
+              {{ purchase.id }}
+              <!-- Display the item list if the row is clicked -->
+              <ul v-if="clickedRowIndex === index" class="item-list">
+                <li v-for="item in purchase.items" :key="item.name">
+                  {{ item.name }} - {{ item.price }} PLN - Amount: {{ item.amount }}
+                </li>
+              </ul>
+            </td>
+            <td>{{ purchase.value }} PLN</td>
+            <td>{{ purchase.status }}</td>
+            <td>{{ purchase.date }}</td>
+            <td>{{ purchase.deliveryMethod }}</td>
+            <td class="button-cell">
+              <div class="button-group">
+                <button @click="getInvoice(purchase)" class="btn btn-sm btn-secondary invoice-button">Get Invoice</button>
+                <button @click="toggleRow(index)" class="btn btn-sm btn-secondary">Show Details</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Pagination controls -->
-    <div class="d-flex justify-content-center align-items-center mt-4">
+    <div class="pagination-container">
       <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">Previous</button>
       <template v-if="purchases.length > 0">
         <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
@@ -211,6 +214,13 @@ export default {
 
 <style scoped>
 /* Style for the hidden item list */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .item-list {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
@@ -239,8 +249,41 @@ export default {
   color: #777; /* Gray text color */
   cursor: not-allowed; /* Change cursor to not-allowed */
 }
+/* Add a class for the cell containing the buttons */
+.button-cell {
+  display: flex;
+  align-items: center;
+}
 
-.invoice-button {
-  margin-right: 3px;
+/* Use a flex container for the buttons */
+.button-group {
+  display: flex;
+  flex-direction: column; /* Change to column layout */
+  align-items: flex-start; /* Adjust as needed */
+  justify-content: flex-start; /* Adjust as needed */
+}
+
+/* Set a fixed width for the buttons */
+.button-group button {
+  width: 100%; /* Set the width to 100% to make them the same width */
+  margin-bottom: 5px; /* Adjust as needed */
+}
+
+.d-flex.justify-content-center.align-items-center {
+  text-align: center;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+@media (max-width: 768px) {
+  .table-responsive table th,
+  .table-responsive table td {
+    white-space: nowrap;
+  }
 }
 </style>
