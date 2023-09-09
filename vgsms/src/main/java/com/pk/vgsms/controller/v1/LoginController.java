@@ -4,6 +4,7 @@ import com.pk.vgsms.model.dto.LoginDto;
 import com.pk.vgsms.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1")
+@Slf4j
 public class LoginController {
 
     private final LoginService loginService;
@@ -30,6 +32,7 @@ public class LoginController {
         try {
             return loginService.setUserSession(request, response, loginDto);
         } catch (Exception exception) {
+            log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password!");
         }
     }

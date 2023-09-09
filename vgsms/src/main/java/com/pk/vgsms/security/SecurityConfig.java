@@ -1,7 +1,6 @@
 package com.pk.vgsms.security;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

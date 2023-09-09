@@ -48,7 +48,6 @@ public class UserController {
                     .build();
         } catch (Exception exception) {
             log.error(exception.getMessage());
-            exception.printStackTrace();
             return GamePaginatedDto.builder()
                     .products(List.of())
                     .totalPages(0)
@@ -66,7 +65,6 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
             log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -77,7 +75,6 @@ public class UserController {
         try {
             return userService.getCartPrice();
         } catch (Exception exception) {
-            exception.printStackTrace();
             log.error(exception.getMessage());
             return 0.0;
         }
@@ -88,7 +85,6 @@ public class UserController {
         try {
             return userService.getUsersCartItems();
         } catch (Exception exception) {
-            exception.printStackTrace();
             log.error(exception.getMessage());
             return List.of();
         }
@@ -103,7 +99,6 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.OK).build();
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
             log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -114,7 +109,6 @@ public class UserController {
         try {
             return userService.getUserDetails();
         } catch (Exception exception) {
-            exception.printStackTrace();
             log.error(exception.getMessage());
             return new UserDto();
         }
@@ -132,10 +126,8 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             String url = stripeService.createStripeCheckoutSession(paymentMethod, deliveryMethod);
-            System.out.println(url);
             return ResponseEntity.status(HttpStatus.OK).body(url);
         } catch (Exception exception) {
-            exception.printStackTrace();
             log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

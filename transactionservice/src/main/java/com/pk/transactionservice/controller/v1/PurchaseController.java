@@ -1,8 +1,8 @@
 package com.pk.transactionservice.controller.v1;
 
-import com.pk.transactionservice.model.entity.PurchaseDto;
 import com.pk.transactionservice.model.entity.PurchaseDtoPaginated;
 import com.pk.transactionservice.service.PurchaseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/transactionservice/v1/purchase")
+@Slf4j
 public class PurchaseController {
 
     private final PurchaseService purchaseService;
@@ -27,7 +28,7 @@ public class PurchaseController {
         try {
             return purchaseService.getPurchases(pageable);
         } catch (Exception exception) {
-            exception.printStackTrace();
+            log.error(exception.getMessage());
             return new PurchaseDtoPaginated();
         }
     }
@@ -46,7 +47,7 @@ public class PurchaseController {
                     .headers(headers)
                     .body(pdfBlob);
         } catch (Exception exception) {
-            exception.printStackTrace();
+            log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

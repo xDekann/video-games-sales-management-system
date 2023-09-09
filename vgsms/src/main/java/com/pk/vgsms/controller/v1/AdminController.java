@@ -36,7 +36,6 @@ public class AdminController {
         try {
             return adminService.getUsers(pageable, username);
         } catch (Exception exception) {
-            exception.printStackTrace();
             log.error("Error while trying to retrieve a list of users." + exception.getMessage());
             return new UserPaginatedDto();
         }
@@ -60,7 +59,6 @@ public class AdminController {
             return ResponseEntity.ok().build();
         } catch (Exception exception) {
             log.error("Error while trying to update a certain user." + exception.getMessage());
-            exception.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -85,7 +83,7 @@ public class AdminController {
         try {
             adminService.registerUser(userRegistrationDto);
         } catch (Exception exception) {
-            //log.error(exception.getMessage());
+            log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in registration");
         }
 

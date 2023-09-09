@@ -1,8 +1,5 @@
 package com.pk.vgsms.model.entity.payment;
 
-import java.util.Arrays;
-import java.util.List;
-
 public enum Payments {
 
     CARD("Card"),

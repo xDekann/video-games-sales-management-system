@@ -1,16 +1,8 @@
 package com.pk.transactionservice.config;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDSimpleFont;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
-
-import javax.swing.text.Document;
 
 @Component
 public class PdfConfig {

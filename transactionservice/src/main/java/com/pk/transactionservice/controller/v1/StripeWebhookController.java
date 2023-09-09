@@ -34,11 +34,9 @@ public class StripeWebhookController {
                 return ResponseEntity.status(HttpStatus.OK).build();
             }
         } catch (SignatureVerificationException exception) {
-            exception.printStackTrace();
             log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
         } catch (Exception exception) {
-            exception.printStackTrace();
             log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

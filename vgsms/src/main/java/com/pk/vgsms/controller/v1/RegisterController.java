@@ -31,11 +31,9 @@ public class RegisterController {
         try {
             registerService.registerUser(userRegistrationDto);
         } catch (Exception exception) {
-            //log.error(exception.getMessage());
-            exception.printStackTrace();
+            log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in registration");
         }
-
         return ResponseEntity.ok("Successfully registered.");
     }
 }
