@@ -35,14 +35,13 @@
     <div class="mt-3">
       <button @click="goToGamePanel" class="btn btn-secondary">Go to Game Panel</button>
     </div>
-
-    <p v-if="message" class="mt-3">{{ message }}</p>
   </div>
+  <Footer></Footer>
 </template>
-
 <script>
 import { generateGameCategories } from "../gameCategories";
 import axios from "axios";
+import Footer from '@/components/Footer.vue';
 
 export default {
   data() {
@@ -57,6 +56,9 @@ export default {
       message: "",
       errors: {},
     };
+  },
+  components: {
+      Footer,
   },
   methods: {
     async addGame() {
@@ -81,7 +83,11 @@ export default {
           for (const validationError of validationErrors) {
             this.errors[validationError.field] = [validationError.defaultMessage];
           }
-        } else {
+        }
+        if (error.response.status === 403) {
+            this.$router.push("/login");
+        } 
+        else {
           this.message = "An error has occurred";
         }
       }

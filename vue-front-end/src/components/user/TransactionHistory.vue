@@ -34,8 +34,8 @@
       </thead>
       <tbody>
         <!-- Loop through PurchaseDto items -->
-        <tr v-for="(purchase, index) in purchases" :key="purchase.id">
-          <td @click="toggleRow(index)" :class="{'clickable-row': clickedRowIndex === index}">
+        <tr v-for="(purchase, index) in purchases" :key="purchase.id" :class="{'clickable-row': clickedRowIndex === index}">
+          <td>
             {{ purchase.id }}
             <!-- Display the item list if the row is clicked -->
             <ul v-if="clickedRowIndex === index" class="item-list">
@@ -49,7 +49,8 @@
           <td>{{ purchase.date }}</td>
           <td>{{ purchase.deliveryMethod }}</td>
           <td>
-            <button @click="getInvoice(purchase)" class="btn btn-secondary">Get Invoice</button>
+            <button @click="getInvoice(purchase)" class="btn btn-secondary invoice-button">Get Invoice</button>
+            <button @click="toggleRow(index)" class="btn btn-secondary">Show Details</button>
           </td>
         </tr>
       </tbody>
@@ -68,11 +69,13 @@
       </template>
     </div>
   </div>
+  <Footer></Footer>
 </template>
 
 <script>
 import axios from 'axios';
 import LogoutButton from '@/components/LogoutButton.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
   mounted() {
@@ -81,7 +84,8 @@ export default {
     console.log(this.purchases);
   },
   components: {
-    LogoutButton
+    LogoutButton,
+    Footer,
   },
   data() {
     return {
@@ -109,6 +113,9 @@ export default {
           }
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           return error;
         });
     },
@@ -119,6 +126,9 @@ export default {
           this.userDetails = response.data;
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           return error;
         });
     },
@@ -148,13 +158,16 @@ export default {
 
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'invoice.pdf');
+            link.setAttribute('download', purchase.id + '.pdf');
             document.body.appendChild(link);
             link.click();
             window.URL.revokeObjectURL(url);
           }
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           console.error('Error fetching PDF:', error);
         });
     },
@@ -208,5 +221,9 @@ export default {
   background-color: #f0f0f0; /* Gray background color */
   color: #777; /* Gray text color */
   cursor: not-allowed; /* Change cursor to not-allowed */
+}
+
+.invoice-button {
+  margin-right: 3px;
 }
 </style>

@@ -34,6 +34,9 @@ export default {
           },
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           return error;
         });
       this.$emit("close");

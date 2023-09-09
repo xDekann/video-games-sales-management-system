@@ -51,10 +51,12 @@
     </div>
     <p v-if="message" class="message">{{ message }}</p>
   </div>
+  <Footer></Footer>
 </template>
 
 <script>
 import axios from 'axios';
+import Footer from '@/components/Footer.vue';
 
 export default {
   data() {
@@ -69,6 +71,9 @@ export default {
       message: '',
       errors: {}
     };
+  },
+  components: {
+      Footer,
   },
   methods: {
     async submitForm() {
@@ -123,6 +128,7 @@ export default {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 50px;
   }
 
   .register-title {

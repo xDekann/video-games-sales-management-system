@@ -71,6 +71,7 @@ public class PurchaseService {
             return null;
         }
 
+        // Title and init
         PDDocument document = new PDDocument();
         PDPage pdfPage = new PDPage(PDRectangle.A4);
         document.addPage(pdfPage);

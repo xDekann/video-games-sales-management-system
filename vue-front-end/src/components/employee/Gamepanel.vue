@@ -2,8 +2,8 @@
   <div class="container mt-5">
     <!-- Upper side panel -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <button class="btn btn-primary add-game-button" @click="goToAddGame">Add Game</button>
       <LogoutButton class="btn btn-danger"></LogoutButton>
+      <button class="btn btn-primary add-game-button" @click="goToAddGame">Add Game</button>
     </div>
 
     <!-- Category search -->
@@ -71,6 +71,7 @@
       </template>
     </div>
   </div>
+  <Footer></Footer>
 </template>
 
 <script>
@@ -79,6 +80,7 @@ import { generateGameCategories } from '../gameCategories';
 import { debounce } from 'lodash';
 import StockUnstockPrompt from './children-components/StockUnstockPrompt.vue';
 import LogoutButton from '@/components/LogoutButton.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
   mounted() {
@@ -86,7 +88,8 @@ export default {
   },
   components: {
     StockUnstockPrompt,
-    LogoutButton
+    LogoutButton,
+    Footer,
   },
   data() {
     return {
@@ -172,10 +175,14 @@ export default {
           const response = await axios.delete(`/v1/employee/game`, {params: {id: gameId}});
           if (response.status === 200) {
             this.clear();
-          } else {
+          }
+          else {
             return;
           }
         } catch (error) {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           return error;
         }
       }
@@ -203,6 +210,9 @@ export default {
           }
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           console.error("Error fetching games:", error);
         });
     },

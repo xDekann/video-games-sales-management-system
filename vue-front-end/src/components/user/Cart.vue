@@ -44,15 +44,18 @@
         <button class="btn btn-success" @click="checkout" v-if="cartCount != 0">Check Out</button>
       </div>
     </div>
+    <Footer></Footer>
   </template>
   
   <script>
   import axios from 'axios';
   import LogoutButton from '@/components/LogoutButton.vue';
+  import Footer from '@/components/Footer.vue';
   
   export default {
     components: {
       LogoutButton,
+      Footer,
     },
     data() {
       return {
@@ -72,6 +75,9 @@
             this.cartItems = response.data;
           })
           .catch((error) => {
+            if (error.response.status === 403) {
+              this.$router.push("/login");
+            }
             return error;
           });
       },
@@ -93,6 +99,9 @@
             return;
           }
         } catch (error) {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           return error;
         }
      },
@@ -112,6 +121,9 @@
                   return;
               }
             } catch (error) {
+              if (error.response.status === 403) {
+                this.$router.push("/login");
+              }
               return error;
             }
         } else {

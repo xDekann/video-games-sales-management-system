@@ -42,7 +42,7 @@
       </div>
   
       <!-- Delivery Methods -->
-      <div class="delivery-methods">
+      <div class="delivery-methods mt-2">
         <h3>Delivery Method</h3>
         <div class="d-flex">
           <label v-for="method in deliveryMethods" :key="method" class="mr-3">
@@ -61,10 +61,12 @@
         <button @click="payNow" class="btn btn-success">Pay Now</button>
       </div>
     </div>
+    <Footer></Footer>
   </template>
   
   <script>
   import axios from "axios";
+  import Footer from '@/components/Footer.vue';
   
   export default {
     data() {
@@ -78,6 +80,9 @@
         selectedDeliveryMethod: "Courier",
       };
     },
+    components: {
+      Footer,
+   },
     mounted() {
       this.fetchTotalCartAmount();
       this.fetchUserDetails();
@@ -91,6 +96,9 @@
             this.userDetails = response.data;
           })
           .catch((error) => {
+            if (error.response.status === 403) {
+              this.$router.push("/login");
+            }
             return error;
           });
       },
@@ -116,6 +124,9 @@
             return;
           }
         } catch (error) {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           return error;
         }
       },
@@ -141,6 +152,9 @@
             this.$router.push('/cart');
           }
         } catch (error) {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           alert('Error has occured during payment:', error);
           this.$router.push('/cart');
         }
@@ -153,6 +167,7 @@
   .checkout-container {
     max-width: 600px;
     margin: 0 auto;
+    margin-bottom: 50px;
   }
   
   .user-details ul,

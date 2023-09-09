@@ -56,13 +56,13 @@
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <button @click="goToUserPanel" class="btn btn-link">Back</button>
-    <p v-if="message" class="message">{{ message }}</p>
-    <div v-if="errors.fetchError" class="message">{{ errors.fetchError }}</div>
   </div>
+  <Footer></Footer>
 </template>
 
 <script>
 import axios from "axios";
+import Footer from '@/components/Footer.vue';
 
 export default {
   data() {
@@ -81,6 +81,9 @@ export default {
       errors: {}
     };
   },
+  components: {
+      Footer,
+  },
   methods: {
     async submitForm() {
       try {
@@ -97,7 +100,11 @@ export default {
               this.errors[validationError.field] = validationError.defaultMessage;
             }
             this.message = "";
-          } else {
+          }
+        if (error.response.status === 403) {
+           this.$router.push("/login");
+        }
+        else {
             this.message = "An error has occurred";
           }
       }
@@ -129,6 +136,7 @@ export default {
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 50px;
 }
 
 .register-title {

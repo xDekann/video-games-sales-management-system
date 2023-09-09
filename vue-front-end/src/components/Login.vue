@@ -15,11 +15,13 @@
       <p v-if="message" class="message">{{ message }}</p>
       <router-link to="/register" class="register-link">Register</router-link>
     </div>
+    <Footer></Footer>
   </template>
   
   <script>
   import axios from 'axios';
   import Cookies from 'js-cookie';
+  import Footer from '@/components/Footer.vue';
   
   export default {
     data() {
@@ -28,6 +30,9 @@
         password: '',
         message: '',
       };
+    },
+    components: {
+      Footer,
     },
     methods: {
       async submitForm() {

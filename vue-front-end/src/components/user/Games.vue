@@ -82,6 +82,7 @@
       </template>
     </div>
   </div>
+  <Footer></Footer>
 </template>
 
 <script>
@@ -90,6 +91,7 @@ import { generateGameCategories } from '@/components/gameCategories';
 import { debounce } from 'lodash';
 import LogoutButton from '@/components/LogoutButton.vue';
 import AddToCartModal from '@/components/user/children-components/AddToCartModal.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
   mounted() {
@@ -98,7 +100,8 @@ export default {
   },
   components: {
     AddToCartModal,
-    LogoutButton
+    LogoutButton,
+    Footer,
   },
   data() {
     return {
@@ -114,7 +117,6 @@ export default {
       fillPage: 0,
       currentPage: 0,
       totalPages: 0,
-      showingPrompt: false,
       selectedGame: null,
       showAddToCartModal: false,
       cartCount: 0,
@@ -167,11 +169,6 @@ export default {
         this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);     
       }
     },
-    async closePrompt() {
-      this.showingPrompt = false;
-      await new Promise(resolve => setTimeout(resolve, 300)); // make sure the timeout is correct
-      this.fetchGames(this.searchPhrase, this.selectedCategory, this.currentPage, this.size, false);
-    },
     fetchGames(phrase, category, currentPage, size, isFill) {
       if (!this.isSearchClicked && !isFill) {
         phrase = '';
@@ -195,6 +192,9 @@ export default {
           }
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           return error;
         });
     },
@@ -227,13 +227,16 @@ export default {
           this.closeAddToCartModal();
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           alert("An error has occurred, please try again later." + error.message);
           this.closeAddToCartModal();
         });
       this.updateCartCount();
     },
     redirectToProfile() {
-      alert("To implement profile");
+      this.$router.push('/profile')
     },
     async updateCartCount() {
       await new Promise(resolve => setTimeout(resolve, 700));
@@ -245,6 +248,9 @@ export default {
           return;
         }
       } catch (error) {
+        if (error.response.status === 403) {
+            this.$router.push("/login");
+        }
         return error;
       }
     },

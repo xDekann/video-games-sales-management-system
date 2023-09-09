@@ -2,8 +2,8 @@
   <div class="container mt-5">
     <!-- Upper side panel -->
     <div class="button-container">
-      <button class="btn btn-primary add-user-button" @click="goToAddUser">Add User</button>
       <LogoutButton class="btn btn-danger logout-button"></LogoutButton>
+      <button class="btn btn-primary add-user-button" @click="goToAddUser">Add User</button>
     </div>
     <!-- Searchbar -->
     <div class="search-container" v-click-away="clearFill">
@@ -57,12 +57,14 @@
       </template>
     </div>
   </div>
+  <Footer></Footer>
 </template>
 
 <script>
 import { debounce } from "lodash";
 import LogoutButton from "@/components/LogoutButton.vue";
 import axios from "axios";
+import Footer from '@/components/Footer.vue';
 
 export default {
   mounted() {
@@ -70,6 +72,7 @@ export default {
   },
   components: {
     LogoutButton,
+    Footer,
   },
   data() {
     return {
@@ -127,6 +130,9 @@ export default {
           });
           this.clear();
         } catch (error) {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           return;
         }
       }
@@ -175,6 +181,9 @@ export default {
           }
         })
         .catch((error) => {
+          if (error.response.status === 403) {
+            this.$router.push("/login");
+          }
           console.error("Error fetching users:", error);
         });
     },
