@@ -83,7 +83,6 @@ export default {
   mounted() {
     this.fetchPurchases();
     this.fetchUserDetails();
-    console.log(this.purchases);
   },
   created() {
     const transaction = this.$route.query.transaction;
@@ -183,7 +182,6 @@ export default {
           if (error.response.status === 403) {
             this.$router.push("/login");
           }
-          console.error('Error fetching PDF:', error);
         });
     },
     redirectToGames() {

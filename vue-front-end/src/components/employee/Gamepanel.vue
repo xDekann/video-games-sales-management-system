@@ -221,7 +221,6 @@ export default {
           if (error.response.status === 403) {
             this.$router.push("/login");
           }
-          console.error("Error fetching games:", error);
         });
     },
   },

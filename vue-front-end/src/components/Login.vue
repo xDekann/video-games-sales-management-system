@@ -57,10 +57,10 @@
                 this.message = 'Login error occurred.';
             }
           } else {
-            this.message = 'Login failed!';
+            this.message = 'Wrong username or password!';
           }
         } catch (error) {
-          this.message = 'An error occurred during login.';
+          this.message = 'Wrong username or password!';
         }
       },
     },
