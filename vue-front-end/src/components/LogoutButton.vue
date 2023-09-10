@@ -10,7 +10,7 @@ export default {
         logout() {
             axios.post('/v1/logout')
                 .then(() => {
-                    this.$router.push('/login');
+                    this.$router.push('/login?loggedout=true');
                 })
                 .catch(error => {
                     return error;

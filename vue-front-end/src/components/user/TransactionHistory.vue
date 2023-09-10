@@ -206,6 +206,10 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin-bottom: 50px;
+}
+
 .button-container {
   display: flex;
   justify-content: space-between;
@@ -214,12 +218,10 @@ export default {
 }
 
 .item-list {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-top: 1px solid #ccc;
   list-style-type: none;
   padding: 0;
   margin: 0;
+  font-size: 12px;
 }
 
 .item-list li {
@@ -228,11 +230,6 @@ export default {
 
 .clickable-row {
   cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.clickable-row:hover {
-  background-color: #f5f5f5;
 }
 
 .disabled-button {
@@ -266,6 +263,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.table {
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: none;
 }
 
 

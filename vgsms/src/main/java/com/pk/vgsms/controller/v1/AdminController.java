@@ -54,8 +54,9 @@ public class AdminController {
     @PutMapping("/user")
     public ResponseEntity<String> updateUser(@Valid @RequestBody UserDto userDto) {
         try {
-            // make sure that username does not repeat
-            adminService.updateUser(userDto);
+            if (adminService.updateUser(userDto) == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or email already exists");
+            }
             return ResponseEntity.ok().build();
         } catch (Exception exception) {
             log.error("Error while trying to update a certain user." + exception.getMessage());
@@ -81,7 +82,9 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role");
         }
         try {
-            adminService.registerUser(userRegistrationDto);
+            if (adminService.registerUser(userRegistrationDto) == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or email already exists");
+            }
         } catch (Exception exception) {
             log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in registration");

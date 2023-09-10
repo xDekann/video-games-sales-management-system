@@ -56,6 +56,7 @@
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <button @click="goToUserPanel" class="btn btn-link">Back</button>
+    <p v-if="message" class="message">{{ message }}</p>
   </div>
   <Footer></Footer>
 </template>
@@ -96,17 +97,21 @@ export default {
         if (error.response && error.response.status === 400) {
             this.errors = {};
             const validationErrors = error.response.data.errors;
+            if (validationErrors === undefined) {
+              this.message = error.response.data;
+              return;
+            }
             for (const validationError of validationErrors) {
               this.errors[validationError.field] = validationError.defaultMessage;
             }
             this.message = "";
           }
-        if (error.response.status === 403) {
+        else if (error.response.status === 403) {
            this.$router.push("/login");
         }
         else {
             this.message = "An error has occurred";
-          }
+        }
       }
     },
     clearForm() {

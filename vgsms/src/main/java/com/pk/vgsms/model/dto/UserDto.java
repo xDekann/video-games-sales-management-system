@@ -41,7 +41,7 @@ public class UserDto {
 
     @NotBlank(message = "City must not be blank!")
     @Size(min = 3, max = 45, message = "City must contain more than 2 and less than 46 characters!")
-    @Pattern(regexp = "[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+", message = "The user's city can only contain letters.")
+    @Pattern(regexp = "[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ ]+", message = "The user's city can only contain letters.")
     private String city;
 
     @NotBlank(message = "Address must not be blank!")
@@ -49,6 +49,7 @@ public class UserDto {
     @Pattern(regexp = "^[A-Za-z0-9\\-.,\\/\\\\ ]+$", message = "Invalid address")
     private String address;
 
+    @NotBlank(message = "Password must not be blank!")
     private String password;
 
     private String authorityName;

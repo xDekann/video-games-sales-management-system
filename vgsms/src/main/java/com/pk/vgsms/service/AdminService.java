@@ -24,11 +24,14 @@ public class AdminService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RegisterService registerService;
+    private final UserService userService;
     @Autowired
-    public AdminService(UserRepository userRepository, PasswordEncoder passwordEncoder, RegisterService registerService) {
+    public AdminService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                        RegisterService registerService, UserService userService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.registerService = registerService;
+        this.userService = userService;
     }
 
     public UserPaginatedDto getUsers(Pageable pageable, String username) {
@@ -65,10 +68,19 @@ public class AdminService {
         return usersToUsersDto(List.of(userFromDb), loggedUserName).get(FIRST_PERSON_INDEX);
     }
 
-    public void updateUser(UserDto userDto) {
+    public User updateUser(UserDto userDto) {
         User userToUpdate = userRepository.findUserById(userDto.getId());
+        if ((userRepository.findUserByName(userDto.getUsername()) != null &&
+                !userService.getLoggedUser().getUsername().equals(userDto.getUsername()) &&
+                !userService.getLoggedUser().getAuthority().getAuthorityName().equals("ADMIN"))
+                || (userRepository.findUserByEmail(userDto.getEmail()) != null &&
+                !userToUpdate.getUserDetails().getEmail().equals(userDto.getEmail()) &&
+                !userService.getLoggedUser().getAuthority().getAuthorityName().equals("ADMIN"))) {
+            return null;
+        }
         mergeUserWithDto(userToUpdate, userDto);
         userRepository.save(userToUpdate);
+        return userToUpdate;
     }
 
     private void mergeUserWithDto(User user, UserDto userDto) {
@@ -99,7 +111,7 @@ public class AdminService {
         userRepository.save(userToDelete);
     }
 
-    public void registerUser(UserRegistrationDto userRegistrationDto) {
-        registerService.registerUser(userRegistrationDto);
+    public User registerUser(UserRegistrationDto userRegistrationDto) {
+        return registerService.registerUser(userRegistrationDto);
     }
 }

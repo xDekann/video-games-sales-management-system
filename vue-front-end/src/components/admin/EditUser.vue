@@ -62,6 +62,7 @@
       <button type="submit" class="btn btn-primary">Update</button>
     </form>
     <button @click="goBack" class="btn btn-link">Back</button>
+    <p v-if="message" class="message">{{ message }}</p>
   </div>
   <Footer></Footer>
 </template>
@@ -83,6 +84,7 @@ export default {
       city: "",
       address: "",
       selectedRole: "",
+      message: "",
       errors: {}
     };
   },
@@ -139,6 +141,10 @@ export default {
           if (error.response && error.response.status === 400) {
             this.errors = {};
             const validationErrors = error.response.data.errors;
+            if (validationErrors === undefined) {
+              this.message = error.response.data;
+              return;
+            }
             for (const validationError of validationErrors) {
               this.errors[validationError.field] = validationError.defaultMessage;
             }

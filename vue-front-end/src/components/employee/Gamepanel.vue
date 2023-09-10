@@ -227,6 +227,10 @@ export default {
 };
 </script>
 <style scoped>
+.container {
+  margin-bottom: 50px;
+}
+
 .game-item {
   border: 1px solid #ccc;
   padding: 10px;

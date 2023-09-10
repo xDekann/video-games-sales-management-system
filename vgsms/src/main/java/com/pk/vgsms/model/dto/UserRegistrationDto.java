@@ -44,7 +44,7 @@ public class UserRegistrationDto {
 
     @NotBlank(message = "City must not be blank!")
     @Size(min = 3, max = 45, message = "City must contain more than 2 and less than 46 characters!")
-    @Pattern(regexp = "[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+", message = "The user's city can only contain letters!")
+    @Pattern(regexp = "[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ ]+", message = "The user's city can only contain letters and spaces!")
     private String city;
 
     @NotBlank(message = "Address must not be blank!")

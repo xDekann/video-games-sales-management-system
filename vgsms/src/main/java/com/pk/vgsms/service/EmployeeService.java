@@ -20,7 +20,10 @@ public class EmployeeService {
         this.productRepository = productRepository;
     }
 
-    public void addProductToDb(GameDto gameDto) {
+    public Product addProductToDb(GameDto gameDto) {
+        if (productRepository.findProductByName(gameDto.getName()) != null) {
+            return null;
+        }
         Product product = Product.builder()
                 .name(gameDto.getName())
                 .amount(1L)
@@ -29,6 +32,7 @@ public class EmployeeService {
                 .producer(gameDto.getProducer())
                 .build();
         productRepository.save(product);
+        return product;
     }
 
     public Page<Product> getProducts(String phrase, String category, Pageable pageable) {
@@ -49,7 +53,11 @@ public class EmployeeService {
             if (addition) {
                 product.setAmount(product.getAmount() + amount);
             } else {
-                product.setAmount(product.getAmount() - amount);
+                if (product.getAmount() - amount < 0) {
+                    product.setAmount(0L);
+                } else {
+                    product.setAmount(product.getAmount() - amount);
+                }
             }
             productRepository.save(product);
             return product;

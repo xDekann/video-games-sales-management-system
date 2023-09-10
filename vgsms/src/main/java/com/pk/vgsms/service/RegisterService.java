@@ -14,14 +14,28 @@ public class RegisterService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public RegisterService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public RegisterService(PasswordEncoder passwordEncoder, UserRepository userRepository, UserService userService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
-    public void registerUser(UserRegistrationDto userRegistrationDto) {
+    public User registerUser(UserRegistrationDto userRegistrationDto) {
+        if ((userRepository.findUserByName(userRegistrationDto.getUsername()) != null && userService.getLoggedUser() == null) ||
+                (userRepository.findUserByEmail(userRegistrationDto.getEmail()) != null && userService.getLoggedUser() == null)) {
+            return null;
+        }
+        if ((userRepository.findUserByName(userRegistrationDto.getUsername()) != null &&
+                !userService.getLoggedUser().getUsername().equals(userRegistrationDto.getUsername()) &&
+                !userService.getLoggedUser().getAuthority().getAuthorityName().equals("ADMIN"))
+                || (userRepository.findUserByEmail(userRegistrationDto.getEmail()) != null &&
+                !userService.getLoggedUser().getUserDetails().getEmail().equals(userRegistrationDto.getEmail()) &&
+                !userService.getLoggedUser().getAuthority().getAuthorityName().equals("ADMIN"))) {
+            return null;
+        }
         User user = dtoToUser(userRegistrationDto);
         UserDetails userDetails = dtoToUserDetails(userRegistrationDto);
         Authority authority = userRepository.findAuthorityByAuthorityName(userRegistrationDto.getAuthorityName());
@@ -30,6 +44,7 @@ public class RegisterService {
         userDetails.connectUser(user);
         authority.getUsers().add(user);
         userRepository.save(user);
+        return user;
     }
 
     private UserDetails dtoToUserDetails(UserRegistrationDto userRegistrationDto) {

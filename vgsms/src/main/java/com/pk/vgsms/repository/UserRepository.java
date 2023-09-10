@@ -16,15 +16,14 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("SELECT u FROM User u JOIN FETCH u.userDetails ud " +
             "JOIN FETCH u.authority ua WHERE u.username = :username")
     User findUserByName(@Param("username") String username);
-
     @Query("SELECT a FROM Authority a WHERE a.authorityName = :authorityName")
     Authority findAuthorityByAuthorityName(@Param("authorityName") String authorityName);
-
     Page<User> findAll(Specification<User> spec, Pageable pageable);
-
     @Query("SELECT u FROM User u JOIN FETCH u.userDetails ud " +
             "JOIN FETCH u.authority ua WHERE u.id = :id")
     User findUserById(@Param("id") Long id);
-
+    @Query("SELECT u FROM User u JOIN FETCH u.userDetails ud " +
+            "JOIN FETCH u.authority ua WHERE u.userDetails.email = :email")
+    User findUserByEmail(String email);
     Page<User> findAllByUsernameContainingIgnoreCaseAndUsernameNotOrderByUsername(String phrase, String loggedUserName, Pageable pageable);
 }

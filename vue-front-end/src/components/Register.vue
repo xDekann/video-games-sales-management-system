@@ -91,7 +91,7 @@ export default {
 
         if (response.status === 200) {
           this.message = 'Registration successful!';
-          this.$router.push('/login');
+          this.$router.push('/login?registered=true');
         } 
         else {
           this.message = 'Registration failed!';
@@ -103,6 +103,10 @@ export default {
         if (error.response.status === 400) {
           this.errors = {};
           const validationErrors = error.response.data.errors;
+          if (validationErrors === undefined) {
+              this.message = error.response.data;
+              return;
+            }
           for (const validationError of validationErrors) {
             this.errors[validationError.field] = validationError.defaultMessage;
           }

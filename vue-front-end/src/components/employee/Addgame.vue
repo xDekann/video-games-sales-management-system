@@ -34,6 +34,7 @@
 
     <div class="mt-3">
       <button @click="goToGamePanel" class="btn btn-secondary">Go to Game Panel</button>
+      <p v-if="message" class="message">{{ message }}</p>
     </div>
   </div>
   <Footer></Footer>
@@ -80,6 +81,14 @@ export default {
           this.errors = {};
 
           const validationErrors = error.response.data.errors;
+          if (validationErrors === undefined) {
+              if (error.response.data.message != null) {
+                this.message = "Use `.` instead of `,` for price";
+                return;
+              }
+              this.message = error.response.data;
+              return;
+            }
           for (const validationError of validationErrors) {
             this.errors[validationError.field] = [validationError.defaultMessage];
           }
@@ -105,6 +114,10 @@ export default {
 }
 
 .invalid-feedback {
+  color: #dc3545;
+}
+
+.message {
   color: #dc3545;
 }
 </style>

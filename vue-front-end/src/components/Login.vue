@@ -29,6 +29,16 @@
         message: '',
       };
     },
+    created() {
+      const registered = this.$route.query.registered;
+      const loggedout = this.$route.query.loggedout;
+      if (registered === 'true') {
+        this.message = 'Registration successful!';
+      }
+      if (loggedout === 'true') {
+        this.message = "Successfully logged out!";
+      }
+    },
     components: {
       Footer,
     },

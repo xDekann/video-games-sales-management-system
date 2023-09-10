@@ -36,14 +36,15 @@ public class EmployeeController {
 
     @PostMapping("/game")
     public ResponseEntity<String> addProduct(@Valid @RequestBody GameDto gameDto) {
-        // validate if the game with the given name already exists in db
         try {
-            employeeService.addProductToDb(gameDto);
+            if (employeeService.addProductToDb(gameDto) == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product already exists");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully added product.");
         } catch (Exception exception) {
             log.error(exception.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in product addition");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Successfully added product.");
     }
 
     @GetMapping("/game")
@@ -65,7 +66,9 @@ public class EmployeeController {
 
     @PutMapping("/game/replenish")
     public ResponseEntity<String> replenishProduct(@RequestParam("id") Long productId, @RequestParam("amount") Long amount) {
-        // add the validation for negative amount (floating point?)
+        if (amount < 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Amount cannot be negative.");
+        }
         try {
             if (employeeService.replenishProduct(productId, amount, true) != null) {
                 return ResponseEntity.status(HttpStatus.OK).build();
