@@ -46,6 +46,7 @@ const router = createRouter({
 
   router.beforeEach((to, from, next) => {
     let role = null;
+    document.title = 'Game store';
     if (jsCookie.get('ROLE')) {
       role = atob(jsCookie.get('ROLE'));
     }
