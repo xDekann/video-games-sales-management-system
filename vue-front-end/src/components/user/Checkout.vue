@@ -47,7 +47,7 @@
         <div class="d-flex">
           <label v-for="method in deliveryMethods" :key="method" class="mr-3">
             <input type="radio" v-model="selectedDeliveryMethod" :value="method" />
-            <img v-if="method === 'Courier'" src="courier.jpg" alt="Courier Logo" class="delivery-logo" />
+            <img v-if="method === 'Courier'" src="courier.png" alt="Courier Logo" class="delivery-logo" />
             <img v-if="method === 'Self Pickup'" src="selfpickup.png" alt="Self Pickup Logo" class="delivery-logo" />
             <img v-if="method === 'Paczkomat'" src="inpost.png" alt="Paczkomat Logo" class="delivery-logo" />
             <span v-if="method === 'Self Pickup'" class="method-name">{{ method }}</span>
@@ -195,7 +195,7 @@
   
   .payment-logo,
   .delivery-logo {
-    width: 40px;
+    width: 50px;
     margin-right: 10px;
     margin-left: 5px;
   }

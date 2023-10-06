@@ -320,6 +320,7 @@ export default {
   width: 100%;
   list-style: none;
   background-color: white;
+  color: black;
   border: 1px solid #ccc;
   border-top: none;
   padding: 0;

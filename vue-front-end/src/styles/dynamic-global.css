@@ -1,0 +1,17 @@
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.table th, .table td {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+.table-responsive {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+.list-group-item {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}

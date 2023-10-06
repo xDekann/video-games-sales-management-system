@@ -241,6 +241,7 @@ export default {
   width: 100%;
   list-style: none;
   background-color: white;
+  color: black;
   border: 1px solid #ccc;
   border-top: none;
   padding: 0;
@@ -289,7 +290,6 @@ export default {
 
 .page-number {
   font-size: 18px;
-  color: #333;
   margin: 0px 3px 0;
 }
 
@@ -377,6 +377,6 @@ export default {
 
 .no-results {
   font-size: 18px;
-  color: #777;
+  color: black;
 }
 </style>

@@ -55,6 +55,7 @@ export default {
 
 .custom-modal {
   background-color: white;
+  color: black;
   padding: 20px;
   border-radius: 4px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);

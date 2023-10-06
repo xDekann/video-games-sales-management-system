@@ -8,7 +8,7 @@
     </div>
 
     <!-- User Details -->
-    <div class="user-details">
+    <div>
       <h3>User Details</h3>
       <ul class="list-unstyled">
         <li><strong>Name:</strong> {{ userDetails.name }}</li>
@@ -20,7 +20,7 @@
     </div>
 
     <!-- Transaction history table -->
-    <div class="table-responsive">
+    <div class="table-responsive mb-4">
       <table class="table mt-4">
         <thead>
           <tr>
@@ -269,11 +269,14 @@ export default {
   border-collapse: collapse;
 }
 
+.table-responsive {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
 .table th,
 .table td {
   border: none;
 }
-
 
 @media (max-width: 768px) {
   .table-responsive table th,
