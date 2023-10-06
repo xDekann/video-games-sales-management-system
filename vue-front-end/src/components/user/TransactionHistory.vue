@@ -2,20 +2,20 @@
   <div class="container mt-5">
     <!-- Upper side panel -->
     <div class="button-container">
-        <LogoutButton class="btn btn-danger"></LogoutButton>
-        <button class="btn btn-secondary" @click="redirectToGames">Back To Games</button>
+        <LogoutButton class="btn btn-danger" :translations="translations"></LogoutButton>
+        <button class="btn btn-secondary" @click="redirectToGames">{{ translations.user.history.backToGames }}</button>
 
     </div>
 
     <!-- User Details -->
     <div>
-      <h3>User Details</h3>
+      <h3>{{ translations.user.history.userDetails }}</h3>
       <ul class="list-unstyled">
-        <li><strong>Name:</strong> {{ userDetails.name }}</li>
-        <li><strong>Surname:</strong> {{ userDetails.surname }}</li>
-        <li><strong>Email:</strong> {{ userDetails.email }}</li>
-        <li><strong>City:</strong> {{ userDetails.city }}</li>
-        <li><strong>Address:</strong> {{ userDetails.address }}</li>
+        <li><strong>{{ translations.user.history.name }}</strong> {{ userDetails.name }}</li>
+        <li><strong>{{ translations.user.history.surname }}</strong> {{ userDetails.surname }}</li>
+        <li><strong>{{ translations.user.history.email }}</strong> {{ userDetails.email }}</li>
+        <li><strong>{{ translations.user.history.city }}</strong> {{ userDetails.city }}</li>
+        <li><strong>{{ translations.user.history.address }}</strong> {{ userDetails.address }}</li>
       </ul>
     </div>
 
@@ -24,12 +24,12 @@
       <table class="table mt-4">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Value</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>Delivery Method</th>
-            <th>Options</th>
+            <th>{{ translations.user.history.id }}</th>
+            <th>{{ translations.user.history.value }}</th>
+            <th>{{ translations.user.history.status }}</th>
+            <th>{{ translations.user.history.date }}</th>
+            <th>{{ translations.user.history.deliveryMethod }}</th>
+            <th>{{ translations.user.history.options }}</th>
           </tr>
         </thead>
         <tbody>
@@ -38,7 +38,7 @@
               {{ purchase.id }}
               <ul v-if="clickedRowIndex === index" class="item-list">
                 <li v-for="item in purchase.items" :key="item.name">
-                  {{ item.name }} - {{ item.price }} PLN - Amount: {{ item.amount }}
+                  {{ item.name }} - {{ item.price }} PLN - {{ translations.user.history.amount }} {{ item.amount }}
                 </li>
               </ul>
             </td>
@@ -48,8 +48,8 @@
             <td>{{ purchase.deliveryMethod }}</td>
             <td class="button-cell">
               <div class="button-group">
-                <button @click="getInvoice(purchase)" class="btn btn-sm btn-secondary invoice-button">Get Invoice</button>
-                <button @click="toggleRow(index)" class="btn btn-sm btn-secondary">Show Details</button>
+                <button @click="getInvoice(purchase)" class="btn btn-sm btn-secondary invoice-button">{{ translations.user.history.invoice }}</button>
+                <button @click="toggleRow(index)" class="btn btn-sm btn-secondary">{{ translations.user.history.showDetails }}</button>
               </div>
             </td>
           </tr>
@@ -59,18 +59,18 @@
 
     <!-- Pagination controls -->
     <div class="pagination-container">
-      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">Previous</button>
+      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">{{ translations.user.history.previous }}</button>
       <template v-if="purchases.length > 0">
-        <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">Next</button>
+        <span class="page-number">{{ translations.user.history.page }} {{ currentPage + 1 }} {{ translations.user.history.of }} {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">{{ translations.user.history.next }}</button>
       </template>
       <template v-else>
-        <span class="page-number">Page {{ currentPage + 1 }} of 1</span>
-        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">Next</button>
+        <span class="page-number">{{ translations.user.history.page }} {{ currentPage + 1 }} {{ translations.user.history.of }} 1</span>
+        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">{{ translations.user.history.next }}</button>
       </template>
     </div>
   </div>
-  <Footer></Footer>
+  <Footer :translations="translations"></Footer>
 </template>
 
 <script>
@@ -80,6 +80,8 @@ import Footer from '@/components/Footer.vue';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
+  props: ["translations"],
+
   mounted() {
     this.fetchPurchases();
     this.fetchUserDetails();
@@ -88,10 +90,10 @@ export default {
     const transaction = this.$route.query.transaction;
     if (transaction === "success") {
       this.$swal.fire({
-          title: 'Success',
-          text: 'Transaction has been completed successfully!',
+          title: this.translations.user.history.stitle,
+          text: this.translations.user.history.stitle,
           icon: 'success',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.translations.user.history.sconfirmButtonText,
       });
     }
   },
@@ -162,10 +164,10 @@ export default {
         .then((response) => {
           if (response.status === 204) {
             this.$swal.fire({
-              title: 'Failure',
-              text: 'Invalid transaction.',
+              title: this.translations.user.history.nstitle,
+              text: this.translations.user.history.nstext,
               icon: 'error',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.translations.user.history.nsconfirmButtonText,
             });
           } else {
             const blob = new Blob([response.data], { type: 'application/pdf' });

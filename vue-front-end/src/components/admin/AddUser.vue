@@ -1,64 +1,64 @@
 <template>
   <div class="registration-container mt-5">
-    <h2 class="register-title">Add User</h2>
+    <h2 class="register-title">{{translations.register.addUser}}</h2>
     <form @submit.prevent="submitForm" class="registration-form">
       <div class="form-group">
-        <label for="name">Name:</label>
+        <label for="name">{{translations.register.name}}</label>
         <input v-model="user.name" type="text" id="name" class="form-control" :class="{ 'is-invalid': errors.name }" />
         <div class="invalid-feedback" v-if="errors.name">{{ errors.name }}</div>
       </div>
 
       <div class="form-group">
-        <label for="surname">Surname:</label>
+        <label for="surname">{{translations.register.surname}}</label>
         <input v-model="user.surname" type="text" id="surname" class="form-control" :class="{ 'is-invalid': errors.surname }" />
         <div class="invalid-feedback" v-if="errors.surname">{{ errors.surname }}</div>
       </div>
 
       <div class="form-group">
-        <label for="email">Email:</label>
+        <label for="email">{{translations.register.email}}</label>
         <input v-model="user.email" type="email" id="email" class="form-control" :class="{ 'is-invalid': errors.email }" />
         <div class="invalid-feedback" v-if="errors.email">{{ errors.email }}</div>
       </div>
 
       <div class="form-group">
-        <label for="username">Username:</label>
+        <label for="username">{{translations.register.username}}</label>
         <input v-model="user.username" type="text" id="username" class="form-control" :class="{ 'is-invalid': errors.username }" />
         <div class="invalid-feedback" v-if="errors.username">{{ errors.username }}</div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password:</label>
+        <label for="password">{{translations.register.password}}</label>
         <input v-model="user.password" type="password" id="password" class="form-control" :class="{ 'is-invalid': errors.password }" />
         <div class="invalid-feedback" v-if="errors.password">{{ errors.password }}</div>
       </div>
 
       <div class="form-group">
-        <label for="city">City:</label>
+        <label for="city">{{translations.register.city}}</label>
         <input v-model="user.city" type="text" id="city" class="form-control" :class="{ 'is-invalid': errors.city }" />
         <div class="invalid-feedback" v-if="errors.city">{{ errors.city }}</div>
       </div>
 
       <div class="form-group">
-        <label for="address">Address:</label>
+        <label for="address">{{translations.register.address}}</label>
         <textarea id="address" v-model="user.address" class="form-control" :class="{ 'is-invalid': errors.address }"></textarea>
         <div class="invalid-feedback" v-if="errors.address">{{ errors.address }}</div>
       </div>
 
       <div class="form-group">
-        <label>Authority:</label>
+        <label>{{translations.register.role}}</label>
         <div>
-          <label><input type="radio" v-model="user.authorityName" value="USER" /> User</label>
-          <label><input type="radio" v-model="user.authorityName" value="EMPLOYEE" /> Employee</label>
-          <label><input type="radio" v-model="user.authorityName" value="ADMIN" /> Admin</label>
+          <label><input type="radio" v-model="user.authorityName" value="USER" /> {{translations.register.user}}</label>
+          <label><input type="radio" v-model="user.authorityName" value="EMPLOYEE" /> {{translations.register.employee}}</label>
+          <label><input type="radio" v-model="user.authorityName" value="ADMIN" /> {{translations.register.admin}}</label>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">{{translations.register.confirmSubmit}}</button>
     </form>
-    <button @click="goToUserPanel" class="btn btn-link">Back</button>
+    <button @click="goToUserPanel" class="btn btn-link">{{translations.register.singleBack}}</button>
     <p v-if="message" class="message">{{ message }}</p>
   </div>
-  <Footer></Footer>
+  <Footer :translations="translations"></Footer>
 </template>
 
 <script>
@@ -66,6 +66,8 @@ import axios from "axios";
 import Footer from '@/components/Footer.vue';
 
 export default {
+  props: ['translations'],
+
   data() {
     return {
       user: {
@@ -79,7 +81,16 @@ export default {
         authorityName: "USER",
       },
       message: "",
-      errors: {}
+      errors: {},
+      errorMessages: {
+        username: this.translations.register.usernameErr,
+        password: this.translations.register.passwordErr,
+        name: this.translations.register.nameErr,
+        surname: this.translations.register.surnameErr,
+        email: this.translations.register.emailErr,
+        city: this.translations.register.cityErr,
+        address: this.translations.register.addressErr
+      }
     };
   },
   components: {
@@ -90,7 +101,7 @@ export default {
       try {
         const response = await axios.post("/v1/admin/user", this.user);
         if (response.status === 200) {
-          this.message = "User added successfully!";
+          this.message = this.translations.register.added;
           this.clearForm();
         }
       } catch (error) {
@@ -102,7 +113,7 @@ export default {
               return;
             }
             for (const validationError of validationErrors) {
-              this.errors[validationError.field] = validationError.defaultMessage;
+              this.errors[validationError.field] = this.errorMessages[validationError.field];
             }
             this.message = "";
           }
@@ -110,7 +121,7 @@ export default {
            this.$router.push("/login");
         }
         else {
-            this.message = "An error has occurred";
+            this.message = this.translations.error;
         }
       }
     },

@@ -1,19 +1,19 @@
 <template>
     <div class="login-container">
-      <h2 class="sign-in-title">Sign In</h2>
+      <h2 class="sign-in-title">{{translations.login.title}}</h2>
       <div class="form-container mt-3">
         <form @submit.prevent="submitForm" class="login-form">
-          <label for="username">Username:</label>
+          <label for="username">{{translations.login.username}}</label>
           <input type="text" id="username" v-model="username" />
-          <label for="password">Password:</label>
+          <label for="password">{{translations.login.password}}</label>
           <input type="password" id="password" v-model="password" />
-          <button type="submit">Sign In</button>
+          <button type="submit">{{translations.login.login}}</button>
         </form>
       </div>
       <p v-if="message" class="message">{{ message }}</p>
-      <router-link to="/register" class="register-link">Register</router-link>
+      <router-link to="/register" class="register-link">{{translations.login.register}}</router-link>
     </div>
-    <Footer></Footer>
+    <Footer :translations="translations"></Footer>
   </template>
   
   <script>
@@ -22,6 +22,7 @@
   import Footer from '@/components/Footer.vue';
   
   export default {
+    props: ['translations'],
     data() {
       return {
         username: '',
@@ -33,10 +34,10 @@
       const registered = this.$route.query.registered;
       const loggedout = this.$route.query.loggedout;
       if (registered === 'true') {
-        this.message = 'Registration successful!';
+        this.message = this.translations.login.registration;
       }
       if (loggedout === 'true') {
-        this.message = "Successfully logged out!";
+        this.message = this.translations.login.logout;
       }
     },
     components: {
@@ -51,7 +52,7 @@
           });
   
           if (response.status === 200) {
-            this.message = 'Login successful!';
+            this.message = this.translations.login.success;
             const roleCookie = atob(Cookies.get('ROLE'));
             switch (roleCookie) {
               case 'ROLE_EMPLOYEE':
@@ -64,13 +65,13 @@
                 this.$router.push('/userpanel');
                 break;
               default:
-                this.message = 'Login error occurred.';
+                this.message = this.translations.login.error;
             }
           } else {
-            this.message = 'Wrong username or password!';
+            this.message = this.translations.login.wrongUP;
           }
         } catch (error) {
-          this.message = 'Wrong username or password!';
+          this.message = this.translations.login.wrongUP;
         }
       },
     },

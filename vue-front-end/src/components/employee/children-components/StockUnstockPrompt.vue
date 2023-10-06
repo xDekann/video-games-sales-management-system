@@ -1,11 +1,11 @@
 <template>
   <div class="prompt-overlay">
     <div class="prompt">
-      <label for="quantity">Enter quantity:</label>
+      <label for="quantity">{{translations.employee.stocking.quantity}}</label>
       <input type="number" id="quantity" v-model="quantity" class="form-control" />
       <div class="button-container mt-3">
-        <button @click="confirm" class="btn btn-primary">Confirm</button>
-        <button @click="cancel" class="btn btn-secondary">Cancel</button>
+        <button @click="confirm" class="btn btn-primary">{{translations.employee.stocking.confirmButtonText}}</button>
+        <button @click="cancel" class="btn btn-secondary">{{translations.employee.stocking.cancelButtonText}}</button>
       </div>
     </div>
   </div>
@@ -15,7 +15,7 @@
 import axios from "axios";
 
 export default {
-  props: ["gameId", "action"],
+  props: ["gameId", "action", "translations"],
   data() {
     return {
       quantity: 0,

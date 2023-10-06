@@ -3,8 +3,8 @@
       <div class="container">
         <div class="footer-content">
           <div class="content">
-            <span>&copy; Video Games Sales Management System 2023</span>
-            by Oskar Ożóg
+            <span>&copy; {{ translations.footer.textPre }} </span>
+            {{ translations.footer.textPost }} 
           </div>
         </div>
       </div>
@@ -13,6 +13,7 @@
   
   <script>
   export default {
+    props: ['translations'],
     name: 'Footer',
   };
   </script>

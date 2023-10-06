@@ -1,15 +1,15 @@
 <template>
   <div class="custom-modal-overlay">
     <div class="custom-modal">
-      <h2>Add to Cart</h2>
+      <h2>{{ translations.user.addToCart.add }}</h2>
       <p>{{ game.name }}</p>
       <div class="input-container">
-        <label for="quantity" class="quantity-label">Quantity:</label>
+        <label for="quantity" class="quantity-label">{{ translations.user.addToCart.quantity }}</label>
         <input type="number" id="quantity" v-model="quantity" min="1" />
       </div>
       <div class="button-container">
-        <button @click="addToCart" class="btn btn-success">Add</button>
-        <button @click="closeModal" class="btn btn-danger">Cancel</button>
+        <button @click="addToCart" class="btn btn-success">{{ translations.user.addToCart.confirmButtonText }}</button>
+        <button @click="closeModal" class="btn btn-danger">{{ translations.user.addToCart.cancelButtonText }}</button>
       </div>
     </div>
   </div>
@@ -22,6 +22,10 @@ export default {
       type: Object,
       required: true,
     },
+    translations: {
+      type: Object,
+      required: true,
+    }
   },
   data() {
     return {

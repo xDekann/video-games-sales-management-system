@@ -2,36 +2,36 @@
     <div class="checkout-container mt-5">
       <!-- User Details -->
       <div class="user-details">
-        <h3>User Details</h3>
+        <h3>{{ translations.user.checkout.userDetails }}</h3>
         <ul class="list-unstyled">
-          <li><strong>Name:</strong> {{ userDetails.name }}</li>
-          <li><strong>Surname:</strong> {{ userDetails.surname }}</li>
-          <li><strong>Email:</strong> {{ userDetails.email }}</li>
-          <li><strong>City:</strong> {{ userDetails.city }}</li>
-          <li><strong>Address:</strong> {{ userDetails.address }}</li>
+          <li><strong>{{ translations.user.checkout.name }}</strong> {{ userDetails.name }}</li>
+          <li><strong>{{ translations.user.checkout.surname }}</strong> {{ userDetails.surname }}</li>
+          <li><strong>{{ translations.user.checkout.email }}</strong> {{ userDetails.email }}</li>
+          <li><strong>{{ translations.user.checkout.city }}</strong> {{ userDetails.city }}</li>
+          <li><strong>{{ translations.user.checkout.address }}</strong> {{ userDetails.address }}</li>
         </ul>
       </div>
   
       <!-- Cart Items -->
       <div class="cart-items">
-        <h3>Cart Items</h3>
+        <h3>{{ translations.user.checkout.cartItems }}</h3>
         <ul class="list-group">
           <li class="list-group-item" v-for="item in cartItems" :key="item.itemId">
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <strong>{{ item.name }}</strong><br>
-                Price (PLN): {{ item.price }}<br>
-                Amount: {{ item.amount }}
+                {{ translations.user.checkout.price }} (PLN): {{ item.price }}<br>
+                {{ translations.user.checkout.amount }} {{ item.amount }}
               </div>
             </div>
           </li>
         </ul>
-        <div><strong>Total Cart Price:</strong> {{ totalCartAmount }} PLN</div>
+        <div><strong>{{ translations.user.checkout.totalCartPrrice }}</strong> {{ totalCartAmount }} PLN</div>
       </div>
   
       <!-- Payment Methods -->
       <div class="payment-methods mt-3">
-        <h3>Payment Method</h3>
+        <h3>{{ translations.user.checkout.paymentMethod }}</h3>
         <div class="d-flex">
           <label v-for="method in paymentMethods" :key="method" class="mr-3">
             <input type="radio" v-model="selectedPaymentMethod" :value="method" />
@@ -43,25 +43,25 @@
   
       <!-- Delivery Methods -->
       <div class="delivery-methods mt-2">
-        <h3>Delivery Method</h3>
+        <h3>{{ translations.user.checkout.deliveryMethod }}</h3>
         <div class="d-flex">
           <label v-for="method in deliveryMethods" :key="method" class="mr-3">
             <input type="radio" v-model="selectedDeliveryMethod" :value="method" />
             <img v-if="method === 'Courier'" src="courier.png" alt="Courier Logo" class="delivery-logo" />
             <img v-if="method === 'Self Pickup'" src="selfpickup.png" alt="Self Pickup Logo" class="delivery-logo" />
             <img v-if="method === 'Paczkomat'" src="inpost.png" alt="Paczkomat Logo" class="delivery-logo" />
-            <span v-if="method === 'Self Pickup'" class="method-name">{{ method }}</span>
+            <span v-if="method === 'Self Pickup'" class="method-name">{{ translations.user.checkout.selfPickup }}</span>
           </label>
         </div>
       </div>
   
       <!-- Buttons -->
       <div class="buttons mt-4">
-        <button @click="goBackToCart" class="btn btn-secondary">Back to Cart</button>
-        <button @click="payNow" class="btn btn-success">Pay Now</button>
+        <button @click="goBackToCart" class="btn btn-secondary"> {{ translations.user.checkout.backToCart }}</button>
+        <button @click="payNow" class="btn btn-success">{{ translations.user.checkout.payNow }}</button>
       </div>
     </div>
-    <Footer></Footer>
+    <Footer :translations="translations"></Footer>
   </template>
   
   <script>
@@ -70,6 +70,8 @@
   import 'sweetalert2/dist/sweetalert2.min.css';
   
   export default {
+    props: ["translations"],
+    
     data() {
       return {
         userDetails: {},
@@ -149,10 +151,10 @@
           }
           if (response.status === 204) {
             await this.$swal.fire({
-              title: 'Error',
-              text: 'Some of the picked items are no longer available.',
+              title: this.translations.user.checkout.itemsUnavailableTitle,
+              text: this.translations.user.checkout.itemsUnavailableText,
               icon: 'error',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.translations.user.checkout.itemsUnavailableConfirmButtonText,
             });
           } else {
             this.$router.push('/cart');
@@ -162,10 +164,10 @@
             this.$router.push("/login");
           }
           await this.$swal.fire({
-              title: 'Error',
-              text: 'An error has occurred while processing your payment',
+              title: this.translations.user.checkout.errorTitle,
+              text: this.translations.user.checkout.errorText,
               icon: 'error',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.translations.user.checkout.errorConfirmButtonText,
             });
           this.$router.push('/cart');
         }

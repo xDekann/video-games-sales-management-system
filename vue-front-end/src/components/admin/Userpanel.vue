@@ -3,13 +3,13 @@
 
     <!-- Upper side panel -->
     <div class="button-container">
-      <LogoutButton class="btn btn-danger logout-button"></LogoutButton>
-      <button class="btn btn-primary add-user-button" @click="goToAddUser">Add User</button>
+      <LogoutButton class="btn btn-danger logout-button" :translations="translations"></LogoutButton>
+      <button class="btn btn-primary add-user-button" @click="goToAddUser">{{ translations.admin.userpanel.adduser }}</button>
     </div>
 
     <!-- Searchbar -->
     <div class="search-container" v-click-away="clearFill">
-      <input v-model="searchPhrase" @input="handleInput" class="form-control" placeholder="Search users..." />
+      <input v-model="searchPhrase" @input="handleInput" class="form-control" :placeholder="translations.admin.userpanel.searchUsers" />
       <ul class="fill-options" v-show="fillOptions.length > 0">
         <li v-for="option in fillOptions" :key="option.id" @click="selectSuggestion(option)" class="fill-option">
           {{ option.username }}
@@ -17,9 +17,9 @@
       </ul>
     </div>
     <div class="search-controls mt-2">
-      <button class="btn btn-primary search-button" @click="searchUsers">Search</button>
+      <button class="btn btn-primary search-button" @click="searchUsers">{{ translations.admin.userpanel.search }}</button>
       <span style="margin: 0 5px;"></span>
-      <button class="btn btn-secondary clear-button" @click="clear">Clear</button>
+      <button class="btn btn-secondary clear-button" @click="clear">{{ translations.admin.userpanel.clear }}</button>
     </div>
 
     <!-- Displayed users -->
@@ -29,20 +29,20 @@
         <li v-for="user in users" :key="user.id" class="user-item border p-2">
           <div class="user-info">
             <strong>{{ user.name }} {{ user.surname }}</strong>
-            <p>Username: {{ user.username }}</p>
-            <p>Email: {{ user.email }}</p>
+            <p>{{ translations.admin.userpanel.username }} {{ user.username }}</p>
+            <p>{{ translations.admin.userpanel.email }} {{ user.email }}</p>
             <div class="user-buttons mt-2">
-              <button @click="editUser(user.id)" class="btn btn-success btn-sm btn-smaller">Edit User</button>
+              <button @click="editUser(user.id)" class="btn btn-success btn-sm btn-smaller">{{ translations.admin.userpanel.editUser }}</button>
               <span style="margin: 0 2px;"></span>
-              <button v-if="user.enabled" @click="removeUser(user.id, user.username, user.enabled)" class="btn btn-danger btn-sm btn-smaller">Remove User</button>
-              <button v-else @click="removeUser(user.id, user.username, user.enabled)" class="btn btn-warning btn-sm btn-smaller">Enable User</button>
+              <button v-if="user.enabled" @click="removeUser(user.id, user.username, user.enabled)" class="btn btn-danger btn-sm btn-smaller">{{ translations.admin.userpanel.removeUser }}</button>
+              <button v-else @click="removeUser(user.id, user.username, user.enabled)" class="btn btn-warning btn-sm btn-smaller">{{ translations.admin.userpanel.enableUser }}</button>
             </div>
           </div>
         </li>
       </template>
       <template v-else>
           <div class="no-results">
-            <p>No results found</p>
+            <p>{{ translations.admin.userpanel.noResults }}</p>
           </div>
         </template>
       </ul>
@@ -50,18 +50,18 @@
     
     <!-- Pagination controls -->
     <div class="d-flex justify-content-center align-items-center mt-4">
-      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">Previous</button>
+      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">{{ translations.admin.userpanel.previous }}</button>
       <template v-if="users.length > 0">
-        <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">Next</button>
+        <span class="page-number">{{ translations.admin.userpanel.page }} {{ currentPage + 1 }} {{ translations.admin.userpanel.of }} {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">{{ translations.admin.userpanel.next }}</button>
       </template>
       <template v-else>
-        <span class="page-number">Page {{ currentPage + 1 }} of 1</span>
-        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">Next</button>
+        <span class="page-number">{{ translations.admin.userpanel.page }} {{ currentPage + 1 }} {{ translations.admin.userpanel.of }} 1</span>
+        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">{{ translations.admin.userpanel.next }}</button>
       </template>
     </div>
   </div>
-  <Footer></Footer>
+  <Footer :translations="translations"></Footer>
 </template>
 
 <script>
@@ -71,6 +71,8 @@ import axios from "axios";
 import Footer from '@/components/Footer.vue';
 
 export default {
+  props: ['translations'],
+
   mounted() {
     this.clear();
   },
@@ -122,13 +124,14 @@ export default {
     },
     async removeUser(userId, username, isEnabled) {
       const confirmResult = await this.$swal({
-        title: 'Are you sure?',
-        text: isEnabled ? 'Are you sure you want to delete user ' + username + '?' : 'Are you sure you want to enable user ' + username + '?',
+        title:  this.translations.admin.userpanel.sureConfirm ,
+        text: isEnabled ? this.translations.admin.userpanel.confirmDisable + username + '?' : this.translations.admin.userpanel.confirmEnable + username + '?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes',
+        confirmButtonText: this.translations.admin.userpanel.confirmButtonText,
+        cancelButtonText: this.translations.admin.userpanel.cancelButtonText
       });
       if (confirmResult.isConfirmed) {
         try {

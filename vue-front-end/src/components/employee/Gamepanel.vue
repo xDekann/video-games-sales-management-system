@@ -2,21 +2,21 @@
   <div class="container mt-5">
     <!-- Upper side panel -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <LogoutButton class="btn btn-danger"></LogoutButton>
-      <button class="btn btn-primary add-game-button" @click="goToAddGame">Add Game</button>
+      <LogoutButton class="btn btn-danger" :translations="translations"></LogoutButton>
+      <button class="btn btn-primary add-game-button" @click="goToAddGame">{{translations.employee.gamepanel.addgame}}</button>
     </div>
 
     <!-- Category search -->
     <div class="label-container">
       <select id="category" v-model="selectedCategory" class="form-select mt-1">
-        <option value="">Select Category</option>
+        <option value="">{{translations.employee.gamepanel.selectCategory}}</option>
         <option v-for="category in gameCategories" :key="category.label" :value="category.value">{{ category.label }}</option>
       </select>
     </div>
 
     <!-- Searchbar -->
     <div class="search-container mt-2" v-click-away="clearFill">
-      <input v-model="searchPhrase" @input="handleInput" placeholder="Search games..." class="form-control" />
+      <input v-model="searchPhrase" @input="handleInput" :placeholder="translations.employee.gamepanel.searchGames" class="form-control" />
       <ul class="fill-options" v-show="fillOptions.length > 0">
         <li v-for="option in fillOptions" :key="option.id" @click="selectSuggestion(option)" class="fill-option">
           {{ option.name }}
@@ -24,8 +24,8 @@
       </ul>
     </div>
     <div class="search-controls mt-2">
-      <button class="btn btn-primary me-2" @click="searchGames">Search</button>
-      <button class="btn btn-secondary" @click="clear">Clear</button>
+      <button class="btn btn-primary me-2" @click="searchGames">{{translations.employee.gamepanel.search}}</button>
+      <button class="btn btn-secondary" @click="clear">{{translations.employee.gamepanel.clear}}</button>
     </div>
 
     <!-- Displayed games -->
@@ -35,43 +35,43 @@
           <li v-for="game in games" :key="game.id" class="game-item border p-2">
             <div class="game-info">
               <strong>{{ game.name }}</strong>
-              <p>Price: {{ game.price }} PLN</p>
-              <p>Amount Available: {{ game.amount }}</p>
-              <p>Category: {{ game.category }}</p>
-              <p>Producer: {{ game.producer }}</p>
+              <p>{{translations.employee.gamepanel.price}} {{ game.price }} PLN</p>
+              <p>{{translations.employee.gamepanel.amountAvailable}} {{ game.amount }}</p>
+              <p>{{translations.employee.gamepanel.category}} {{ game.category }}</p>
+              <p>{{translations.employee.gamepanel.producer}} {{ game.producer }}</p>
             </div>
             <div class="game-buttons mt-2">
-              <button @click="stockGame(game.id, true)" class="btn btn-success btn-sm btn-smaller mr-1">Stock</button>
-              <button @click="stockGame(game.id, false)" class="btn btn-warning btn-sm btn-smaller mr-1">Unstock</button>
-              <button @click="removeGame(game.id, game.name)" class="btn btn-danger btn-sm btn-smaller">Remove</button>
+              <button @click="stockGame(game.id, true)" class="btn btn-success btn-sm btn-smaller mr-1">{{translations.employee.gamepanel.stock}}</button>
+              <button @click="stockGame(game.id, false)" class="btn btn-warning btn-sm btn-smaller mr-1">{{translations.employee.gamepanel.unstock}}</button>
+              <button @click="removeGame(game.id, game.name)" class="btn btn-danger btn-sm btn-smaller">{{translations.employee.gamepanel.remove}}</button>
             </div>
           </li>
         </template>
         <template v-else>
           <div class="no-results">
-            <p>No results found</p>
+            <p>{{translations.employee.gamepanel.noResults}}</p>
           </div>
         </template>
       </ul>
     </div>
 
     <!-- Action confirmation prompt -->
-    <StockUnstockPrompt v-if="showingPrompt" :gameId="selectedGameId" :action="action" @close="closePrompt" />
+    <StockUnstockPrompt v-if="showingPrompt" :gameId="selectedGameId" :action="action" :translations="translations" @close="closePrompt" />
 
     <!-- Pagination controls -->
     <div class="d-flex justify-content-center align-items-center mt-4">
-      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">Previous</button>
+      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">{{translations.employee.gamepanel.previous}}</button>
       <template v-if="games.length > 0">
-        <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">Next</button>
+        <span class="page-number">{{translations.employee.gamepanel.page}} {{ currentPage + 1 }} {{translations.employee.gamepanel.of}} {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">{{translations.employee.gamepanel.next}}</button>
       </template>
       <template v-else>
-        <span class="page-number">Page {{ currentPage + 1 }} of 1</span>
-        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">Next</button>
+        <span class="page-number">{{translations.employee.gamepanel.page}} {{ currentPage + 1 }} {{translations.employee.gamepanel.of}} 1</span>
+        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">{{translations.employee.gamepanel.next}}</button>
       </template>
     </div>
   </div>
-  <Footer></Footer>
+  <Footer :translations="translations"></Footer>
 </template>
 
 <script>
@@ -83,6 +83,8 @@ import LogoutButton from '@/components/LogoutButton.vue';
 import Footer from '@/components/Footer.vue';
 
 export default {
+  props: ['translations'],
+
   mounted() {
     this.clear();
   },
@@ -170,13 +172,14 @@ export default {
     },
     async removeGame(gameId, gameName) {
       const confirmResult = await this.$swal({
-        title: 'Are you sure?',
-        text: 'Are you sure that you want to delete game ' + gameName + '?',
+        title: this.translations.employee.gamepanel.sureConfirm,
+        text: this.translations.employee.gamepanel.confirmRemove + ' ' + gameName + '?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes',
+        confirmButtonText: this.translations.employee.gamepanel.confirmButtonText,
+        cancelButtonText: this.translations.employee.gamepanel.cancelButtonText
       });      
       if (confirmResult.isConfirmed) {
         try {

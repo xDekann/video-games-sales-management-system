@@ -1,57 +1,57 @@
 <template>
   <div class="registration-container mt-5">
-    <h2 class="register-title">Register</h2>
+    <h2 class="register-title">{{translations.register.title}}</h2>
     <form @submit.prevent="submitForm" class="registration-form">
       <div class="form-group">
-        <label for="username">Username:</label>
+        <label for="username">{{translations.register.username}}</label>
         <input type="text" id="username" v-model="username" class="form-control" :class="{ 'is-invalid': errors.username }" />
         <div class="invalid-feedback" v-if="errors.username">{{ errors.username }}</div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password:</label>
+        <label for="password">{{translations.register.password}}</label>
         <input type="password" id="password" v-model="password" class="form-control" :class="{ 'is-invalid': errors.password }" />
         <div class="invalid-feedback" v-if="errors.password">{{ errors.password }}</div>
       </div>
 
       <div class="form-group">
-        <label for="name">Name:</label>
+        <label for="name">{{translations.register.name}}</label>
         <input type="text" id="name" v-model="name" class="form-control" :class="{ 'is-invalid': errors.name }" />
         <div class="invalid-feedback" v-if="errors.name">{{ errors.name }}</div>
       </div>
 
       <div class="form-group">
-        <label for="surname">Surname:</label>
+        <label for="surname">{{translations.register.surname}}</label>
         <input type="text" id="surname" v-model="surname" class="form-control" :class="{ 'is-invalid': errors.surname }" />
         <div class="invalid-feedback" v-if="errors.surname">{{ errors.surname }}</div>
       </div>
 
       <div class="form-group">
-        <label for="email">Email:</label>
+        <label for="email">{{translations.register.email}}</label>
         <input type="email" id="email" v-model="email" class="form-control" :class="{ 'is-invalid': errors.email }" />
         <div class="invalid-feedback" v-if="errors.email">{{ errors.email }}</div>
       </div>
 
       <div class="form-group">
-        <label for="city">City:</label>
+        <label for="city">{{translations.register.city}}</label>
         <input type="text" id="city" v-model="city" class="form-control" :class="{ 'is-invalid': errors.city }" />
         <div class="invalid-feedback" v-if="errors.city">{{ errors.city }}</div>
       </div>
 
       <div class="form-group">
-        <label for="address">Address:</label>
+        <label for="address">{{translations.register.address}}</label>
         <textarea id="address" v-model="address" class="form-control" :class="{ 'is-invalid': errors.address }"></textarea>
         <div class="invalid-feedback" v-if="errors.address">{{ errors.address }}</div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Register</button>
+      <button type="submit" class="btn btn-primary">{{translations.register.confirmation}}</button>
     </form>
     <div class="center-button">
-      <button @click="backToLogin" class="btn btn-link">Back to Login</button>
+      <button @click="backToLogin" class="btn btn-link">{{translations.register.back}}</button>
     </div>
     <p v-if="message" class="message">{{ message }}</p>
   </div>
-  <Footer></Footer>
+  <Footer :translations="translations"></Footer>
 </template>
 
 <script>
@@ -59,6 +59,7 @@ import axios from 'axios';
 import Footer from '@/components/Footer.vue';
 
 export default {
+  props: ['translations'],
   data() {
     return {
       username: '',
@@ -69,7 +70,16 @@ export default {
       city: '',
       address: '',
       message: '',
-      errors: {}
+      errors: {},
+      errorMessages: {
+        username: this.translations.register.usernameErr,
+        password: this.translations.register.passwordErr,
+        name: this.translations.register.nameErr,
+        surname: this.translations.register.surnameErr,
+        email: this.translations.register.emailErr,
+        city: this.translations.register.cityErr,
+        address: this.translations.register.addressErr
+      }
     };
   },
   components: {
@@ -90,15 +100,15 @@ export default {
         });
 
         if (response.status === 200) {
-          this.message = 'Registration successful!';
+          this.message = this.translations.register.success;
           this.$router.push('/login?registered=true');
         } 
         else {
-          this.message = 'Registration failed!';
+          this.message = this.translations.register.failed;
         }
       } catch (error) {
         if (error.response.status === 403) {
-          this.message = 'Unauthorized!';
+          this.message = this.translations.register.unauthorized;
         }
         if (error.response.status === 400) {
           this.errors = {};
@@ -108,11 +118,11 @@ export default {
               return;
             }
           for (const validationError of validationErrors) {
-            this.errors[validationError.field] = validationError.defaultMessage;
+            this.errors[validationError.field] = this.errorMessages[validationError.field];
           }
         }
         else {
-          this.message = "An error has occurred";
+          this.message = this.translations.register.error;
         } 
       }
     },

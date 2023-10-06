@@ -2,9 +2,9 @@
   <div class="container mt-5 main-container">
     <!-- Upper side panel -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <LogoutButton class="btn btn-danger"></LogoutButton>
+      <LogoutButton class="btn btn-danger" :translations="translations"></LogoutButton>
       <div class="profile-cart-container">
-        <button class="btn btn-primary me-2" @click="redirectToProfile">Profile</button>
+        <button class="btn btn-primary me-2" @click="redirectToProfile">{{ translations.user.games.profile }}</button>
         <div class="cart-container" @click="redirectToCart">
           <img src="shopping-cart.svg" alt="Shopping Cart" class="cart-icon" />
           <div class="cart-count">
@@ -19,14 +19,14 @@
     <!-- Category search -->
     <div class="label-container">
       <select id="category" v-model="selectedCategory" class="form-select mt-1">
-        <option value="">Select Category</option>
+        <option value="">{{ translations.user.games.selectCategory }}</option>
         <option v-for="category in gameCategories" :key="category.label" :value="category.value">{{ category.label }}</option>
       </select>
     </div>
 
     <!-- Searchbar -->
     <div class="search-container mt-2" v-click-away="clearFill">
-      <input v-model="searchPhrase" @input="handleInput" placeholder="Search games..." class="form-control" />
+      <input v-model="searchPhrase" @input="handleInput" :placeholder="translations.user.games.searchGames" class="form-control" />
       <ul class="fill-options" v-show="fillOptions.length > 0">
         <li v-for="option in fillOptions" :key="option.id" @click="selectSuggestion(option)" class="fill-option">
           {{ option.name }}
@@ -34,8 +34,8 @@
       </ul>
     </div>
     <div class="search-controls mt-2">
-      <button class="btn btn-primary me-2" @click="searchGames">Search</button>
-      <button class="btn btn-secondary" @click="clear">Clear</button>
+      <button class="btn btn-primary me-2" @click="searchGames">{{ translations.user.games.search }}</button>
+      <button class="btn btn-secondary" @click="clear">{{ translations.user.games.clear }}</button>
     </div>
 
     <!-- Displayed games -->
@@ -45,42 +45,42 @@
         <li v-for="game in games" :key="game.id" :class="{'unavailable-row': game.amount <= 0}" class="game-item border p-2">
           <div class="game-info">
             <strong>{{ game.name }}</strong>
-            <p>Price: {{ game.price }} PLN</p>
+            <p>{{ translations.user.games.price }} {{ game.price }} PLN</p>
             <p :class="{'unavailable-text': game.amount <= 0}">
-              {{ game.amount <= 0 ? 'Unavailable' : 'Amount Available: ' + game.amount }}
+              {{ game.amount <= 0 ?  translations.user.games.unavailable : translations.user.games.availability + ' ' +  game.amount }}
             </p>
-            <p>Category: {{ game.category }}</p>
-            <p>Producer: {{ game.producer }}</p>
+            <p>{{ translations.user.games.category }} {{ game.category }}</p>
+            <p>{{ translations.user.games.producer }} {{ game.producer }}</p>
           </div>
           <div class="game-buttons" v-if="game.amount > 0">
-            <button @click="addToCart(game)" class="btn btn-sm btn-success btn-smaller">Add to Cart</button>
+            <button @click="addToCart(game)" class="btn btn-sm btn-success btn-smaller" >{{ translations.user.games.addToCart }}</button>
           </div>
         </li>
       </template>
         <template v-else>
           <div class="no-results">
-            <p>No results found</p>
+            <p>{{ translations.user.games.noResults }}</p>
           </div>
         </template>
       </ul>
     </div>
 
-    <AddToCartModal v-if="showAddToCartModal" :game="selectedGame" @close="closeAddToCartModal" @add-to-cart="addToCartBackend" />
+    <AddToCartModal v-if="showAddToCartModal" :game="selectedGame" @close="closeAddToCartModal" @add-to-cart="addToCartBackend" :translations="translations" />
 
     <!-- Pagination controls -->
     <div class="d-flex justify-content-center align-items-center mt-4">
-      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">Previous</button>
+      <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">{{ translations.user.games.previous }}</button>
       <template v-if="games.length > 0">
-        <span class="page-number">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">Next</button>
+        <span class="page-number">{{ translations.user.games.page }} {{ currentPage + 1 }} {{ translations.user.games.of }} {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-secondary ms-2">{{ translations.user.games.next }}</button>
       </template>
       <template v-else>
-        <span class="page-number">Page {{ currentPage + 1 }} of 1</span>
-        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">Next</button>
+        <span class="page-number">{{ translations.user.games.page }} {{ currentPage + 1 }} {{ translations.user.games.of }} 1</span>
+        <button @click="nextPage" :disabled="true" class="btn btn-secondary ms-2">{{ translations.user.games.next }}</button>
       </template>
     </div>
   </div>
-  <Footer></Footer>
+  <Footer :translations="translations"></Footer>
 </template>
 
 <script>
@@ -94,6 +94,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 
 export default {
+  props: ['translations'],
+
   mounted() {
     this.clear();
     this.updateCartCount();
@@ -217,31 +219,31 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             this.$swal.fire({
-              title: 'Success',
-              text: 'Game added to cart successfully!',
+              title: this.translations.user.games.stitle,
+              text: this.translations.user.games.stext,
               icon: 'success',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.translations.user.games.sconfirmButtonText,
             });
           } else if (response.status === 204) {
             this.$swal.fire({
-              title: 'Failure',
-              text: 'Product is unavailable.',
+              title: this.translations.user.games.nstitle,
+              text: this.translations.user.games.nstext,
               icon: 'error',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.translations.user.games.nsconfirmButtonText,
             });
           } else if (response.status === 400) {
             this.$swal.fire({
-              title: 'Failure',
-              text: 'Invalid input.',
+              title: this.translations.user.games.nftitle,
+              text: this.translations.user.games.nftext,
               icon: 'error',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.translations.user.games.nfconfirmButtonText,
             });
           } else {
             this.$swal.fire({
-              title: 'Failure',
-              text: 'An error has occurred, please try again later.',
+              title: this.translations.user.games.etitle,
+              text: this.translations.user.games.etext,
               icon: 'error',
-              confirmButtonText: 'OK',
+              confirmButtonText: this.translations.user.games.econfirmButtonText,
             });
           }
           this.closeAddToCartModal();

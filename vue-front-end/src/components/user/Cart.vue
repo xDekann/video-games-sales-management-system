@@ -2,8 +2,8 @@
   <div class="container mt-5">
     <!-- Upper side panel -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <LogoutButton class="btn btn-danger"></LogoutButton>
-      <button class="btn btn-secondary" @click="redirectToGames">Back</button>
+      <LogoutButton class="btn btn-danger" :translations="translations"></LogoutButton>
+      <button class="btn btn-secondary" @click="redirectToGames">{{ translations.user.cart.back }}</button>
     </div>
 
     <!-- Cart Items Table -->
@@ -11,11 +11,11 @@
       <table class="table table-bordered">
         <thead class="thead-dark">
           <tr>
-            <th>Product</th>
-            <th>Price (PLN)</th>
-            <th>Amount</th>
-            <th>Amount left</th>
-            <th>Action</th>
+            <th>{{ translations.user.cart.product }}</th>
+            <th>{{ translations.user.cart.price }} (PLN)</th>
+            <th>{{ translations.user.cart.amount }}</th>
+            <th>{{ translations.user.cart.left }}</th>
+            <th>{{ translations.user.cart.action }}</th>
           </tr>
         </thead>
         <tbody>
@@ -25,11 +25,11 @@
             <td>{{ item.amount }}</td>
             <td>
               <p :class="{'unavailable-text': item.amountLeft <= 0}">
-                {{ item.amountLeft <= 0 ? 'Unavailable' : item.amountLeft }}
+                {{ item.amountLeft <= 0 ?  this.translations.user.cart.unavailable : item.amountLeft }}
               </p>
             </td>
             <td>
-              <button @click="deleteCartItem(item.itemId)" class="btn btn-danger">Delete</button>
+              <button @click="deleteCartItem(item.itemId)" class="btn btn-danger">{{ translations.user.cart.delete }}</button>
             </td>
           </tr>
         </tbody>
@@ -39,12 +39,12 @@
     <!-- Checkout Container -->
     <div class="d-flex justify-content-between align-items-center mt-4">
       <div class="font-weight-bold">
-        Total Cart Price: {{ cartCount }} PLN
+        {{ translations.user.cart.totalCartPrice }} {{ cartCount }} PLN
       </div>
-      <button class="btn btn-success" @click="checkout" v-if="cartCount != 0">Check Out</button>
+      <button class="btn btn-success" @click="checkout" v-if="cartCount != 0">{{ translations.user.cart.checkOut }}</button>
     </div>
   </div>
-  <Footer></Footer>
+  <Footer :translations="translations"></Footer>
 </template>
   
 <script>
@@ -54,6 +54,8 @@ import Footer from '@/components/Footer.vue';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default {
+  props: ["translations"],
+
   components: {
     LogoutButton,
     Footer,
@@ -68,10 +70,10 @@ export default {
     const transaction = this.$route.query.transaction;
     if (transaction === "cancelled") {
       this.$swal.fire({
-          title: 'Error',
-          text: 'Transaction has ben cancelled',
+          title: this.translations.user.cart.cancelledTitle,
+          text: this.translations.user.cart.cancelledText,
           icon: 'error',
-          confirmButtonText: 'OK',
+          confirmButtonText: this.translations.user.cart.confirmCancelButtonText,
       });
     }
   },
@@ -98,13 +100,14 @@ export default {
     },
     async checkout() {
       const confirmResult = await this.$swal({
-        title: 'Are you sure?',
-        text: 'Are you sure you want to proceed with the checkout?',
+        title: this.translations.user.cart.checkTitle,
+        text: this.translations.user.cart.checkText,
         icon: 'info',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes',
+        confirmButtonText: this.translations.user.cart.confirmButtonText,
+        cancelButtonText: this.translations.user.cart.cancelButtonText
       });
       if (confirmResult.isConfirmed) {
         this.$router.push("/checkout");
@@ -127,13 +130,14 @@ export default {
     },
     async deleteCartItem(itemId) {
       const confirmDelete = await this.$swal({
-        title: 'Are you sure?',
-        text: 'Are you sure you want to delete product from cart?',
+        title: this.translations.user.cart.deleteTitle,
+        text: this.translations.user.cart.deleteText,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes',
+        confirmButtonText: this.translations.user.cart.deleteConfirmButtonText,
+        cancelButtonText: this.translations.user.cart.deleteCancelButtonText
       });
       if (confirmDelete.isConfirmed) {
           try {

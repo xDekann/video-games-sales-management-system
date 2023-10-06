@@ -1,45 +1,45 @@
 <template>
   <div class="registration-container mt-5">
-    <h2 class="register-title">Edit User</h2>
+    <h2 class="register-title">{{translations.register.editUser}}</h2>
     <form @submit.prevent="submitForm" class="registration-form">
       <div class="form-group">
-        <label for="username">Username:</label>
+        <label for="username">{{translations.register.username}}</label>
         <input type="text" id="username" v-model="username" class="form-control" :class="{ 'is-invalid': errors.username }" />
         <div class="invalid-feedback" v-if="errors.username">{{ errors.username }}</div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password:</label>
+        <label for="password">{{translations.register.password}}</label>
         <input type="password" id="password" v-model="password" class="form-control" :class="{ 'is-invalid': errors.password }" />
         <div class="invalid-feedback" v-if="errors.password">{{ errors.password }}</div>
       </div>
 
       <div class="form-group">
-        <label for="name">Name:</label>
+        <label for="name">{{translations.register.name}}</label>
         <input type="text" id="name" v-model="name" class="form-control" :class="{ 'is-invalid': errors.name }" />
         <div class="invalid-feedback" v-if="errors.name">{{ errors.name }}</div>
       </div>
 
       <div class="form-group">
-        <label for="surname">Surname:</label>
+        <label for="surname">{{translations.register.surname}}:</label>
         <input type="text" id="surname" v-model="surname" class="form-control" :class="{ 'is-invalid': errors.surname }" />
         <div class="invalid-feedback" v-if="errors.surname">{{ errors.surname }}</div>
       </div>
 
       <div class="form-group">
-        <label for="email">Email:</label>
+        <label for="email">{{translations.register.email}}</label>
         <input type="email" id="email" v-model="email" class="form-control" :class="{ 'is-invalid': errors.email }" />
         <div class="invalid-feedback" v-if="errors.email">{{ errors.email }}</div>
       </div>
 
       <div class="form-group">
-        <label for="city">City:</label>
+        <label for="city">{{translations.register.city}}</label>
         <input type="text" id="city" v-model="city" class="form-control" :class="{ 'is-invalid': errors.city }" />
         <div class="invalid-feedback" v-if="errors.city">{{ errors.city }}</div>
       </div>
 
       <div class="form-group">
-        <label for="address">Address:</label>
+        <label for="address">{{translations.register.address}}</label>
         <textarea id="address" v-model="address" class="form-control" :class="{ 'is-invalid': errors.address }"></textarea>
         <div class="invalid-feedback" v-if="errors.address">{{ errors.address }}</div>
       </div>
@@ -48,23 +48,23 @@
         <label>Role:</label>
         <div>
           <label>
-            <input type="radio" v-model="selectedRole" value="USER" /> User
+            <input type="radio" v-model="selectedRole" value="USER" /> {{translations.register.user}}
           </label>
           <label>
-            <input type="radio" v-model="selectedRole" value="ADMIN" /> Admin
+            <input type="radio" v-model="selectedRole" value="ADMIN" /> {{translations.register.admin}}
           </label>
           <label>
-            <input type="radio" v-model="selectedRole" value="EMPLOYEE" /> Employee
+            <input type="radio" v-model="selectedRole" value="EMPLOYEE" /> {{translations.register.employee}}
           </label>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Update</button>
+      <button type="submit" class="btn btn-primary">{{translations.register.confirmSubmit}}</button>
     </form>
-    <button @click="goBack" class="btn btn-link">Back</button>
+    <button @click="goBack" class="btn btn-link">{{translations.register.singleBack}}</button>
     <p v-if="message" class="message">{{ message }}</p>
   </div>
-  <Footer></Footer>
+  <Footer :translations="translations"></Footer>
 </template>
 
 <script>
@@ -72,7 +72,7 @@ import axios from "axios";
 import Footer from '@/components/Footer.vue';
 
 export default {
-  props: ['id'],
+  props: ['id', 'translations'],
   data() {
     return {
       userId: "",
@@ -85,7 +85,16 @@ export default {
       address: "",
       selectedRole: "",
       message: "",
-      errors: {}
+      errors: {},
+      errorMessages: {
+        username: this.translations.register.usernameErr,
+        password: this.translations.register.passwordErr,
+        name: this.translations.register.nameErr,
+        surname: this.translations.register.surnameErr,
+        email: this.translations.register.emailErr,
+        city: this.translations.register.cityErr,
+        address: this.translations.register.addressErr
+      }
     };
   },
   components: {
@@ -114,7 +123,8 @@ export default {
           this.selectedRole = userData.authorityName;
         })
         .catch((error) => {
-          this.errors.fetchError = "Error fetching user data." + error.message;
+          console.log(error)
+          this.errors.fetchError = this.translations.error;
           return;
         });
     },
@@ -134,7 +144,7 @@ export default {
       axios
         .put(`/v1/admin/user`, updatedUser)
         .then(() => {
-          this.message = "Successfully updated user!";
+          this.message = this.translations.register.successEdit;
           this.errors = {};
         })
         .catch((error) => {
@@ -146,7 +156,7 @@ export default {
               return;
             }
             for (const validationError of validationErrors) {
-              this.errors[validationError.field] = validationError.defaultMessage;
+              this.errors[validationError.field] = this.errorMessages[validationError.field];
             }
             this.message = "";
           } 
@@ -154,7 +164,7 @@ export default {
            this.$router.push("/login");
           }
           else {
-            this.message = "An error has occurred";
+            this.message = this.translations.error;
           }
         });
     },
@@ -170,10 +180,8 @@ export default {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   margin-bottom: 50px;
 }
 

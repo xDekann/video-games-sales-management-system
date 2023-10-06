@@ -56,8 +56,8 @@
   display: inline-block;
   width: 60px;
   height: 34px;
-  top: 0px;
-  left: 0px;
+  top: 4px;
+  left: 4px;
 }
 
 .switch input {
