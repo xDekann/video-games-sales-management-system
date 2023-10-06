@@ -185,7 +185,7 @@
             "address": "Address:",
             "cartItems": "Cart Items",
             "price": "Price",
-            "amount": "Amount",
+            "amount": "Amount:",
             "totalCartPrice": "Total Cart Price: ",
             "paymentMethod": "Payment Method",
             "deliveryMethod": "Delivery Method",

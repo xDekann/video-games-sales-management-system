@@ -185,7 +185,7 @@
             "address": "Adres:",
             "cartItems": "Pozycje w koszyku",
             "price": "Cena",
-            "amount": "Ilość",
+            "amount": "Ilość: ",
             "totalCartPrice": "Całkowita cena koszyka: ",
             "paymentMethod": "Metoda płatności",
             "deliveryMethod": "Metoda dostawy",
