@@ -1,6 +1,6 @@
 <template>
   <label class="switch">
-    <input type="checkbox" @change="toggleMode" />
+    <input type="checkbox" @change="toggleMode" :checked="isDarkTheme" />
     <span class="slider round">
       <span class="sun-icon">☀️</span>
       <span class="moon-icon">🌙</span>
@@ -9,15 +9,33 @@
 </template>
   
 <script>
+  import Cookies from 'js-cookie';
+
   export default {
+    data() {
+      return {
+        isDarkTheme: false
+      };
+    },
+    mounted() {
+      const darkThemeCookie = Cookies.get('DARKTHEME');
+      if (darkThemeCookie === 'true') {
+        this.isDarkTheme = true;
+        this.setDarkMode();
+      } else {
+        this.isDarkTheme = false;
+        this.setLightMode();
+      }
+    },
     methods: {
       toggleMode() {
-        const app = document.documentElement;
-        app.classList.toggle('dark-mode');
-          if (app.classList.contains('dark-mode')) {
+        this.isDarkTheme = !this.isDarkTheme;
+        if (this.isDarkTheme) {
           this.setDarkMode();
+          Cookies.set('DARKTHEME', 'true', { path: '/' });
         } else {
           this.setLightMode();
+          Cookies.set('DARKTHEME', 'false', { path: '/' });
         }
       },
       setDarkMode() {
