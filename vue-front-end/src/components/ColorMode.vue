@@ -32,10 +32,10 @@
         this.isDarkTheme = !this.isDarkTheme;
         if (this.isDarkTheme) {
           this.setDarkMode();
-          Cookies.set('DARKTHEME', 'true', { path: '/' });
+          Cookies.set('DARKTHEME', 'true', {expires: 365});
         } else {
           this.setLightMode();
-          Cookies.set('DARKTHEME', 'false', { path: '/' });
+          Cookies.set('DARKTHEME', 'false', {expires: 365});
         }
       },
       setDarkMode() {
