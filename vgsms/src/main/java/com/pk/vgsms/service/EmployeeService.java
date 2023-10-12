@@ -24,12 +24,19 @@ public class EmployeeService {
         if (productRepository.findProductByName(gameDto.getName()) != null) {
             return null;
         }
+        Long idForImage = 1L;
+        Optional<Product> lastProduct = productRepository.findTopByOrderByIdDesc();
+        if (lastProduct.isPresent()) {
+            idForImage = lastProduct.get().getId() + 1;
+        }
+
         Product product = Product.builder()
                 .name(gameDto.getName())
                 .amount(1L)
                 .price(gameDto.getPrice())
                 .category(gameDto.getCategory())
                 .producer(gameDto.getProducer())
+                .imageUrl("https://picsum.photos/id/" + idForImage + "/300") // stock image for the project: https://picsum.photos
                 .build();
         productRepository.save(product);
         return product;

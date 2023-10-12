@@ -47,6 +47,9 @@ public class Product {
     @Column(name = "producer")
     private String producer;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<Purchase> purchases;

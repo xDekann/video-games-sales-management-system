@@ -51,9 +51,12 @@
             </p>
             <p>{{ translations.user.games.category }} {{ game.category }}</p>
             <p>{{ translations.user.games.producer }} {{ game.producer }}</p>
+            <div class="game-buttons" v-if="game.amount > 0">
+              <button @click="addToCart(game)" class="btn btn-sm btn-success btn-smaller" >{{ translations.user.games.addToCart }}</button>
+            </div>
           </div>
-          <div class="game-buttons" v-if="game.amount > 0">
-            <button @click="addToCart(game)" class="btn btn-sm btn-success btn-smaller" >{{ translations.user.games.addToCart }}</button>
+          <div class="game-image-container">
+            <img :src="game.imageUrl" @error="setAltImg" class="game-image" />
           </div>
         </li>
       </template>
@@ -278,6 +281,9 @@ export default {
     redirectToCart() {
       this.$router.push('/cart');
     },
+    setAltImg(event) { 
+      event.target.src = 'noimg.png'
+    }, 
   },
 };
 </script>
@@ -298,6 +304,29 @@ export default {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  min-width: 600px;
+}
+
+.game-info {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.list-container {
+    overflow-x: auto;
+}
+
+.game-image-container {
+  flex-shrink: 0;
+  margin-right: 20px;
+}
+
+.game-image {
+  max-width: 200px;
+  height: auto;
+  border-radius: 5px;
 }
 
 .btn-smaller {

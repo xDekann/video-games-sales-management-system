@@ -6,10 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAllByNameContainingIgnoreCaseAndCategoryOrderByName(String phrase, String category, Pageable pageable);
     Page<Product> findAllByNameContainingIgnoreCaseOrderByName(String phrase, Pageable pageable);
     Page<Product> findAll(Pageable pageable);
     Product findProductByName(String name);
+    Optional<Product> findTopByOrderByIdDesc();
 }

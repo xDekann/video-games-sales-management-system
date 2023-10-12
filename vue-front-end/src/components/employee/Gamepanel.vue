@@ -33,17 +33,22 @@
       <ul class="list-unstyled" style="list-style: none;">
         <template v-if="games.length > 0">
           <li v-for="game in games" :key="game.id" class="game-item border p-2">
-            <div class="game-info">
-              <strong>{{ game.name }}</strong>
-              <p>{{translations.employee.gamepanel.price}} {{ game.price }} PLN</p>
-              <p>{{translations.employee.gamepanel.amountAvailable}} {{ game.amount }}</p>
-              <p>{{translations.employee.gamepanel.category}} {{ game.category }}</p>
-              <p>{{translations.employee.gamepanel.producer}} {{ game.producer }}</p>
+            <div class="game-details">
+              <div class="game-info">
+                <strong>{{ game.name }}</strong>
+                <p>{{translations.employee.gamepanel.price}} {{ game.price }} PLN</p>
+                <p>{{translations.employee.gamepanel.amountAvailable}} {{ game.amount }}</p>
+                <p>{{translations.employee.gamepanel.category}} {{ game.category }}</p>
+                <p>{{translations.employee.gamepanel.producer}} {{ game.producer }}</p>
+              </div>
+              <div class="game-buttons mt-2">
+                  <button @click="stockGame(game.id, true)" class="btn btn-success btn-sm btn-smaller mr-1">{{translations.employee.gamepanel.stock}}</button>
+                  <button @click="stockGame(game.id, false)" class="btn btn-warning btn-sm btn-smaller mr-1">{{translations.employee.gamepanel.unstock}}</button>
+                  <button @click="removeGame(game.id, game.name)" class="btn btn-danger btn-sm btn-smaller">{{translations.employee.gamepanel.remove}}</button>
+              </div>
             </div>
-            <div class="game-buttons mt-2">
-              <button @click="stockGame(game.id, true)" class="btn btn-success btn-sm btn-smaller mr-1">{{translations.employee.gamepanel.stock}}</button>
-              <button @click="stockGame(game.id, false)" class="btn btn-warning btn-sm btn-smaller mr-1">{{translations.employee.gamepanel.unstock}}</button>
-              <button @click="removeGame(game.id, game.name)" class="btn btn-danger btn-sm btn-smaller">{{translations.employee.gamepanel.remove}}</button>
+            <div class="game-image-container">
+              <img :src="game.imageUrl" @error="setAltImg" class="game-image" />
             </div>
           </li>
         </template>
@@ -226,6 +231,9 @@ export default {
           }
         });
     },
+    setAltImg(event) { 
+      event.target.src = 'noimg.png'
+    }, 
   },
 };
 </script>
@@ -238,6 +246,11 @@ export default {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 10px;
+  align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 600px;
 }
 
 .btn-smaller {
@@ -283,6 +296,29 @@ export default {
 
 .game-buttons button {
   margin-right: 5px;
+}
+
+.game-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.game-image-container {
+  flex-shrink: 0;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+
+.game-image {
+  width: 100%;
+  height: auto;
+  max-width: 200px;
+}
+
+.list-container {
+    overflow-x: auto;
 }
 </style>
   
