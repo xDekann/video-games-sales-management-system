@@ -59,7 +59,6 @@ services:
       SPRING_DATASOURCE_USERNAME: gamestore
       SPRING_DATASOURCE_PASSWORD: gamestore
       SPRING_DATA_REDIS_HOST: redis-server
-    restart: always
     networks:
       - backend
   transactionservice:
@@ -74,7 +73,6 @@ services:
       SPRING_DATA_MONGODB_HOST: mongo-container
       SPRING_DATA_MONGODB_PORT: 27017
       SPRING_DATA_MONGODB_DATABASE: finalized_orders
-    restart: always
     networks:
       - backend
 networks:
