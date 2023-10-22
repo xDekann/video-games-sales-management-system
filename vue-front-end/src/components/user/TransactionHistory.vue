@@ -91,7 +91,7 @@ export default {
     if (transaction === "success") {
       this.$swal.fire({
           title: this.translations.user.history.stitle,
-          text: this.translations.user.history.stitle,
+          text: this.translations.user.history.stext,
           icon: 'success',
           confirmButtonText: this.translations.user.history.sconfirmButtonText,
       });
