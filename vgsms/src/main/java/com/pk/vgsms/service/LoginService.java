@@ -47,7 +47,6 @@ public class LoginService {
         cookie.setPath(COOKIE_PATH);
         cookie.setMaxAge(COOKIE_DURATION); // seconds provided (1 day)
         response.addCookie(cookie);
-        System.out.println("Logged and redirected - getting cookie: " + cookie);
     }
 
     public ResponseEntity<String> setUserSession(HttpServletRequest request, HttpServletResponse response, LoginDto loginDto) {

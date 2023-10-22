@@ -40,7 +40,6 @@ public class PurchaseService {
 
     public PurchaseDtoPaginated getPurchases(Pageable pageable) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(username);
         Page<Purchase> receivedProducts =  purchaseRepository.findAllByUsernameOrderByTransactionDateDesc(username, pageable);
         List<Purchase> purchaseList = receivedProducts.getContent();
         return PurchaseDtoPaginated.builder()

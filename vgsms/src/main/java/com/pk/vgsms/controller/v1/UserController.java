@@ -122,7 +122,6 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
             }
             if (!stripeService.checkPaymentAndDelivery(paymentMethod, deliveryMethod)) {
-                System.out.println("ERROR IN NAMING");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
             String url = stripeService.createStripeCheckoutSession(paymentMethod, deliveryMethod);

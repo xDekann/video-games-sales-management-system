@@ -25,7 +25,6 @@ public class WebhookController {
     public ResponseEntity<String> deleteUsersCartPostTransaction(@RequestBody String userId) {
         try {
             userService.deleteTransactionItemsAfterSucceed(userId);
-            System.out.println("Successful delete");
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception exception) {
             log.error(exception.getMessage());
