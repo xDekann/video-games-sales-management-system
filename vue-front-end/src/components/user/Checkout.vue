@@ -138,6 +138,7 @@
       },
       async payNow() {
         try {
+          await axios.get('/transactionservice/v1/healthcheck');
           const paymentData = {
             selectedPaymentMethod: this.selectedPaymentMethod,
             selectedDeliveryMethod: this.selectedDeliveryMethod,

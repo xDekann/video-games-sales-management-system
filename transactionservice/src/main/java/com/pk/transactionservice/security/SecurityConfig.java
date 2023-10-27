@@ -33,6 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain web(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(configurer ->
                         configurer.requestMatchers("/transactionservice/v1/purchase").hasRole("USER")
+                                .requestMatchers("/healthcheck").permitAll()
                                 .requestMatchers("/transactionservice/v1/purchase/pdf").hasRole("USER")
                                 .anyRequest().permitAll())
                 .csrf(csrf -> csrf.disable())

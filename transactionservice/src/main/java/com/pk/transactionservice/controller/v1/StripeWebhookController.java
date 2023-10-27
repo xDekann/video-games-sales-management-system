@@ -4,8 +4,10 @@ import com.pk.transactionservice.service.StripeWebhookService;
 import com.stripe.exception.SignatureVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,6 +24,11 @@ public class StripeWebhookController {
     @Autowired
     public StripeWebhookController(StripeWebhookService stripeWebhookService) {
         this.stripeWebhookService = stripeWebhookService;
+    }
+
+    @GetMapping("/healthcheck")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("OK");
     }
 
     @PostMapping("/stripe-webhook")

@@ -9,6 +9,7 @@
         "success": "Zalogowano pomyślnie!",
         "error": "Wystąpił błąd logowania.",
         "wrongUP": "Nieprawidłowa nazwa użytkownika lub hasło!",
+        "serviceUnavailable": "Serwis jest obecnie niedostępny. Spróbuj ponownie później.",
         "logout": "Wylogowano pomyślnie!",
         "registration": "Rejestracja zakończona pomyślnie!"
     },
@@ -192,6 +193,8 @@
             "selfPickup": "Odbiór osobisty",
             "backToCart": "Powrót do koszyka",
             "payNow": "Zapłać teraz",
+            "healthTitle": "Serwis niedostępny",
+            "healthText": "Serwis płatności jest niedostępny. Spróbuj ponownie później.",
             "itemsUnavailableTitle": "Produkty niedostępne!",
             "itemsUnavailableText": "Niektóre produkty są niedostępne!",
             "itemsUnavailableConfirmButtonText": "OK",

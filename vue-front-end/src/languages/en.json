@@ -9,6 +9,7 @@
         "success": "Login successful!",
         "error": "Login error occurred.",
         "wrongUP": "Wrong username or password!",
+        "serviceUnavailable": "Service is currently unavailable. Please try again later.",
         "logout": "Logout successful!",
         "registration": "Registration successful!"
     },
@@ -192,6 +193,8 @@
             "selfPickup": "Self Pickup",
             "backToCart": "Back to Cart",
             "payNow": "Pay Now",
+            "healthTitle": "Service Unavailable",
+            "healthText": "Service is currently unavailable. Please try again later.",
             "itemsUnavailableTitle": "Items Unavailable!",
             "itemsUnavailableText": "Some items are unavailable!",
             "itemsUnavailableConfirmButtonText": "OK",
