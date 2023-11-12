@@ -38,28 +38,46 @@
       <button class="btn btn-secondary" @click="clear">{{ translations.user.games.clear }}</button>
     </div>
 
-    <!-- Displayed games -->
-    <div class="list-container mt-3">
-    <ul class="list-unstyled" style="list-style: none;">
-      <template v-if="games.length > 0">
-        <li v-for="game in games" :key="game.id" :class="{'unavailable-row': game.amount <= 0}" class="game-item border p-2">
-          <div class="game-info">
-            <strong>{{ game.name }}</strong>
-            <p>{{ translations.user.games.price }} {{ game.price }} PLN</p>
-            <p :class="{'unavailable-text': game.amount <= 0}">
-              {{ game.amount <= 0 ?  translations.user.games.unavailable : translations.user.games.availability + ' ' +  game.amount }}
-            </p>
-            <p>{{ translations.user.games.category }} {{ game.category }}</p>
-            <p>{{ translations.user.games.producer }} {{ game.producer }}</p>
-            <div class="game-buttons" v-if="game.amount > 0">
-              <button @click="addToCart(game)" class="btn btn-sm btn-success btn-smaller" >{{ translations.user.games.addToCart }}</button>
+  <!-- Displayed games -->
+  <div class="list-container mt-3" style="list-style: none;">
+      <ul class="list-unstyled">
+        <template v-if="games.length > 0">
+          <li v-for="game in games" :key="game.id" :class="{'unavailable-row': game.amount <= 0}" class="game-item">
+            <!-- Game Title -->
+            <div class="game-title">
+              <strong>{{ game.name }}</strong>
+              <br><br>
+                <button v-if="game.amount > 0" @click="addToCart(game)" class="btn btn-sm btn-success">{{ translations.user.games.addToCart }}</button>
             </div>
-          </div>
-          <div class="game-image-container">
-            <img :src="game.imageUrl" @error="setAltImg" class="game-image" />
-          </div>
-        </li>
-      </template>
+
+            <!-- Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Game Category and Producer -->
+            <div class="game-category-producer">
+              {{ translations.user.games.category }}<br> <strong>{{ game.category }} </strong><br><br>
+              {{ translations.user.games.producer }}<br> <strong>{{ game.producer }} </strong>
+            </div>
+
+            <!-- Separator Line -->
+            <div class="separator-line"></div>
+
+            <!-- Availability and Price -->
+            <div class="game-availability-price">
+              <p :class="{'unavailable-text': game.amount <= 0}">
+                {{ game.amount <= 0 ? translations.user.games.unavailable : translations.user.games.availability }}<br> 
+              <strong>{{ game.amount <= 0 ? "" : game.amount }} </strong>
+              </p>
+              {{ translations.user.games.price }}<br> <strong>{{ game.price }} PLN </strong>
+            </div>
+
+            <!-- Game Image -->
+            <div class="game-image-container">
+              <img :src="game.imageUrl" @error="setAltImg" class="game-image" />
+            </div>
+
+          </li>
+        </template>
         <template v-else>
           <div class="no-results">
             <p>{{ translations.user.games.noResults }}</p>
@@ -301,32 +319,42 @@ export default {
 }
 
 .game-item {
+  display: grid;
+  grid-template-columns: 1fr 0.05fr 1fr 0.05fr 1fr auto;
+  align-items: center;
   border: 1px solid #ccc;
-  padding: 10px;
   margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  min-width: 600px;
+  overflow-x: auto;
+  grid-gap: 20px;
 }
 
-.game-info {
-  flex: 1;
-  margin-right: 20px;
+.game-title, .game-category-producer, .game-availability-price {
+  text-align: center;
 }
 
-.list-container {
-    overflow-x: auto;
+.game-title {
+  font-size: 28px;
+  margin-left: 20px;
+}
+
+.separator-line {
+  height: 50%;
+  width: 1px;
+  background-color: #ccc;
+  align-self: center;
+}
+
+.game-category-producer strong, .game-availability-price strong {
+  font-weight: bold;
 }
 
 .game-image-container {
-  flex-shrink: 0;
-  margin-right: 20px;
+  height: 100%;
 }
 
 .game-image {
-  max-width: 200px;
-  height: auto;
-  border-radius: 5px;
+  height: 100%;
+  width: auto;
 }
 
 .btn-smaller {
