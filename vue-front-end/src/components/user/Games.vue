@@ -89,7 +89,7 @@
     <AddToCartModal v-if="showAddToCartModal" :game="selectedGame" @close="closeAddToCartModal" @add-to-cart="addToCartBackend" :translations="translations" />
 
     <!-- Pagination controls -->
-    <div class="d-flex justify-content-center align-items-center mt-4">
+    <div class="d-flex justify-content-center align-items-center mt-4 paginations">
       <button @click="previousPage" :disabled="currentPage === 0" class="btn btn-secondary me-2">{{ translations.user.games.previous }}</button>
       <template v-if="games.length > 0">
         <span class="page-number">{{ translations.user.games.page }} {{ currentPage + 1 }} {{ translations.user.games.of }} {{ totalPages }}</span>
@@ -409,4 +409,35 @@ export default {
 .unavailable-text {
   color: red;
 }
+
+@media (max-width: 768px) {
+  .game-item {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto auto auto;
+    grid-gap: 10px;
+  }
+  .game-image-container,
+  .game-category-producer,
+  .game-availability-price {
+    text-align: center;
+  }
+
+  .game-image-container .game-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .game-title, .btn-success {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .paginations {
+    margin-bottom: 100px;
+  }
+}
+
 </style>
