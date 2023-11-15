@@ -44,24 +44,24 @@ const router = createRouter({
     routes
   })
 
-  router.beforeEach((to, from, next) => {
-    let role = null;
-    document.title = 'Game store';
-    if (jsCookie.get('ROLE')) {
-      role = atob(jsCookie.get('ROLE'));
-    }
-    if (!protectedRoutes.some(route => to.path === route || to.path.startsWith(route))) {
+router.beforeEach((to, from, next) => {
+  let role = null;
+  document.title = 'Game store';
+  if (jsCookie.get('ROLE')) {
+    role = atob(jsCookie.get('ROLE'));
+  }
+  if (!protectedRoutes.some(route => to.path === route || to.path.startsWith(route))) {
+    next();
+    return;
+  }
+  if (role && protectedRoutes.some(route => to.path === route || to.path.startsWith(route))) {
+    if (roleAllowedRoutes[role].some(allowedRoute => allowedRoute.startsWith(to.path) || to.path.startsWith(allowedRoute))) {
       next();
       return;
     }
-    if (role && protectedRoutes.some(route => to.path === route || to.path.startsWith(route))) {
-      if (roleAllowedRoutes[role].some(allowedRoute => allowedRoute.startsWith(to.path) || to.path.startsWith(allowedRoute))) {
-        next();
-        return;
-      }
-    }
-    next('/login');
-  });
+  }
+  next('/login');
+});
   
 
 export default router;

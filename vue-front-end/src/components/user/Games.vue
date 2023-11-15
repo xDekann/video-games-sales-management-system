@@ -324,7 +324,6 @@ export default {
   align-items: center;
   border: 1px solid #ccc;
   margin-bottom: 10px;
-  overflow-x: auto;
   grid-gap: 20px;
 }
 
@@ -410,7 +409,7 @@ export default {
   color: red;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1050px) {
   .game-item {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto auto auto auto;
@@ -423,7 +422,7 @@ export default {
   }
 
   .game-image-container .game-image {
-    width: 100%;
+    width: 50%;
     height: auto;
   }
 
