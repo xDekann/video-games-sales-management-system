@@ -40,7 +40,6 @@ public class SecurityConfig {
                                 .requestMatchers(("/v1/admin/**")).hasRole("ADMIN")
                                 .requestMatchers(("/v1/user/**")).hasRole("USER")
                                 .anyRequest().permitAll())
-                //.formLogin(configurer -> configurer.loginPage("/v1/login"))
                 .logout(configurer -> configurer.permitAll()
                         .logoutUrl("/v1/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {

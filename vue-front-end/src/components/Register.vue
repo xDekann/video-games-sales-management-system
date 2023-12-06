@@ -28,7 +28,7 @@
 
       <div class="form-group">
         <label for="email">{{translations.register.email}}</label>
-        <input type="email" id="email" v-model="email" class="form-control" :class="{ 'is-invalid': errors.email }" />
+        <input type="text" id="email" v-model="email" class="form-control" :class="{ 'is-invalid': errors.email }" />
         <div class="invalid-feedback" v-if="errors.email">{{ errors.email }}</div>
       </div>
 
