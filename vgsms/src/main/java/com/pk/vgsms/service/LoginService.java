@@ -42,7 +42,6 @@ public class LoginService {
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String role = userDetails.getAuthorities().iterator().next().getAuthority();
-        System.out.println(role);
         Cookie cookie = new Cookie(COOKIE_NAME, Base64.getEncoder().encodeToString(role.getBytes()));
         cookie.setPath(COOKIE_PATH);
         cookie.setMaxAge(COOKIE_DURATION); // seconds provided (1 day)
