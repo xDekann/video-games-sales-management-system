@@ -1,15 +1,20 @@
 vgsms.35-212-199-186.nip.io {
   encode gzip
 
-  root * /srv
+  # gateway -> VGSMS
+  handle /v1/* {
+    reverse_proxy gateway:8085
+  }
 
-  # Vue SPA fallback (to work with site refresh - dont call server)
-  try_files {path} /index.html
-  file_server
+  # gateway -> TransactionService
+  handle /transactionservice/v1/* {
+    reverse_proxy gateway:8085
+  }
 
-  @vgsms path /v1/*
-  reverse_proxy @vgsms gateway:8085
-
-  @tx path /transactionservice/v1/*
-  reverse_proxy @tx gateway:8085
+  # Vue SPA
+  handle {
+    root * /srv
+    try_files {path} /index.html
+    file_server
+  }
 }
