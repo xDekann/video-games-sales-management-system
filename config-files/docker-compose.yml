@@ -29,14 +29,15 @@ services:
     networks:
       - backend
   caddy:
-    image: caddy:2
+    build:
+      context: ../vue-front-end
+      dockerfile: Dockerfile
     depends_on:
       - gateway
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ../vue-front-end/dist:/srv:ro
       - ../caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ../caddy/data:/data
       - ../caddy/config:/config
