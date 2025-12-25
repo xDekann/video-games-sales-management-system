@@ -1,5 +1,5 @@
 ## build
-FROM maven:3.8.4-openjdk-17-slim as build
+FROM maven:3.9-eclipse-temurin-17 as build
 WORKDIR /app
 
 COPY .mvn mvnw mvnw.cmd pom.xml ./
@@ -7,7 +7,7 @@ COPY src ./src
 RUN mvn package -Dmaven.test.skip
 
 ## deploy
-FROM openjdk:17-jdk-slim as deploy
+FROM maven:3.9-eclipse-temurin-17 as deploy
 
 WORKDIR /app
 

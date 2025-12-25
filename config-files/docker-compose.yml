@@ -1,43 +1,34 @@
 version: '3'
 services:
-  mysql-container:
-    image: mysql:latest
-    container_name: mysql-container
-    environment:
-      MYSQL_ROOT_PASSWORD: gamestore
-      MYSQL_DATABASE: gamestore
-      MYSQL_USER: gamestore
-      MYSQL_PASSWORD: gamestore
-    ports:
-      - "3307:3306"
-    volumes:
-      - ../databases/scripts:/docker-entrypoint-initdb.d
-      - ../databases/docker-data/mysql:/var/lib/mysql
+  cloudsql-proxy:
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2
+    container_name: cloudsql-proxy
+    command:
+      - "--address=0.0.0.0"
+      - "--port=3306"
+      - "${CLOUDSQL_INSTANCE_CONNECTION_NAME}"
+    restart: unless-stopped
     networks:
       - backend
+
   redis-server:
     image: redis:7.0.9
     container_name: redis-server
     command: [ "redis-server" ]
+    restart: unless-stopped
     networks:
       - backend
-  mongo-container:
-    image: mongo:latest
-    container_name: mongo-container
-    ports:
-      - "27018:27017"
-    volumes:
-      - ../databases/docker-data/mongodb:/data/db
-    networks:
-      - backend
+
   eureka-container:
     build: ../eureka
     ports:
       - "8087:8087"
     depends_on:
       - redis-server
+    restart: unless-stopped
     networks:
       - backend
+
   gateway:
     build: ../gateway
     ports:
@@ -45,36 +36,46 @@ services:
     depends_on:
       - eureka-container
       - redis-server
+    restart: unless-stopped
     networks:
       - backend
+
   vgsms:
     build: ../vgsms
     depends_on:
       - eureka-container
       - redis-server
       - gateway
-      - mysql-container
+      - cloudsql-proxy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/gamestore?serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true&allowPublicKeyRetrieval=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: gamestore
-      SPRING_DATASOURCE_PASSWORD: gamestore
+      MYSQL_JDBC_URL: ${MYSQL_JDBC_URL}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+
       SPRING_DATA_REDIS_HOST: redis-server
+    restart: unless-stopped
     networks:
       - backend
+
   transactionservice:
     build: ../transactionservice
     depends_on:
       - eureka-container
       - redis-server
       - gateway
-      - mongo-container
     environment:
       SPRING_DATA_REDIS_HOST: redis-server
-      SPRING_DATA_MONGODB_HOST: mongo-container
-      SPRING_DATA_MONGODB_PORT: 27017
-      SPRING_DATA_MONGODB_DATABASE: finalized_orders
+
+      MONGO_URI: ${MONGO_URI}
+
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET_KEY: ${STRIPE_WEBHOOK_SECRET_KEY}
+    restart: unless-stopped
     networks:
       - backend
+
 networks:
   backend:
     driver: bridge
