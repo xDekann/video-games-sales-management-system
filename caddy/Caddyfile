@@ -2,6 +2,9 @@ vgsms.35-212-199-186.nip.io {
   encode gzip
 
   root * /srv
+
+  # Vue SPA fallback (to work with site refresh - dont call server)
+  try_files {path} /index.html
   file_server
 
   @vgsms path /v1/*
