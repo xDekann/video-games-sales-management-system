@@ -1,0 +1,12 @@
+vgsms.35-212-199-186.nip.io {
+  encode gzip
+
+  root * /srv
+  file_server
+
+  @vgsms path /v1/*
+  reverse_proxy @vgsms gateway:8085
+
+  @tx path /transactionservice/v1/*
+  reverse_proxy @tx gateway:8085
+}

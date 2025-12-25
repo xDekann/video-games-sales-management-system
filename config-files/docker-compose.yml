@@ -22,9 +22,24 @@ services:
   eureka-container:
     build: ../eureka
     ports:
-      - "8087:8087"
+      - "127.0.0.1:8087:8087"
     depends_on:
       - redis-server
+    restart: unless-stopped
+    networks:
+      - backend
+  caddy:
+    image: caddy:2
+    depends_on:
+      - gateway
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../vue-front-end/dist:/srv:ro
+      - ../caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../caddy/data:/data
+      - ../caddy/config:/config
     restart: unless-stopped
     networks:
       - backend
@@ -32,7 +47,7 @@ services:
   gateway:
     build: ../gateway
     ports:
-      - "8085:8085"
+      - "127.0.0.1:8085:8085"
     depends_on:
       - eureka-container
       - redis-server
