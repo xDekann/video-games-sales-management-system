@@ -73,7 +73,7 @@
 
             <!-- Game Image -->
             <div class="game-image-container">
-              <img :src="'https://picsum.photos/seed/' + game.id_product + '/300/300'"
+              <img :src="'https://picsum.photos/seed/' + game.id + '/300/300'"
                    loading="lazy"
                    @error="setAltImg"
                    class="game-image" />
