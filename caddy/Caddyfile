@@ -1,25 +1,19 @@
-vgsms.35-212-241-214.nip.io {
+:80 {
   encode gzip
 
-  # health check
-  handle /lb-health {
+  handle /lb-healthz {
     respond "ok" 200
   }
 
-  # gateway -> VGSMS
   handle /v1/* {
     reverse_proxy gateway:8085
   }
 
-  # gateway -> TransactionService
   handle /transactionservice/v1/* {
     reverse_proxy gateway:8085
   }
 
-  # Vue SPA
-  handle {
-    root * /srv
-    try_files {path} /index.html
-    file_server
-  }
+  root * /srv
+  file_server
+  try_files {path} /index.html
 }
