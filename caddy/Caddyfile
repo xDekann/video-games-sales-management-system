@@ -1,19 +1,16 @@
 :80 {
   encode gzip
 
-  handle /lb-healthz {
-    respond "ok" 200
-  }
+  # health check
+  respond /lb-healthz "ok" 200
 
-  handle /v1/* {
-    reverse_proxy gateway:8085
-  }
+  # API -> gateway
+  @api path /v1/* /transactionservice/v1/*
+  reverse_proxy @api gateway:8085
 
-  handle /transactionservice/v1/* {
-    reverse_proxy gateway:8085
-  }
-
+  # Vue SPA
+  @static method GET HEAD
   root * /srv
-  file_server
   try_files {path} /index.html
+  file_server @static
 }
